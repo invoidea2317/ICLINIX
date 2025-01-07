@@ -67,32 +67,32 @@ class ClinicContentCard extends StatelessWidget {
                 sizedBox4(),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          '4.8',
-                          style: openSansRegular.copyWith(
-                              fontSize: Dimensions.fontSize14,
-                              color: Theme.of(context).hintColor),
-                        ),
-                        RatingBar.builder(
-                          itemSize:  Dimensions.fontSize14,
-                          initialRating: 4,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: Dimensions.fontSize14,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       '4.8',
+                    //       style: openSansRegular.copyWith(
+                    //           fontSize: Dimensions.fontSize14,
+                    //           color: Theme.of(context).hintColor),
+                    //     ),
+                    //     RatingBar.builder(
+                    //       itemSize:  Dimensions.fontSize14,
+                    //       initialRating: 4,
+                    //       minRating: 1,
+                    //       direction: Axis.horizontal,
+                    //       allowHalfRating: true,
+                    //       itemCount: 5,
+                    //       itemBuilder: (context, _) => const Icon(
+                    //         Icons.star,
+                    //         color: Colors.amber,
+                    //         size: Dimensions.fontSize14,
+                    //       ),
+                    //       onRatingUpdate: (rating) {
+                    //         print(rating);
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
                     Flexible(
                       child: RichText(
                         text: TextSpan(
@@ -104,7 +104,7 @@ class ClinicContentCard extends StatelessWidget {
                                   color: greenColor), // Different color for "resend"
                             ),
                             TextSpan(
-                              text: "10AM-7PM",
+                              text: "08AM-06PM",
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize13,
                                   color: Theme.of(context)

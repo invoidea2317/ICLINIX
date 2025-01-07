@@ -38,7 +38,8 @@ class SearchScreen extends StatelessWidget {
         child: GetBuilder<ClinicController>(builder: (clinicControl) {
           final dataList = clinicControl.searchList;
           final dataList2 = clinicControl.serviceDetailsSearchData;
-          final isListEmpty = (dataList ?? []).isEmpty && (dataList2 ?? []).isEmpty;
+          final isListEmpty =
+              (dataList ?? []).isEmpty && (dataList2 ?? []).isEmpty;
           final isLoading = clinicControl.isSearchLoading;
           return Column(
             children: [
@@ -59,7 +60,7 @@ class SearchScreen extends StatelessWidget {
                           clinicControl.getSearchList(value);
                         }
                       },
-                    decoration: const InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Search for Clinic',
                         border: OutlineInputBorder(),
                       ),
@@ -126,14 +127,16 @@ class SearchScreen extends StatelessWidget {
                   errorBuilder: (context, error) {
                     return const Center(
                       child: Text('No results found.'),
-                    );},
+                    );
+                  },
                   // },
                   loadingBuilder: (context) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   },
-                  onSelected: (value) {}, suggestionsCallback: (String search) {  },
+                  onSelected: (value) {},
+                  suggestionsCallback: (String search) {},
                 ),
               ),
               sizedBoxDefault(),
@@ -151,408 +154,443 @@ class SearchScreen extends StatelessWidget {
                   : isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : Column(
-                        children: [
-                          if (dataList != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeDefault),
-                              child: Row(
-                                children: [
-                                  Text("Branches",
-                                      style: openSansBold.copyWith(
-                                          fontSize: Dimensions.fontSize18)),
-                                ],
+                          children: [
+                            if (dataList != null)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeDefault),
+                                child: Row(
+                                  children: [
+                                    Text("Branches",
+                                        style: openSansBold.copyWith(
+                                            fontSize: Dimensions.fontSize18)),
+                                  ],
+                                ),
                               ),
-                            ),
-                          if (dataList == null || dataList.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: Dimensions.fontSize8),
-                              child: Center(
-                                  child: EmptyDataWidget(
-                                text: 'No Branches Found',
-                                image: Images.icEmptySearchHolder,
-                                fontColor: Theme.of(context).disabledColor,
-                              )),
-                            ),
-                          if (dataList != null)
-                           ListView.separated(
-                              itemCount: dataList.length,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeDefault),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (_, i) {
-                                return CustomCardContainer(
-                                  radius: Dimensions.radius5,
-                                  tap: () {
-                                    Get.toNamed(RouteHelper.getSelectSlotRoute(
-                                        dataList[i].image,
-                                        dataList[i].branchName,
-                                        dataList[i].branchContactNo,
-                                        dataList[i].apiBranchId.toString()));
-                                    // GetPage(
-                                    //   name: RouteHelper.selectSlot,
-                                    //   page: () => SelectSlotScreen(model:dataList[i], isSearchModel: true),
-                                    // );
-                                    // Get.toNamed(
-                                    //   RouteHelper.getSelectSlotRoute(),
-                                    //   arguments: dataList[
-                                    //       i], // Pass the clinicModel as an argument
-                                    // );
-                                  },
-                                  child: Column(
-                                    children: [
-                                      // CustomNetworkImageWidget(
-                                      //     height: 200,
-                                      //     image:
-                                      //         '${AppConstants.branchImageUrl}${dataList[i].image.toString()}'),
-                                      // sizedBox4(),
-                                      Padding(
-                                        padding: const EdgeInsets.all(
-                                            Dimensions.paddingSize10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              dataList[i].branchName.toString(),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: openSansBold.copyWith(
-                                                  fontSize: Dimensions.fontSize14),
-                                            ),
-                                            sizedBox4(),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: "Branch Contact: ",
-                                                    style: openSansRegular.copyWith(
-                                                        fontSize:
-                                                            Dimensions.fontSize12,
-                                                        color: Theme.of(context)
-                                                            .primaryColor), // Different color for "resend"
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        dataList[i].branchContactNo,
-                                                    style: openSansRegular.copyWith(
-                                                        fontSize:
-                                                            Dimensions.fontSize13,
-                                                        color: Theme.of(context)
-                                                            .hintColor), // Different color for "resend"
-                                                  ),
-                                                ],
+                            if (dataList == null || dataList.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: Dimensions.fontSize8),
+                                child: Center(
+                                    child: EmptyDataWidget(
+                                  text: 'No Branches Found',
+                                  image: Images.icEmptySearchHolder,
+                                  fontColor: Theme.of(context).disabledColor,
+                                )),
+                              ),
+                            if (dataList != null)
+                              ListView.separated(
+                                itemCount: dataList.length,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeDefault),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (_, i) {
+                                  return CustomCardContainer(
+                                    radius: Dimensions.radius5,
+                                    tap: () {
+                                      Get.toNamed(
+                                          RouteHelper.getSelectSlotRoute(
+                                              dataList[i].image,
+                                              dataList[i].branchName,
+                                              dataList[i].branchContactNo,
+                                              dataList[i]
+                                                  .apiBranchId
+                                                  .toString()));
+                                      // GetPage(
+                                      //   name: RouteHelper.selectSlot,
+                                      //   page: () => SelectSlotScreen(model:dataList[i], isSearchModel: true),
+                                      // );
+                                      // Get.toNamed(
+                                      //   RouteHelper.getSelectSlotRoute(),
+                                      //   arguments: dataList[
+                                      //       i], // Pass the clinicModel as an argument
+                                      // );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        // CustomNetworkImageWidget(
+                                        //     height: 200,
+                                        //     image:
+                                        //         '${AppConstants.branchImageUrl}${dataList[i].image.toString()}'),
+                                        // sizedBox4(),
+                                        Padding(
+                                          padding: const EdgeInsets.all(
+                                              Dimensions.paddingSize10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                dataList[i]
+                                                    .branchName
+                                                    .toString(),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: openSansBold.copyWith(
+                                                    fontSize:
+                                                        Dimensions.fontSize14),
                                               ),
-                                            ),
-                                            sizedBox4(),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Row(
+                                              sizedBox4(),
+                                              RichText(
+                                                text: TextSpan(
                                                   children: [
-                                                    Text(
-                                                      '4.8',
-                                                      style:
-                                                          openSansRegular.copyWith(
-                                                              fontSize: Dimensions
-                                                                  .fontSize14,
-                                                              color:
-                                                                  Theme.of(context)
-                                                                      .hintColor),
+                                                    TextSpan(
+                                                      text: "Branch Contact: ",
+                                                      style: openSansRegular.copyWith(
+                                                          fontSize: Dimensions
+                                                              .fontSize12,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor), // Different color for "resend"
                                                     ),
-                                                    RatingBar.builder(
-                                                      itemSize:
-                                                          Dimensions.fontSize14,
-                                                      initialRating: 4,
-                                                      minRating: 1,
-                                                      direction: Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemBuilder: (context, _) =>
-                                                          const Icon(
-                                                        Icons.star,
-                                                        color: Colors.amber,
-                                                        size: Dimensions.fontSize14,
-                                                      ),
-                                                      onRatingUpdate: (rating) {
-                                                        print(rating);
-                                                      },
+                                                    TextSpan(
+                                                      text: dataList[i]
+                                                          .branchContactNo,
+                                                      style: openSansRegular.copyWith(
+                                                          fontSize: Dimensions
+                                                              .fontSize13,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .hintColor), // Different color for "resend"
                                                     ),
                                                   ],
                                                 ),
-                                                Flexible(
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: "Open: ",
-                                                          style: openSansRegular.copyWith(
-                                                              fontSize: Dimensions
-                                                                  .fontSize12,
-                                                              color:
-                                                                  greenColor), // Different color for "resend"
+                                              ),
+                                              sizedBox4(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        '4.8',
+                                                        style: openSansRegular
+                                                            .copyWith(
+                                                                fontSize: Dimensions
+                                                                    .fontSize14,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .hintColor),
+                                                      ),
+                                                      RatingBar.builder(
+                                                        itemSize: Dimensions
+                                                            .fontSize14,
+                                                        initialRating: 4,
+                                                        minRating: 1,
+                                                        direction:
+                                                            Axis.horizontal,
+                                                        allowHalfRating: true,
+                                                        itemCount: 5,
+                                                        itemBuilder:
+                                                            (context, _) =>
+                                                                const Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                          size: Dimensions
+                                                              .fontSize14,
                                                         ),
-                                                        TextSpan(
-                                                          text: "10AM-7PM",
-                                                          style: openSansRegular.copyWith(
-                                                              fontSize: Dimensions
-                                                                  .fontSize13,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .hintColor), // Different color for "resend"
-                                                        ),
-                                                      ],
+                                                        onRatingUpdate:
+                                                            (rating) {
+                                                          print(rating);
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Flexible(
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                            text: "Open: ",
+                                                            style: openSansRegular.copyWith(
+                                                                fontSize: Dimensions
+                                                                    .fontSize12,
+                                                                color:
+                                                                    greenColor), // Different color for "resend"
+                                                          ),
+                                                          TextSpan(
+                                                            text: "10AM-7PM",
+                                                            style: openSansRegular.copyWith(
+                                                                fontSize: Dimensions
+                                                                    .fontSize13,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .hintColor), // Different color for "resend"
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: Dimensions.paddingSize12,
-                                            left: Dimensions.paddingSizeDefault,
-                                            right: Dimensions.paddingSizeDefault),
-                                        child: CustomButtonWidget(
-                                          height: 40,
-                                          buttonText: 'Book Appointment',
-                                          transparent: true,
-                                          isBold: false,
-                                          fontSize: Dimensions.fontSize14,
-                                          onPressed: () {
-                                            Get.toNamed(
-                                                RouteHelper.getSelectSlotRoute(
-                                                    dataList[i].image,
-                                                    dataList[i].branchName,
-                                                    dataList[i].branchContactNo,
-                                                    dataList[i]
-                                                        .apiBranchId
-                                                        .toString()));
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: Dimensions.paddingSize12,
+                                              left:
+                                                  Dimensions.paddingSizeDefault,
+                                              right: Dimensions
+                                                  .paddingSizeDefault),
+                                          child: CustomButtonWidget(
+                                            height: 40,
+                                            buttonText: 'Book Appointment',
+                                            transparent: true,
+                                            isBold: false,
+                                            fontSize: Dimensions.fontSize14,
+                                            onPressed: () {
+                                              Get.toNamed(RouteHelper
+                                                  .getSelectSlotRoute(
+                                                      dataList[i].image,
+                                                      dataList[i].branchName,
+                                                      dataList[i]
+                                                          .branchContactNo,
+                                                      dataList[i]
+                                                          .apiBranchId
+                                                          .toString()));
 
-                                            // Get.toNamed(
-                                            //   RouteHelper.getSelectSlotRoute(),
-                                            //   arguments: dataList[
-                                            //       i], // Pass the clinicModel as an argument
-                                            // );
-                                          },
+                                              // Get.toNamed(
+                                              //   RouteHelper.getSelectSlotRoute(),
+                                              //   arguments: dataList[
+                                              //       i], // Pass the clinicModel as an argument
+                                              // );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (BuildContext context, int index) =>
-                                  sizedBoxDefault(),
-                            ),
-                          if (dataList2 != null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeDefault),
-                              child: Row(
-                                children: [
-                                  Text("Services",
-                                      style: openSansBold.copyWith(
-                                          fontSize: Dimensions.fontSize18)),
-                                ],
+                                      ],
+                                    ),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        sizedBoxDefault(),
                               ),
-                            ),
+                            if (dataList2 != null)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeDefault),
+                                child: Row(
+                                  children: [
+                                    Text("Services",
+                                        style: openSansBold.copyWith(
+                                            fontSize: Dimensions.fontSize18)),
+                                  ],
+                                ),
+                              ),
+                            if (dataList2 == null || dataList2.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: Dimensions.fontSize8),
+                                child: Center(
+                                    child: EmptyDataWidget(
+                                  text: 'No Branches Found',
+                                  image: Images.icEmptySearchHolder,
+                                  fontColor: Theme.of(context).disabledColor,
+                                )),
+                              ),
+                            if (dataList2 != null)
+                              ListView.separated(
+                                itemCount: dataList2.length,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeDefault),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (_, i) {
+                                  return CustomCardContainer(
+                                    radius: Dimensions.radius5,
+                                    tap: () {
+                                      Get.toNamed(
+                                          RouteHelper.getServiceDetailRoute(
+                                              dataList2[i].id.toString(),
+                                              dataList2[i].name.toString()));
 
-                          if (dataList2 == null || dataList2.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: Dimensions.fontSize8),
-                              child: Center(
-                                  child: EmptyDataWidget(
-                                    text: 'No Branches Found',
-                                    image: Images.icEmptySearchHolder,
-                                    fontColor: Theme.of(context).disabledColor,
-                                  )),
-                            ),
-                          if (dataList2 != null)
-                           ListView.separated(
-                              itemCount: dataList2.length,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeDefault),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (_, i) {
-                                return CustomCardContainer(
-                                  radius: Dimensions.radius5,
-                                  tap: () {
-                                    // Get.toNamed(RouteHelper.getSelectSlotRoute(
-                                    //     dataList2[i].image,
-                                    //     dataList2[i].branchName,
-                                    //     dataList2[i].branchContactNo,
-                                    //     dataList2[i].apiBranchId.toString()));
-                                    // GetPage(
-                                    //   name: RouteHelper.selectSlot,
-                                    //   page: () => SelectSlotScreen(model:dataList[i], isSearchModel: true),
-                                    // );
-                                    // Get.toNamed(
-                                    //   RouteHelper.getSelectSlotRoute(),
-                                    //   arguments: dataList[
-                                    //       i], // Pass the clinicModel as an argument
-                                    // );
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // CustomNetworkImageWidget(
-                                      //     height: 200,
-                                      //     image:
-                                      //         '${AppConstants.branchImageUrl}${dataList2[i].image.toString()}'),
-                                      // sizedBox4(),
-                                      Padding(
-                                        padding: const EdgeInsets.all(
-                                            Dimensions.paddingSize10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              dataList2[i].name.toString(),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: openSansBold.copyWith(
-                                                  fontSize: Dimensions.fontSize14),
-                                            ),
-                                            // sizedBox4(),
-                                            // RichText(
-                                            //   text: TextSpan(
-                                            //     children: [
-                                            //       TextSpan(
-                                            //         text: "Branch Contact: ",
-                                            //         style: openSansRegular.copyWith(
-                                            //             fontSize:
-                                            //                 Dimensions.fontSize12,
-                                            //             color: Theme.of(context)
-                                            //                 .primaryColor), // Different color for "resend"
-                                            //       ),
-                                            //       TextSpan(
-                                            //         text:
-                                            //             dataList[i].branchContactNo,
-                                            //         style: openSansRegular.copyWith(
-                                            //             fontSize:
-                                            //                 Dimensions.fontSize13,
-                                            //             color: Theme.of(context)
-                                            //                 .hintColor), // Different color for "resend"
-                                            //       ),
-                                            //     ],
-                                            //   ),
-                                            // ),
-                                            // ),
-                                            // sizedBox4(),
-                                            // Row(
-                                            //   mainAxisAlignment:
-                                            //       MainAxisAlignment.spaceBetween,
-                                            //   children: [
-                                            //     Row(
-                                            //       children: [
-                                            //         Text(
-                                            //           '4.8',
-                                            //           style:
-                                            //               openSansRegular.copyWith(
-                                            //                   fontSize: Dimensions
-                                            //                       .fontSize14,
-                                            //                   color:
-                                            //                       Theme.of(context)
-                                            //                           .hintColor),
-                                            //         ),
-                                            //         RatingBar.builder(
-                                            //           itemSize:
-                                            //               Dimensions.fontSize14,
-                                            //           initialRating: 4,
-                                            //           minRating: 1,
-                                            //           direction: Axis.horizontal,
-                                            //           allowHalfRating: true,
-                                            //           itemCount: 5,
-                                            //           itemBuilder: (context, _) =>
-                                            //               const Icon(
-                                            //             Icons.star,
-                                            //             color: Colors.amber,
-                                            //             size: Dimensions.fontSize14,
-                                            //           ),
-                                            //           onRatingUpdate: (rating) {
-                                            //             print(rating);
-                                            //           },
-                                            //         ),
-                                            //       ],
-                                            //     ),
-                                            //     Flexible(
-                                            //       child: RichText(
-                                            //         text: TextSpan(
-                                            //           children: [
-                                            //             TextSpan(
-                                            //               text: "Open: ",
-                                            //               style: openSansRegular.copyWith(
-                                            //                   fontSize: Dimensions
-                                            //                       .fontSize12,
-                                            //                   color:
-                                            //                       greenColor), // Different color for "resend"
-                                            //             ),
-                                            //             TextSpan(
-                                            //               text: "10AM-7PM",
-                                            //               style: openSansRegular.copyWith(
-                                            //                   fontSize: Dimensions
-                                            //                       .fontSize13,
-                                            //                   color: Theme.of(
-                                            //                           context)
-                                            //                       .hintColor), // Different color for "resend"
-                                            //             ),
-                                            //           ],
-                                            //         ),
-                                            //       ),
-                                            //     ),
-                                            //   ],
-                                            // ),
-                                          ],
+                                      // Get.toNamed(RouteHelper.getSelectSlotRoute(
+                                      //     dataList2[i].image,
+                                      //     dataList2[i].branchName,
+                                      //     dataList2[i].branchContactNo,
+                                      //     dataList2[i].apiBranchId.toString()));
+                                      // GetPage(
+                                      //   name: RouteHelper.selectSlot,
+                                      //   page: () => SelectSlotScreen(model:dataList[i], isSearchModel: true),
+                                      // );
+                                      // Get.toNamed(
+                                      //   RouteHelper.getSelectSlotRoute(),
+                                      //   arguments: dataList[
+                                      //       i], // Pass the clinicModel as an argument
+                                      // );
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // CustomNetworkImageWidget(
+                                        //     height: 200,
+                                        //     image:
+                                        //         '${AppConstants.branchImageUrl}${dataList2[i].image.toString()}'),
+                                        // sizedBox4(),
+                                        Padding(
+                                          padding: const EdgeInsets.all(
+                                              Dimensions.paddingSize10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                dataList2[i].name.toString(),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: openSansBold.copyWith(
+                                                    fontSize:
+                                                        Dimensions.fontSize14),
+                                              ),
+                                              // sizedBox4(),
+                                              // RichText(
+                                              //   text: TextSpan(
+                                              //     children: [
+                                              //       TextSpan(
+                                              //         text: "Branch Contact: ",
+                                              //         style: openSansRegular.copyWith(
+                                              //             fontSize:
+                                              //                 Dimensions.fontSize12,
+                                              //             color: Theme.of(context)
+                                              //                 .primaryColor), // Different color for "resend"
+                                              //       ),
+                                              //       TextSpan(
+                                              //         text:
+                                              //             dataList[i].branchContactNo,
+                                              //         style: openSansRegular.copyWith(
+                                              //             fontSize:
+                                              //                 Dimensions.fontSize13,
+                                              //             color: Theme.of(context)
+                                              //                 .hintColor), // Different color for "resend"
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
+                                              // ),
+                                              // sizedBox4(),
+                                              // Row(
+                                              //   mainAxisAlignment:
+                                              //       MainAxisAlignment.spaceBetween,
+                                              //   children: [
+                                              //     Row(
+                                              //       children: [
+                                              //         Text(
+                                              //           '4.8',
+                                              //           style:
+                                              //               openSansRegular.copyWith(
+                                              //                   fontSize: Dimensions
+                                              //                       .fontSize14,
+                                              //                   color:
+                                              //                       Theme.of(context)
+                                              //                           .hintColor),
+                                              //         ),
+                                              //         RatingBar.builder(
+                                              //           itemSize:
+                                              //               Dimensions.fontSize14,
+                                              //           initialRating: 4,
+                                              //           minRating: 1,
+                                              //           direction: Axis.horizontal,
+                                              //           allowHalfRating: true,
+                                              //           itemCount: 5,
+                                              //           itemBuilder: (context, _) =>
+                                              //               const Icon(
+                                              //             Icons.star,
+                                              //             color: Colors.amber,
+                                              //             size: Dimensions.fontSize14,
+                                              //           ),
+                                              //           onRatingUpdate: (rating) {
+                                              //             print(rating);
+                                              //           },
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //     Flexible(
+                                              //       child: RichText(
+                                              //         text: TextSpan(
+                                              //           children: [
+                                              //             TextSpan(
+                                              //               text: "Open: ",
+                                              //               style: openSansRegular.copyWith(
+                                              //                   fontSize: Dimensions
+                                              //                       .fontSize12,
+                                              //                   color:
+                                              //                       greenColor), // Different color for "resend"
+                                              //             ),
+                                              //             TextSpan(
+                                              //               text: "10AM-7PM",
+                                              //               style: openSansRegular.copyWith(
+                                              //                   fontSize: Dimensions
+                                              //                       .fontSize13,
+                                              //                   color: Theme.of(
+                                              //                           context)
+                                              //                       .hintColor), // Different color for "resend"
+                                              //             ),
+                                              //           ],
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: Dimensions.paddingSize12,
-                                            left: Dimensions.paddingSizeDefault,
-                                            right: Dimensions.paddingSizeDefault),
-                                        child: CustomButtonWidget(
-                                          height: 40,
-                                          buttonText: 'Go To Service',
-                                          transparent: true,
-                                          isBold: false,
-                                          fontSize: Dimensions.fontSize14,
-                                          onPressed: () {
-                                            // Get.toNamed(
-                                                // RouteHelper.getSelectSlotRoute(
-                                                //     dataList[i].image,
-                                                //     dataList[i].branchName,
-                                                //     dataList[i].branchContactNo,
-                                                //     dataList[i]
-                                                //         .apiBranchId
-                                                //         .toString()));
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: Dimensions.paddingSize12,
+                                              left:
+                                                  Dimensions.paddingSizeDefault,
+                                              right: Dimensions
+                                                  .paddingSizeDefault),
+                                          child: CustomButtonWidget(
+                                            height: 40,
+                                            buttonText: 'Go To Service',
+                                            transparent: true,
+                                            isBold: false,
+                                            fontSize: Dimensions.fontSize14,
+                                            onPressed: () {
+                                              Get.toNamed(RouteHelper
+                                                  .getServiceDetailRoute(
+                                                      dataList2[i]
+                                                          .id
+                                                          .toString(),
+                                                      dataList2[i]
+                                                          .name
+                                                          .toString()));
+                                              // Get.toNamed(
+                                              // RouteHelper.getSelectSlotRoute(
+                                              //     dataList[i].image,
+                                              //     dataList[i].branchName,
+                                              //     dataList[i].branchContactNo,
+                                              //     dataList[i]
+                                              //         .apiBranchId
+                                              //         .toString()));
 
-                                            // Get.toNamed(
-                                            //   RouteHelper.getSelectSlotRoute(),
-                                            //   arguments: dataList[
-                                            //       i], // Pass the clinicModel as an argument
-                                            // );
-                                          },
+                                              // Get.toNamed(
+                                              //   RouteHelper.getSelectSlotRoute(),
+                                              //   arguments: dataList[
+                                              //       i], // Pass the clinicModel as an argument
+                                              // );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (BuildContext context, int index) =>
-                                  sizedBoxDefault(),
-                            ),
-                          sizedBoxDefault(),
-                        ],
-                      ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        sizedBoxDefault(),
+                              ),
+                            sizedBoxDefault(),
+                          ],
+                        ),
             ],
           );
         }),
