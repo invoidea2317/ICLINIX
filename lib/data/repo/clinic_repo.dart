@@ -45,11 +45,15 @@ class ClinicRepo {
     request.fields['message'] = description ?? '';
     request.fields['type'] = type ?? '';
 
-    for (var attachment in files) {
-      request.files.add(await http.MultipartFile.fromPath('file[]', attachment.path));
+   if(files.isNotEmpty) {
+     debugPrint('====> isEmpty: ${files.isEmpty}');
+      for (var attachment in files) {
+        request.files
+            .add(await http.MultipartFile.fromPath('file[]', attachment.path));
+      }
     }
-     debugPrint('====> API Call: $url\nHeader: $token');
-     debugPrint('====> API body: ${request.files.single.filename}');
+    debugPrint('====> API Call: $url\nHeader: $token');
+     // debugPrint('====> API body: ${request.files.single.filename}');
     request.headers.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
