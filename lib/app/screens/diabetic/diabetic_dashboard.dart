@@ -26,6 +26,7 @@ import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 import 'package:iclinix/utils/themes/light_theme.dart';
 import 'components/health_parameter_dialog.dart';
+import 'components/horizontalView.dart';
 import 'components/resources_component.dart';
 import 'diabetic_screen.dart';
 
@@ -548,7 +549,8 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           "") !=
                       "Expired")
                     AddHealthGoal(),
-
+                  sizedBoxDefault(),
+                  HorizontalviewDiabetic(),
                   // sizedBoxDefault(),
                   // const RoutineComponent(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??

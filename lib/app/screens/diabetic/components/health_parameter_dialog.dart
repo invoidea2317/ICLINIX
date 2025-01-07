@@ -204,6 +204,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                         ),
                         sizedBox10(),
                         BloodSugarInput(
+                          inputType: TextInputType.text,
                           title: 'Any Other Health Condition / Co-Morbidities',
                           hintText: 'Any Other Health Condition / Co-Morbidities',
                           controller: otherHealthController,

@@ -169,7 +169,7 @@ class PatientDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              'Your Appointment Details',
+                              'Write Your Concern Here',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,
@@ -333,7 +333,7 @@ class PatientDetailsScreen extends StatelessWidget {
                             ),
                             sizedBox10(),
                             Text(
-                              'Your Appointment Details',
+                              'Write Your Concern here',
                               style: openSansRegular.copyWith(
                                   fontSize: Dimensions.fontSize12
                               ), //,

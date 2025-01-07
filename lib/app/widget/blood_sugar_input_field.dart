@@ -8,6 +8,7 @@ class BloodSugarInput extends StatelessWidget {
   final String title;
   final String hintText;
   final String? suffixText;
+  final TextInputType? inputType;
   final TextEditingController controller;
   final String? Function(String?)? validator; // Validator parameter
   final ValueChanged<String>? onChanged; // Optional onChanged parameter
@@ -21,7 +22,7 @@ class BloodSugarInput extends StatelessWidget {
     this.suffixText,
     this.validator, // Initialize the validator parameter
     this.onChanged, // Initialize the onChanged parameter
-    this.readOnly = false, // Initialize readOnly with a default value of false
+    this.readOnly = false, this.inputType, // Initialize readOnly with a default value of false
   });
 
   @override
@@ -40,7 +41,7 @@ class BloodSugarInput extends StatelessWidget {
         // sizedBoxDefault(), // Assuming you have a custom SizedBox widget
         CustomTextField(
           readOnly: readOnly, // Pass the readOnly parameter to CustomTextField
-          inputType: TextInputType.number,
+          inputType: inputType ?? TextInputType.number,
           controller: controller, // Pass the controller here
           editText: true,
           hintText: hintText, // Use the provided hintText

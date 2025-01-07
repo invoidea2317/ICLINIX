@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,7 +101,10 @@ class ClinicController extends GetxController implements GetxService {
       Response response = await clinicRepo.getSearchList(query);
       if (response.statusCode == 200) {
         List<dynamic> responseData = response.body['searchResponse']['branch'];
+        List<dynamic> responseDataServices = response.body['searchResponse']['service'];
+        log("==gj=====> ${response.body['searchResponse']}");
         _searchList = responseData.map((json) => SearchModel.fromJson(json)).toList();
+        _serviceDetailsSearchData = responseDataServices.map((json) => ServicesModel.fromJson(json)).toList();
         print("Plans fetched successfully: $_searchList");
       } else {
         print("Error while fetching Data Error services list: ${response.statusCode} - ${response.statusText}");
@@ -121,6 +125,9 @@ class ClinicController extends GetxController implements GetxService {
 
   ServicesModel? _serviceDetails;
   ServicesModel? get serviceDetails => _serviceDetails;
+
+  List<ServicesModel>? _serviceDetailsSearchData;
+  List <ServicesModel>? get serviceDetailsSearchData => _serviceDetailsSearchData;
 
   Future<ServicesModel?> getServiceDetailsApi(String? id) async {
     _isServiceDetailsLoading = true;
