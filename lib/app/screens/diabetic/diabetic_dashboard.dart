@@ -461,7 +461,7 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                       ),
                     ),
                   ),
-                  sizedBoxDefault(),
+                  // sizedBoxDefault(),
                   // Row(
                   //   children: [
                   //     Flexible(
@@ -509,6 +509,8 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                               .expiredAt ??
                           "") !=
                       "Expired")
+                    sizedBoxDefault(),
+
                     if (!isListEmpty) ...[
                       const Text('Today’s Blood Sugar Parameters',
                           style: openSansSemiBold),
@@ -548,9 +550,12 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                               .expiredAt ??
                           "") !=
                       "Expired")
+                    // sizedBoxDefault(),
+                    HorizontalviewDiabetic(),
+                  sizedBoxDefault(),
                     AddHealthGoal(),
                   sizedBoxDefault(),
-                  HorizontalviewDiabetic(),
+                  // HorizontalviewDiabetic(),
                   // sizedBoxDefault(),
                   // const RoutineComponent(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??

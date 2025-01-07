@@ -41,8 +41,8 @@ Future<void>   init() async {
   Get.lazyPut(() => ClinicController(clinicRepo:  Get.find(), apiClient: Get.find()));
   Get.lazyPut(() => ProfileController(profileRepo: Get.find(), apiClient: Get.find()));
   Get.lazyPut(() => DiabeticController(diabeticRepo: Get.find(), apiClient: Get.find()));
-    Get.lazyPut(() => ChatController(clinicRepo: Get.find(), apiClient: Get.find()));
-    Get.lazyPut(() => SubsHistoryController(clinicRepo: Get.find(), apiClient: Get.find()));
+  Get.lazyPut(() => ChatController(clinicRepo: Get.find(), apiClient: Get.find()));
+  Get.lazyPut(() => SubsHistoryController(clinicRepo: Get.find(), apiClient: Get.find()));
 
 
 

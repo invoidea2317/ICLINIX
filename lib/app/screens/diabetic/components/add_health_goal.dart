@@ -56,7 +56,7 @@ class _AddHealthGoalState extends State<AddHealthGoal> {
       return Column(
         children: [
           CustomDecoratedContainer(
-            height: 200,
+            height: controller.healthGoalData?.length == 0?75:200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,7 +76,7 @@ class _AddHealthGoalState extends State<AddHealthGoal> {
                     ),
                   ],
                 ),
-               const SizedBox(height: 10,),
+                controller.healthGoalData?.length == 0?Container():const SizedBox(height: 10,),
                 // CustomDropdownField(
                 //   hintText: 'Goal',
                 //   selectedValue: controller.healthGoal?.isEmpty ?? true
@@ -113,7 +113,7 @@ class _AddHealthGoalState extends State<AddHealthGoal> {
                 //   showTitle: false,
                 // ),
                 Container(
-                  height: 120,
+                  height: controller.healthGoalData?.length == 0?0:120,
                   child: controller.healthGoalData?.length == 0
                       ? Center(
                     child: Text(
