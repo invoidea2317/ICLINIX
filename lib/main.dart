@@ -10,18 +10,31 @@ import 'package:iclinix/utils/app_constants.dart';
 import 'package:iclinix/utils/themes/light_theme.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import 'helper/local_notification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  const androidInitialization = AndroidInitializationSettings('@mipmap/ic_launcher');
-  const initializationSettings = InitializationSettings(android: androidInitialization);
+
+
+  // Initialize Flutter Local Notifications Plugin
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  const AndroidInitializationSettings androidInitializationSettings =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const DarwinInitializationSettings iosInitializationSettings = DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: androidInitializationSettings,
+    iOS: iosInitializationSettings,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
