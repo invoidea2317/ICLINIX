@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 import 'package:get/get.dart';
 import 'package:iclinix/app/screens/appointment/appointment_screen.dart';
@@ -88,13 +89,59 @@ class DashboardScreenState extends State<DashboardScreen> {
         child: SafeArea(
           child: Scaffold(
             key: _scaffoldKey,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Get.toNamed(RouteHelper.getChatRoute());
-              },
-              child: Image.asset(Images.icChat,
-              height: 28,width: 28,),
+            floatingActionButtonLocation: ExpandableFab.location,
+            floatingActionButton: ExpandableFab(
+              duration: const Duration(milliseconds: 100),
+              overlayStyle: const ExpandableFabOverlayStyle(
+                blur: 15
+              ),
+              openButtonBuilder: RotateFloatingActionButtonBuilder(
+                child: const Icon(Icons.message),
+                fabSize: ExpandableFabSize.regular,
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: const CircleBorder(),
+              ),
+              closeButtonBuilder: DefaultFloatingActionButtonBuilder(
+                child: const Icon(Icons.close),
+                fabSize: ExpandableFabSize.small,
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: const CircleBorder(),
+              ),
+              children: [
+                FloatingActionButton.extended(
+                  tooltip: "New Message",
+                  onPressed: () {
+                    Get.toNamed(RouteHelper.getChatRoute());
+                  },
+                  label: const Text("New Message", style: TextStyle(color: Colors.white)), // Title/Label
+                  icon: const Icon(Icons.add, color: Colors.white), // Icon
+                  backgroundColor: Theme.of(context).primaryColor, // Optional: Change the button color
+                ),
+
+                FloatingActionButton.extended(
+                  tooltip: "All Message",
+                  onPressed: () {
+                    Get.toNamed(RouteHelper.getMessageRoute());
+                  },
+                  label: const Text("All Message", style: TextStyle(color: Colors.white)), // Title/Label
+                  icon: const Icon(Icons.view_agenda, color: Colors.white), // Icon
+                  backgroundColor: Theme.of(context).primaryColor, // Optional: Change the button color
+                ),
+
+              //   FloatingActionButton(
+              //   tooltip: "New Message",
+              //   onPressed: () {
+              //     Get.toNamed(RouteHelper.getChatRoute());
+              //   },
+              //   child: const Icon(Icons.add,color: Colors.white,),
+              // ),
+            ],
             ),
+
+
+
             extendBody: true,
             resizeToAvoidBottomInset: false,
             bottomNavigationBar: GetBuilder<AuthController>(

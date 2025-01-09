@@ -34,20 +34,20 @@ class _VerticalBannerComponentsState extends State<VerticalBannerComponents> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Refer System Currently Unavailable.'),
-                ),
-              );
-            },
-            child: controller.isLoadingRefer?const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-              ],
-            ):Image.network(controller.referImage)),
-            sizedBoxDefault(),
+            // GestureDetector(onTap: () {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     const SnackBar(
+            //       content: Text('Refer System Currently Unavailable.'),
+            //     ),
+            //   );
+            // },
+            // child: controller.isLoadingRefer?const Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     CircularProgressIndicator(),
+            //   ],
+            // ):Image.network(controller.referImage)),
+            // sizedBoxDefault(),
             GestureDetector(
                 onTap: () {
               controller.selectBookingType(false);

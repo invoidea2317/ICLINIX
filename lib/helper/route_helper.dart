@@ -237,7 +237,8 @@ class RouteHelper {
         // Extract the appointment model from arguments
         final List<TicketReply> replies = Get.arguments['replies'];
         final String id = Get.arguments['id'];
-        return Messaging(replies: replies, id: id,);
+        final String subject = Get.arguments['subject'];
+        return Messaging(replies: replies, id: id, subject: subject,);
       },
     ),
   ];

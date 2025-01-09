@@ -165,18 +165,18 @@ class PatientDetailsScreen extends StatelessWidget {
                             print('Selected Patient ID: ${appointmentControl.selectedPatientId.value}');
                           },
                         ),
-                        sizedBox10(),
-                        Row(
-                          children: [
-                            Text(
-                              'Write Your Concern Here',
-                              style: openSansRegular.copyWith(
-                                  fontSize: Dimensions.fontSize12
-                              ), //,
-                            ),
-                          ],
-                        ),
-                        sizedBox10(),
+                        // sizedBox10(),
+                        // Row(
+                        //   children: [
+                        //     Text(
+                        //       'Write Your Concern Here',
+                        //       style: openSansRegular.copyWith(
+                        //           fontSize: Dimensions.fontSize12
+                        //       ), //,
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 15,),
                         CustomTextField(
                           isNumber: false,
                           inputType: TextInputType.streetAddress,
@@ -185,7 +185,7 @@ class PatientDetailsScreen extends StatelessWidget {
                           hintText: "Write Your Concern here.....",
                           validation: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your appointment Details';
+                              return 'Please enter Your Concern here';
                             }
                             return null;
                           },
@@ -229,9 +229,9 @@ class PatientDetailsScreen extends StatelessWidget {
                               controller: _lastnameController,
                               hintText: 'Last Name',
                             ),
-                            sizedBox10(),
+                            // SizedBox(height: ,),
                             CustomDropdownField(
-                              hintText: 'Gender',
+                              hintText: '',
                               selectedValue: appointmentControl.selectedGender.isEmpty
                                       ? null
                                       : appointmentControl.selectedGender,
@@ -244,14 +244,14 @@ class PatientDetailsScreen extends StatelessWidget {
                               },
                               showTitle: true, // Set to true to show title
                             ),
-                            sizedBox10(),
-                             Text(
-                              'Phone Number',
-                              style: openSansRegular.copyWith(
-                                  fontSize: Dimensions.fontSize12
-                              ), //,
-                            ),
-                            const SizedBox(height: 5),
+                            // sizedBox10(),
+                            //  Text(
+                            //   'Phone Number',
+                            //   style: openSansRegular.copyWith(
+                            //       fontSize: Dimensions.fontSize12
+                            //   ), //,
+                            // ),
+                            const SizedBox(height: 15),
                             CustomTextField(
                               maxLength: 10,
                               isNumber: true,
@@ -268,14 +268,15 @@ class PatientDetailsScreen extends StatelessWidget {
                                 return null;
                               },
                             ),
-                            sizedBox10(),
-                            Text(
-                              'Enter Your Address',
-                              style: openSansRegular.copyWith(
-                                  fontSize: Dimensions.fontSize12
-                              ), //,
-                            ),
-                            sizedBox10(),
+                            // sizedBox10(),
+                            // Text(
+                            //   'Enter Your Address',
+                            //   style: openSansRegular.copyWith(
+                            //       fontSize: Dimensions.fontSize12
+                            //   ), //,
+                            // ),
+                            // sizedBox1(),
+                            SizedBox(height: 15,),
                             CustomTextField(
                               isNumber: false,
                               inputType: TextInputType.text,
@@ -288,14 +289,14 @@ class PatientDetailsScreen extends StatelessWidget {
                                 return null;
                               },
                             ),
-                            sizedBox10(),
-                             Text(
-                              'DOB',
-                                style: openSansRegular.copyWith(
-                                    fontSize: Dimensions.fontSize12
-                                ),
-                            ),
-                            const SizedBox(height: 5),
+                            // sizedBox10(),
+                            //  Text(
+                            //   'DOB',
+                            //     style: openSansRegular.copyWith(
+                            //         fontSize: Dimensions.fontSize12
+                            //     ),
+                            // ),
+                            SizedBox(height: 15,),
                             CustomTextField(
                               controller: _dateController,
                               readOnly: true,
@@ -331,14 +332,14 @@ class PatientDetailsScreen extends StatelessWidget {
                               isCalenderIcon: true,
                               editText: true,
                             ),
-                            sizedBox10(),
-                            Text(
-                              'Write Your Concern here',
-                              style: openSansRegular.copyWith(
-                                  fontSize: Dimensions.fontSize12
-                              ), //,
-                            ),
-                            sizedBox10(),
+                            // sizedBox10(),
+                            // Text(
+                            //   'Write Your Concern here',
+                            //   style: openSansRegular.copyWith(
+                            //       fontSize: Dimensions.fontSize12
+                            //   ), //,
+                            // ),
+                            SizedBox(height: 15,),
                             CustomTextField(
                               isNumber: false,
                               inputType: TextInputType.streetAddress,

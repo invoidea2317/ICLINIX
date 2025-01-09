@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -40,18 +41,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 25,
-              ),
+              // SizedBox(
+              //   height: 25,
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   children: [
                     Expanded(
                       child: CustomDropdownField(
-                        selectedValue: chatControl.type == 1 ? "Question" : "Problem",
-                        hintText: 'Select Type',
-                        options: ["Question", "Problem", "Urgent"],
+                        selectedValue: chatControl.type == 1 ? "Question" : chatControl.type == 3?"Urgent":"Problem",
+                        hintText: '',
+                        options: const ["Question", "Problem", "Urgent"],
                         onChanged: (String? newValue) {
                           chatControl.setType(newValue == "Question"
                               ? 1
@@ -66,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               const SizedBox(
-                height: 25,
+                height: 15,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -76,14 +77,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: CustomTextField(
                         controller: subjectController,
                         showTitle: true,
-                        hintText: 'Subject',
+                        hintText: 'Topic',
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(
-                height: 25,
+                height: 15,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -93,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: CustomTextField(
                         maxLines: 3,
                         controller: description,
-                        showTitle: true,
+                        showTitle: false,
                         hintText: 'Description',
                       ),
                     ),
@@ -101,17 +102,29 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
               const SizedBox(
-                height: 25,
+                height: 15,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.attach_file),
-                      onPressed: _pickFiles,
-                    ),
-                  ],
+                child: GestureDetector(
+                  onTap: (){
+                    log("Message1");
+                    _pickFiles();
+                  },
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.attach_file),
+                        onPressed: _pickFiles,
+                      ),
+                      GestureDetector(
+                          onTap: (){
+                            _pickFiles();
+                            log("Message2");
+                          },
+                          child: Expanded(child: const Text("Add Attachment",)))
+                    ],
+                  ),
                 ),
               ),
               // Display selected files

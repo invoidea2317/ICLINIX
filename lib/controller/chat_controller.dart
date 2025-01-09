@@ -25,7 +25,7 @@ class ChatController extends GetxController implements GetxService {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  int _type = 0;
+  int _type = 2;
   int get type => _type;
   List<Ticket> _allTickets = [];
   List<Ticket> get allTickets => _allTickets;
@@ -146,7 +146,7 @@ class ChatController extends GetxController implements GetxService {
          // debugPrint("valueee==> ${allTickets}");
          // log("valueee==> ${tickets[0].ticketToReply![3]}",name: "replies==>");
          LoadingDialog.hideLoading();
-         Get.to(() => Messaging(replies: tickets,id: id,));
+         Get.to(() => Messaging(replies: tickets,id: id, subject: parsedResponse['data']["ticket"]['subject'],));
        } else {
          throw Exception("Expected 'data' to be a List, got ${parsedResponse['data'].runtimeType}");
        }

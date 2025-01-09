@@ -86,6 +86,16 @@ class ClinicController extends GetxController implements GetxService {
   List<SearchModel>? _searchList = [];
   List<SearchModel>? get searchList => _searchList;
 
+
+  List<Map<String,dynamic>>? _keywordList = [];
+  List<Map<String,dynamic>>? get keywordList => _keywordList;
+
+  void setKeywordList(List<Map<String,dynamic>> value){
+    _keywordList = [];
+    _keywordList = value;
+    update();
+  }
+
   bool _isSearchLoading = false;
   bool get isSearchLoading => _isSearchLoading;
 

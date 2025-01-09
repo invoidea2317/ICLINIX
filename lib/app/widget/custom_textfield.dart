@@ -83,14 +83,14 @@ class CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        widget.showTitle
-            ? Text(
-          widget.hintText,
-          style: openSansRegular.copyWith(
-            fontSize: Dimensions.fontSize12,
-          ), // Adjust style as needed
-        )
-            : const SizedBox(),
+        // widget.showTitle
+        //     ? Text(
+        //   widget.hintText,
+        //   style: openSansRegular.copyWith(
+        //     fontSize: Dimensions.fontSize12,
+        //   ), // Adjust style as needed
+        // )
+        //     : const SizedBox(),
         SizedBox(height: widget.showTitle ? 5 : 0),
         TextFormField(
           onTap: widget.onTap,

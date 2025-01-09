@@ -69,21 +69,22 @@ class SelectSlotScreen extends StatelessWidget {
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now().add(Duration(days: 1)),
-                          firstDate: DateTime.now().add(Duration(days: 1)),
-                          lastDate: DateTime(2100),
+                          initialDate: DateTime.now(), // Current date is the default selected date
+                          firstDate: DateTime.now(),  // Current date is selectable
+                          lastDate: DateTime(2100),   // Upper limit for date selection
                           selectableDayPredicate: (DateTime date) {
-                            // Return false for Sundays
+                            // Allow all days except Sundays
                             return date.weekday != DateTime.sunday;
                           },
                         );
                         if (pickedDate != null) {
+                          // Update the date in your controller or state management
                           appointmentControl.updateDate(
                             pickedDate,
                             clinicId.toString(),
                           );
                           _dateController.text =
-                              appointmentControl.formattedDate.toString();
+                              appointmentControl.formattedDate.toString(); // Update the text field
                         }
                       },
                       hintText: 'Select',
@@ -91,7 +92,6 @@ class SelectSlotScreen extends StatelessWidget {
                       editText: true,
                       suffixText: '',
                     ),
-
 
                     sizedBox20(),
                     appointmentControl.isSlotLoading
@@ -126,11 +126,14 @@ class SelectSlotScreen extends StatelessWidget {
                 if (_dateController.text.isNotEmpty &&
                     appointmentControl.selectedTime != null &&
                     appointmentControl.selectedTime!.isNotEmpty) {
+
                   Get.toNamed(RouteHelper.getAddPatientDetailsRoute(
                     _dateController.text,
                     appointmentControl.selectedTime.toString(),
                     clinicId,
                   ));
+
+
                 } else {
                   showCustomSnackBar('Please Add Appointment Date and Time');
                 }

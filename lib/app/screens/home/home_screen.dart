@@ -125,11 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ],
                                   ),
-                                  Row(
+                                  const Row(
                                     children: [
                                       // Image.asset(Images.icWhatsapp,height: Dimensions.fontSize24,),
                                       // sizedBoxW15(),
-                                      const NotificationButton()
+                                      NotificationButton()
                                       // Image.asset(Images.icNotification,height: Dimensions.fontSize24,),
 
                                     ],
@@ -195,9 +195,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child:
                     Column(
                       children: [
-                        BookAppointmentComponent(),
+                        const BookAppointmentComponent(),
                         NeedForHelpComponent(),
-                        VerticalBannerComponents(),
+                        const VerticalBannerComponents(),
                         sizedBox100(),
                       ],
                     ),

@@ -36,7 +36,7 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
     return GetBuilder<ChatController>(builder: (chatControl) {
       return Scaffold(
         appBar:  CustomAppBar(
-          title: "Your issues",
+          title: "Your Messages",
           isBackButtonExist: true,
           menuWidget: Row(
             children: [
@@ -70,7 +70,7 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
                           style: ListTileStyle.list,
                           splashColor: Colors.grey,
                           title: Text(
-                            chatControl.allTickets[index].ticketType!.type ??"" ,
+                            chatControl.allTickets[index].subject ??"" ,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           subtitle: const Text("Tap To Open Chat"),

@@ -26,8 +26,9 @@ import '../appointment/booking_successful_screen.dart';
 class Messaging extends StatefulWidget {
   final List<TicketReply>? replies;
   final String id;
+  final String subject;
 
-  Messaging({required this.replies, required this.id});
+  const Messaging({required this.replies, required this.id, required this.subject});
 
   @override
   State<Messaging> createState() => _MessagingState();
@@ -134,10 +135,10 @@ class _MessagingState extends State<Messaging> {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text("Chat"),
+            title: Text(widget.subject),
             actions: [
               IconButton(
-                icon: Icon(Icons.refresh),
+                icon: const Icon(Icons.refresh),
                 onPressed: () {
                   Get.find<ChatController>().getSingleTicketReplies(widget.id);
                 },
