@@ -54,6 +54,28 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
     }
   }
 
+  String durationType = "Months";
+  void _toggleDurationType(String value) {
+    if (value != durationType) {
+      setState(() {
+        durationType = value;
+
+        // Convert existing duration value between months and years
+        if (daibetesController.text.isNotEmpty) {
+          double duration = double.tryParse(daibetesController.text) ?? 0.0;
+          if (value == "Years") {
+            // Convert months to years
+            daibetesController.text = (duration / 12).toStringAsFixed(1);
+          } else {
+            // Convert years to months
+            daibetesController.text = (duration * 12).toStringAsFixed(0);
+          }
+        }
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -186,20 +208,41 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                           },
                         ),
                         sizedBox10(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Radio<String>(
+                              value: "Months",
+                              groupValue: durationType,
+                              onChanged: (value) => _toggleDurationType(value!),
+                            ),
+                            Text("Months", style: openSansRegular),
+                            Radio<String>(
+                              value: "Years",
+                              groupValue: durationType,
+                              onChanged: (value) => _toggleDurationType(value!),
+                            ),
+                            Text("Years", style: openSansRegular),
+                          ],
+                        ),
+                        sizedBox10(),
+                        // Duration of Diabetes Input
                         BloodSugarInput(
                           title: 'Duration of Diabetes',
-                          hintText: 'Duration of Diabetes',
+                          hintText: durationType == "Months"
+                              ? 'Duration in Months'
+                              : 'Duration in Years',
                           controller: daibetesController,
-                          suffixText: 'Months',
+                          suffixText: durationType,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter the duration of diabetes'; // Validation message
+                              return 'Please enter the duration of diabetes';
                             }
-                            final numericValue = int.tryParse(value);
+                            final numericValue = double.tryParse(value);
                             if (numericValue == null || numericValue < 0) {
-                              return 'Please enter a valid duration'; // Validation message for invalid number
+                              return 'Please enter a valid duration';
                             }
-                            return null; // Return null if valid
+                            return null;
                           },
                         ),
                         sizedBox10(),

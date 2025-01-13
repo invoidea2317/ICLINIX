@@ -25,9 +25,9 @@ class AddSugarLevelsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String fastingTest = isBp! ? 'Fasting Bp' : 'Fasting Blood Sugar';
-    String postPrandialTest =isBp! ? 'Fasting Bp' : 'Postprandial Sugars';
-    String PleaseSelectDropdown =isBp! ? 'Fasting Bp' : 'Please select Blood Sugar';
+    String fastingTest = isBp! ? 'Blood Pressure' : 'Fasting Blood Sugar';
+    String postPrandialTest =isBp! ? 'Blood Pressure' : 'Postprandial Sugars';
+    String PleaseSelectDropdown =isBp! ? 'Blood Pressure' : 'Please select Blood Sugar';
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize10),
@@ -49,7 +49,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(diabeticControl.showHistory == true ? isBp! ? 'Bp history' :'Sugar History' : isBp! ? 'Add Bp Data' : 'Add Sugar',
+                      Text(diabeticControl.showHistory == true ? isBp! ? 'Bp history' :'Sugar History' : isBp! ? 'Add Blood Pressure Data' : 'Add Sugar',
                       style: openSansSemiBold.copyWith(fontSize: Dimensions.fontSizeDefault,
                       color: Theme.of(context).cardColor),),
                       Row(
@@ -190,6 +190,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                             style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),
                           ),
                           BloodSugarInput(
+                            suffixText: isBp!?"mm/Hg":"mg/dL",
                             title: fastingTest,
                             hintText: fastingTest,
                             controller: _fastingSugarController,
@@ -231,6 +232,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                 style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),
                               ),
                               BloodSugarInput(
+                                suffixText: isBp!?"mm/Hg":"mg/dL",
                                 title: diabeticControl.selectedSugarCheck,
                                 hintText: diabeticControl.selectedSugarCheck,
                                 controller: _measuredValueController,
