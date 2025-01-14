@@ -107,6 +107,10 @@ class SearchScreen extends StatelessWidget {
         'sugar level check',
       ],
       'newMessages': [
+        "complain",
+        "ticket",
+        "support",
+        "support ticket",
         'new message',
         'new messages',
         'start new chat',
@@ -176,7 +180,7 @@ class SearchScreen extends StatelessWidget {
 
 
     Map<String, dynamic> _triggerActionBasedOnKeyword(String keyword) {
-      debugPrint("KeyWord: $keyword");
+      // debugPrint("KeyWord: $keyword");
       final lowerCaseKeyword = keyword.toLowerCase();
 
       // Helper function to get the best match from a group
@@ -243,7 +247,7 @@ class SearchScreen extends StatelessWidget {
 
 
     bool _isKeyword(String suggestion) {
-      debugPrint("suggestion: $suggestion");
+     // debugPrint("suggestion: $suggestion");
       return keywordGroups.values.any((group) => group.contains(suggestion.trim().toLowerCase()));
     }
 
@@ -292,7 +296,7 @@ class SearchScreen extends StatelessWidget {
                             clinicControl.getSearchList(value);
                           } else {
                           final values =  _triggerActionBasedOnKeyword(value);
-                          debugPrint("values==> ${values}");
+                        //  debugPrint("values==> ${values}");
                           List<Map<String,dynamic>> data = [];
                           data.add(values);
                           clinicControl.setKeywordList(data);

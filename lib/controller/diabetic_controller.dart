@@ -31,6 +31,9 @@ class DiabeticController extends GetxController implements GetxService {
 
   DiabeticController({required this.diabeticRepo, required this.apiClient});
 
+  bool _isHba1c = false;
+  bool get isHba1c => _isHba1c;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   @override
@@ -50,6 +53,10 @@ class DiabeticController extends GetxController implements GetxService {
   void updateDate(DateTime newDate) {
     selectedDate = newDate;
     formattedDate = SimpleDateConverter.formatDateToCustomFormat(selectedDate);
+    update(); // Trigger GetX update to refresh UI if necessary
+  }
+  void updateIsHba1c(bool value) {
+    _isHba1c = value;
     update(); // Trigger GetX update to refresh UI if necessary
   }
 
@@ -202,11 +209,11 @@ class DiabeticController extends GetxController implements GetxService {
   bool get isDailySugarCheckupLoading => _isDailySugarCheckupLoading;
 
   Future<void> addSugarApi(String? testType, String? checkingTime, String? fastingSugar, String? measuredValue, String? checkingDate,
-      String? hbA1c,) async {
+      String? hbA1c,String systolic,String diastolic) async {
     _isDailySugarCheckupLoading = true;
     update();
     Response response = await diabeticRepo.dailySugarCheckUpRepo(
-        testType, checkingTime,fastingSugar, measuredValue,checkingDate,hbA1c
+        testType, checkingTime,fastingSugar, measuredValue,checkingDate,hbA1c,systolic,diastolic
     );
     if(response.statusCode == 200) {
       var responseData = response.body;
@@ -323,7 +330,7 @@ class DiabeticController extends GetxController implements GetxService {
 
           if(data['subscription'] != null) {
             var subscriptionData = data["subscription"];
-            debugPrint("Subscription Data: ${data["subscription"]}");
+            //debugPrint("Subscription Data: ${data["subscription"]}");
             _subscriptionModel = SubscriptionModel.fromJson(subscriptionData);
           } else {
             print("No subscription key found in the response.");
@@ -388,11 +395,11 @@ class DiabeticController extends GetxController implements GetxService {
 
 
   Future<void> addHealthApi(String? height, String? weight, String? waistCircumference,
-      String? hipCircumference, String? duraDiabetes) async {
+      String? hipCircumference, String? year,String? month) async {
     _isDailySugarCheckupLoading = true;
     update();
     Response response = await diabeticRepo.healthCheckUpRepo(height,weight,waistCircumference,
-        hipCircumference,duraDiabetes,);
+        hipCircumference,year,month);
     if(response.statusCode == 200) {
       var responseData = response.body;
       if(responseData["msg"]  == "Data updated successfully") {

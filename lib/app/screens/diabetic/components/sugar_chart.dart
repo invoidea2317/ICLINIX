@@ -28,6 +28,7 @@ class SugarChart extends StatelessWidget {
           : isListEmpty
           ? const Center(child: Text('Add Sugar Level For Track Details'))
           : SfCartesianChart(
+        enableAxisAnimation: true,
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat('MM/dd'), // Show date only in MM/DD format
           intervalType: DateTimeIntervalType.days,
@@ -40,6 +41,12 @@ class SugarChart extends StatelessWidget {
             xValueMapper: (SugarData data, _) => data.date!,
             yValueMapper: (SugarData data, _) => data.value,
             dataLabelSettings: const DataLabelSettings(isVisible: true),
+            markerSettings: const MarkerSettings(
+              isVisible: true, // Enables dots at data points
+              shape: DataMarkerType.circle, // Shape of the dots
+              borderWidth: 2, // Border width of the dots
+              borderColor: Colors.blue, // Border color
+            ),
             color: Colors.blue,
           ),
           LineSeries<SugarData, DateTime>(
@@ -48,6 +55,12 @@ class SugarChart extends StatelessWidget {
             xValueMapper: (SugarData data, _) => data.date!,
             yValueMapper: (SugarData data, _) => data.value,
             dataLabelSettings: const DataLabelSettings(isVisible: true),
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              shape: DataMarkerType.circle,
+              borderWidth: 2,
+              borderColor: Colors.red,
+            ),
             color: Colors.red,
           ),
         ],

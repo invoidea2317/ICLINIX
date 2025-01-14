@@ -47,7 +47,7 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
 
 
   Future<void> downloadFile(String url, String fileName) async {
-    debugPrint("Downloading file from ${Get.find<AppointmentController>().apptId}");
+    // debugPrint("Downloading file from ${Get.find<AppointmentController>().apptId}");
     // await Permission.storage.request();
     if (await Permission.storage.isDenied) {
       await Permission.manageExternalStorage.request();

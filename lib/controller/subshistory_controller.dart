@@ -67,7 +67,7 @@ class SubsHistoryController extends GetxController implements GetxService {
 
         // Pass the subs to your setter or state
         setSubs(subsData);
-        debugPrint("valueee==> $subsData");
+        //debugPrint("valueee==> $subsData");
         LoadingDialog.hideLoading();
       } else {
         throw Exception(

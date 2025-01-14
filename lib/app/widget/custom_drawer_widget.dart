@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/screens/dashboard/dashboard_screen.dart';
+import 'package:iclinix/app/screens/privacy/privacy_policy.dart';
 import 'package:iclinix/app/widget/confirmation_dialog.dart';
 import 'package:iclinix/app/widget/custom_image_widget.dart';
 import 'package:iclinix/controller/auth_controller.dart';
@@ -231,7 +232,11 @@ debugPrint("Drawer Opened");
 
                 Align(alignment: Alignment.centerLeft,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.find<AuthController>().getPrivacyPolicy();
+
+
+                    },
                     child: Text(
                         "Privacy Policy",
                         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)

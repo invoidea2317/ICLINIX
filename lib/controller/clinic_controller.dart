@@ -146,11 +146,10 @@ class ClinicController extends GetxController implements GetxService {
 
     try {
       Response response = await clinicRepo.getServiceDetails(id);
-     debugPrint("========> ${response.body}");
       if (response.statusCode == 200) {
           Map<String, dynamic> responseData = response.body['serviceDetail'];
           _serviceDetails = ServicesModel.fromJson(responseData);
-          debugPrint("========> ${_serviceDetails?.bannerUrl}");
+
 
       } else {
         print("Failed to serviceDetail data: ${response.statusCode}");

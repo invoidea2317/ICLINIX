@@ -63,7 +63,7 @@ class _MessagingState extends State<Messaging> {
         });
       }
     } catch (e) {
-      debugPrint('Error picking files: $e');
+    //  debugPrint('Error picking files: $e');
     }
   }
 
@@ -114,7 +114,7 @@ class _MessagingState extends State<Messaging> {
       final response = await request.send();
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
-        debugPrint("Response: ${responseBody}");
+        //debugPrint("Response: ${responseBody}");
         final responseData = jsonDecode(responseBody);
         print("Success: ${responseData['message']}");
         if (responseData['message'] == "Reply added successfully") {

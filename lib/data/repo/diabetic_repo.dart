@@ -21,12 +21,18 @@ class DiabeticRepo {
       String? fastingSugar,
       String? measuredValue,
       String? checkingDate,
-      String? hbA1c,) {
+      String? hbA1c,
+      String? systolic,
+      String? diastolic
+
+      ) {
     return apiClient.postData(AppConstants.dailySugarCheckup, {
       'test_type' : testType,
       'checking_time' : checkingTime,
       'fasting_suger' : fastingSugar,
       'measured_value' : measuredValue,
+      "diastolic":diastolic,
+      "systolic": systolic,
       'test_date' : checkingDate,
       'hbA1c' : hbA1c,
     });
@@ -41,13 +47,16 @@ class DiabeticRepo {
 
   Future<Response> healthCheckUpRepo(String? height,
       String? weight,String? waistCircumference,
-      String? hipCircumference, String? duraDiabetes,) {
+      String? hipCircumference, String? year,String? month) {
     return apiClient.postData(AppConstants.healthCheckup,{
       'height' : height,
       'weight' :weight,
       'waist_circumference' : waistCircumference,
       'hip_circumference' : hipCircumference,
-      'dura_diabetes' :duraDiabetes,
+      'dura_diabetes' : {
+        "year":year,
+        "month":month,
+      }
     });
   }
 

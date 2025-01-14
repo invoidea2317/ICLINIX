@@ -343,8 +343,8 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                         dividerColor: Colors.grey,
                         unselectedLabelColor: Colors.grey,
                         onTap: (value){
-                          debugPrint("Tab Index: $value");
-                          debugPrint("Health Records Screen: ${_tabController.index}");
+                          //debugPrint("Tab Index: $value");
+                          //debugPrint("Health Records Screen: ${_tabController.index}");
                           setState(() {
                             index = value;
                           });
@@ -527,8 +527,8 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                           itemBuilder: (_, j) {
                                             final patientAppointment =
                                                 patientAppointments[j];
-                                            debugPrint(
-                                                'Patient Appointment: ${patientAppointments[j].branchName}');
+                                            //debugPrint(
+                                            //     'Patient Appointment: ${patientAppointments[j].branchName}');
                                             return patientAppointment.status == 1?null:Padding(
                                               padding: const EdgeInsets.symmetric(
                                                   horizontal: 8.0, vertical: 5),

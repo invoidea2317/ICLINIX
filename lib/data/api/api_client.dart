@@ -127,15 +127,15 @@ class ApiClient extends GetxService {
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      debugPrint('====> API Body: ${jsonEncode(body)}');
+      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      //debugPrint('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
       http.Response response = await http.post(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
-      debugPrint('====> API Response: [${response.statusCode}] $uri\n${response.body}');
+      //debugPrint('====> API Response: [${response.statusCode}] $uri\n${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -144,8 +144,8 @@ class ApiClient extends GetxService {
 
   Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, List<MultipartDocument> otherFile, {Map<String, String>? headers}) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      debugPrint('====> API Body: $body with ${multipartBody.length} and multipart ${otherFile.length}');
+      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      //debugPrint('====> API Body: $body with ${multipartBody.length} and multipart ${otherFile.length}');
       http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse(appBaseUrl+uri));
       request.headers.addAll(headers ?? _mainHeaders);
       for(MultipartBody multipart in multipartBody) {
@@ -185,8 +185,8 @@ class ApiClient extends GetxService {
 
   Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      debugPrint('====> API Body: $body');
+      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      //debugPrint('====> API Body: $body');
       http.Response response = await http.put(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),
@@ -200,7 +200,7 @@ class ApiClient extends GetxService {
 
   Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
     try {
-      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       http.Response response = await http.delete(
         Uri.parse(appBaseUrl+uri),
         headers: headers ?? _mainHeaders,
@@ -224,7 +224,7 @@ class ApiClient extends GetxService {
     }else if(response0.statusCode != 200 && response0.body == null) {
       response0 = const Response(statusCode: 0, statusText: noInternetMessage);
     }
-    debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
+    //debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
     return response0;
   }
 

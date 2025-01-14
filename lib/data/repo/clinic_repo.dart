@@ -46,13 +46,13 @@ class ClinicRepo {
     request.fields['type'] = type ?? '';
 
    if(files.isNotEmpty) {
-     debugPrint('====> isEmpty: ${files.isEmpty}');
+     //debugPrint('====> isEmpty: ${files.isEmpty}');
       for (var attachment in files) {
         request.files
             .add(await http.MultipartFile.fromPath('file[]', attachment.path));
       }
     }
-    debugPrint('====> API Call: $url\nHeader: $token');
+    //debugPrint('====> API Call: $url\nHeader: $token');
      // debugPrint('====> API body: ${request.files.single.filename}');
     request.headers.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
@@ -66,7 +66,7 @@ class ClinicRepo {
 
       // Convert the StreamedResponse to a Response
       final response = await http.Response.fromStream(streamedResponse);
-          debugPrint('====> API Response: ${response.body}');
+          //debugPrint('====> API Response: ${response.body}');
       return response;
     } catch (e) {
       print("Exception: $e");

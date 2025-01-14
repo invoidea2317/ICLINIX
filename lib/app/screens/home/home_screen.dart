@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               if (drawerKey.currentState?.isOpened ?? false) {
                 drawerKey.currentState?.closeDrawer();
-                  debugPrint("Drawer is closed");
+                  //debugPrint("Drawer is closed");
 
               }
             },

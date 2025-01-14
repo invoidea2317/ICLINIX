@@ -42,7 +42,7 @@ class SubscribedPatientModel {
   final String? weight;
   final String? waistCircumference;
   final String? hipCircumference;
-  final String? duraDiabetes;
+  final Map<String,dynamic>? duraDiabetes;
   final String? createdAt;
   final String? updatedAt;
 

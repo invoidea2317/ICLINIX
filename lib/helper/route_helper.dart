@@ -233,7 +233,7 @@ class RouteHelper {
     GetPage(
       name: replies,
       page: () {
-        debugPrint('Arguments: ${Get.arguments}');
+        //debugPrint('Arguments: ${Get.arguments}');
         // Extract the appointment model from arguments
         final List<TicketReply> replies = Get.arguments['replies'];
         final String id = Get.arguments['id'];

@@ -25,6 +25,8 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
   final hipController = TextEditingController();
   final bMIController = TextEditingController();
   final daibetesController = TextEditingController();
+  final yearController = TextEditingController();
+  final monthController = TextEditingController();
   final systolicBpController = TextEditingController();
   final diastolicBpController = TextEditingController();
   final bpDateController = TextEditingController();
@@ -39,6 +41,8 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<DiabeticController>().getSubscribedPatientDataApi();
+      yearController.text ="0";
+      monthController.text ="0";
     });
   }
 
@@ -91,7 +95,8 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
             heightController.text = controller.subscribedPatientData?.height?.toString() ?? '';
             waistController.text = controller.subscribedPatientData?.waistCircumference?.toString() ?? '';
             hipController.text = controller.subscribedPatientData?.hipCircumference?.toString() ?? '';
-            daibetesController.text = controller.subscribedPatientData?.duraDiabetes?.toString() ?? '';
+            yearController.text = controller.subscribedPatientData?.duraDiabetes?["year"].toString() ?? '';
+            monthController.text = controller.subscribedPatientData?.duraDiabetes?["month"].toString() ?? '';
             double weight = double.tryParse(weightController.text) ?? 0;
             double height = double.tryParse(heightController.text) ?? 0;
             String bmi = '';
@@ -208,39 +213,52 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                           },
                         ),
                         sizedBox10(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<String>(
-                              value: "Months",
-                              groupValue: durationType,
-                              onChanged: (value) => _toggleDurationType(value!),
-                            ),
-                            Text("Months", style: openSansRegular),
-                            Radio<String>(
-                              value: "Years",
-                              groupValue: durationType,
-                              onChanged: (value) => _toggleDurationType(value!),
-                            ),
-                            Text("Years", style: openSansRegular),
-                          ],
-                        ),
-                        sizedBox10(),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     Radio<String>(
+                        //       value: "Months",
+                        //       groupValue: durationType,
+                        //       onChanged: (value) => _toggleDurationType(value!),
+                        //     ),
+                        //     Text("Months", style: openSansRegular),
+                        //     Radio<String>(
+                        //       value: "Years",
+                        //       groupValue: durationType,
+                        //       onChanged: (value) => _toggleDurationType(value!),
+                        //     ),
+                        //     Text("Years", style: openSansRegular),
+                        //   ],
+                        // ),
+                        // sizedBox10(),
                         // Duration of Diabetes Input
                         BloodSugarInput(
-                          title: 'Duration of Diabetes',
-                          hintText: durationType == "Months"
-                              ? 'Duration in Months'
-                              : 'Duration in Years',
-                          controller: daibetesController,
-                          suffixText: durationType,
-                          validator: (value) {
+                          isDouble: true,
+                          titleSecond: 'Duration of Diabetes in Months',
+                          hintTextSecond: 'Duration in Months',
+
+                          controllerSecond: monthController,
+                          suffixTextSecond: "Month",
+                          validatorSecond: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter the duration of diabetes';
                             }
                             final numericValue = double.tryParse(value);
                             if (numericValue == null || numericValue < 0) {
                               return 'Please enter a valid duration';
+                            }
+                            return null;
+                          },
+                          title: 'Duration of Diabetes in Years', hintText: 'Duration in Year',
+                          controller: yearController,
+                          suffixText: "Year",
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the years';
+                            }
+                            final numericValue = int.tryParse(value);
+                            if (numericValue == null || numericValue < 0) {
+                              return 'Please enter a valid number of years';
                             }
                             return null;
                           },
@@ -293,7 +311,8 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                                       weightController.text,
                                       waistController.text,
                                       hipController.text,
-                                      daibetesController.text,
+                                     yearController.text,
+                                      monthController.text
                                     );
                                   }
                                 },

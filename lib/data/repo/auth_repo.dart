@@ -19,7 +19,7 @@ class AuthRepo {
 
   Future<bool> isLoggedIn() async {
     final String? isTokenAvailable = await sharedPreferences.getString(AppConstants.token);
-    debugPrint("isTokenAvailable: $isTokenAvailable");
+    //debugPrint("isTokenAvailable: $isTokenAvailable");
     return isTokenAvailable != null && isTokenAvailable.isNotEmpty;
   }
 
@@ -44,6 +44,10 @@ class AuthRepo {
 
   Future<Response> getUserData() async {
     return await apiClient.getData(AppConstants.myProfileUrl,method: 'GET');
+  }
+
+  Future<Response> getPrivacyPolicy() async {
+    return await apiClient.getData(AppConstants.privacyUrl,method: 'GET');
   }
 
 

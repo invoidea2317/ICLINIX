@@ -13,6 +13,15 @@ class BloodSugarInput extends StatelessWidget {
   final String? Function(String?)? validator; // Validator parameter
   final ValueChanged<String>? onChanged; // Optional onChanged parameter
   final bool readOnly; // Conditional readOnly parameter
+  final bool? isDouble;
+  final String? titleSecond;
+  final String? hintTextSecond;
+  final String? suffixTextSecond;
+  final TextInputType? inputTypeSecond;
+  final TextEditingController? controllerSecond;
+  final String? Function(String?)? validatorSecond; // Validator parameter
+  final ValueChanged<String>? onChangedSecond; // Optional onChanged parameter
+  final bool? readOnlySecond;
 
   BloodSugarInput({
     super.key,
@@ -22,7 +31,10 @@ class BloodSugarInput extends StatelessWidget {
     this.suffixText,
     this.validator, // Initialize the validator parameter
     this.onChanged, // Initialize the onChanged parameter
-    this.readOnly = false, this.inputType, // Initialize readOnly with a default value of false
+    this.readOnly = false,
+    this.inputType,
+    this.isDouble = false, this.titleSecond, this.hintTextSecond, this.suffixTextSecond, this.inputTypeSecond, this.controllerSecond, this.validatorSecond, this.onChangedSecond, this.readOnlySecond, // Initialize readOnly with a default value of false
+
   });
 
   @override
@@ -39,15 +51,65 @@ class BloodSugarInput extends StatelessWidget {
         //   ),
         // ),
         // sizedBoxDefault(), // Assuming you have a custom SizedBox widget
-        CustomTextField(
-          readOnly: readOnly, // Pass the readOnly parameter to CustomTextField
-          inputType: inputType ?? TextInputType.number,
-          controller: controller, // Pass the controller here
-          editText: true,
-          hintText: hintText, // Use the provided hintText
-          suffixText: suffixText ?? 'mg/dL',
-          validation: validator, // Pass the validator function to CustomTextField
-          onChanged: onChanged, // Pass the onChanged callback to CustomTextField
+        Visibility(
+          visible: !(isDouble ?? false),
+          child: CustomTextField(
+            readOnly: readOnly,
+            // Pass the readOnly parameter to CustomTextField
+            inputType: inputType ?? TextInputType.number,
+            controller: controller,
+            // Pass the controller here
+            editText: true,
+            hintText: hintText,
+            // Use the provided hintText
+            suffixText: suffixText ?? 'mg/dL',
+            validation: validator,
+            // Pass the validator function to CustomTextField
+            onChanged:
+                onChanged, // Pass the onChanged callback to CustomTextField
+          ),
+        ),
+        Visibility(
+          visible: (isDouble ?? false),
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  readOnly: readOnly,
+                  // Pass the readOnly parameter to CustomTextField
+                  inputType: inputType ?? TextInputType.number,
+                  controller: controller,
+                  // Pass the controller here
+                  editText: true,
+                  hintText: hintText,
+                  // Use the provided hintText
+                  suffixText: suffixText ?? 'mg/dL',
+                  validation: validator,
+                  // Pass the validator function to CustomTextField
+                  onChanged:
+                      onChanged, // Pass the onChanged callback to CustomTextField
+                ),
+              ),
+              SizedBox(width: 20,),
+              Expanded(
+                child: CustomTextField(
+                  readOnly: readOnlySecond ?? false,
+                  // Pass the readOnly parameter to CustomTextField
+                  inputType: inputTypeSecond ?? TextInputType.number,
+                  controller: controllerSecond,
+                  // Pass the controller here
+                  editText: true,
+                  hintText: hintTextSecond ?? "",
+                  // Use the provided hintText
+                  suffixText: suffixTextSecond ?? 'mg/dL',
+                  validation: validatorSecond,
+                  // Pass the validator function to CustomTextField
+                  onChanged:
+                  onChangedSecond, // Pass the onChanged callback to CustomTextField
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

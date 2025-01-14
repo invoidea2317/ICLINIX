@@ -66,7 +66,7 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
   final _referralController = TextEditingController();
 
   static String calculateTimeLeft(String expirationDate) {
-    debugPrint("Expiration date: $expirationDate");
+ //   debugPrint("Expiration date: $expirationDate");
     try {
       final DateTime expiry = DateTime.parse(expirationDate);
       final DateTime now = DateTime.now();
@@ -235,7 +235,7 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
                         name = widget.patientModel.planName.toString();
                       });
                     }
-                    debugPrint("Plan id: $planId");
+                //    debugPrint("Plan id: $planId");
                   },
                 ),
                 // CustomDecoratedContainer(
@@ -268,7 +268,7 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
                       buttonText: 'Purchase Plan',
                       onPressed: () {
                         LoadingDialog.showLoading();
-                        debugPrint("Plan id: rzorpay");
+                     //   debugPrint("Plan id: rzorpay");
                         appointmentControl.setPlanRenewing(true);
                         appointmentControl.purchasePlanApi(widget.patientId,planId,'razorpay',true);
                         // razorpayImplement(name, price, planId);
@@ -313,7 +313,7 @@ void razorpayImplement(String name, String price, String planId,String key,Strin
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   } catch (e) {
-    debugPrint('Error====>: ${e.toString()}');
+    //debugPrint('Error====>: ${e.toString()}');
     // _razorpay.clear();
   }
 }
@@ -328,19 +328,19 @@ void _handlePaymentSuccess(
     "historyId": Get.find<AppointmentController>().HistoryId,
     "paymentStatus": "success"
   };
-  debugPrint("requestBody==> $requestBody");
-  debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
+  // debugPrint("requestBody==> $requestBody");
+  // debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
   bool? value = Get.find<AppointmentController>().isPlanRenewing;
-  debugPrint("value==> $value");
+  //debugPrint("value==> $value");
   Get.find<AppointmentController>().postDataBackPlans(requestBody,Get.find<AppointmentController>().isPlanRenewing);
 }
 
 void _handlePaymentError(PaymentFailureResponse response) {
   // Do something when payment fails
-  debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
+  //debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
 }
 
 void _handleExternalWallet(ExternalWalletResponse response) {
   // Do something when an external wallet was selected
-  debugPrint('EVENT_EXTERNAL_WALLET: ${response.walletName}');
+  //debugPrint('EVENT_EXTERNAL_WALLET: ${response.walletName}');
 }

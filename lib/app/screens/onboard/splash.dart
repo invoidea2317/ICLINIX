@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final AuthController authController = Get.find<AuthController>();
     Timer(const Duration(seconds: 1), () async {
       await Get.find<AuthController>().isLoggedIn().then((value){
-        debugPrint("isTokenAvailable: $value");
+        //debugPrint("isTokenAvailable: $value");
         if (value ?? false) {
           Get.offNamed(RouteHelper.getDashboardRoute());
         } else {

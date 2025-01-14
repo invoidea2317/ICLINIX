@@ -77,7 +77,7 @@ class DiabeticScreen extends StatelessWidget {
                         //   ),
                         // );
                         appointControl.selectBookingType(true);
-                        debugPrint("value====>"+appointControl.bookingDiabeticType.toString());
+                        //debugPrint("value====>"+appointControl.bookingDiabeticType.toString());
                         Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
                       },
                     ),

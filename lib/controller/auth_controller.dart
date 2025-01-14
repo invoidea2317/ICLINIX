@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:iclinix/data/repo/auth_repo.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../app/screens/privacy/privacy_policy.dart';
 import '../app/widget/loading_widget.dart';
 import '../helper/date_converter.dart';
 
@@ -25,6 +27,7 @@ class AuthController extends GetxController implements GetxService {
   }
   DateTime? selectedDate;
   String? formattedDate;
+  String? privacyPolicy;
 
   void updateDate(DateTime newDate) {
     selectedDate = newDate;
@@ -84,6 +87,23 @@ class AuthController extends GetxController implements GetxService {
     }
     return Future.value(true);
   }
+
+  Future<void> getPrivacyPolicy() async {
+
+    _isLoginLoading = true;
+    update();
+    Response response = await authRepo.getPrivacyPolicy();
+
+    final dynamic data = jsonEncode(response.body.toString());
+    log(data,name: "Privacy Policy");
+    privacyPolicy = data['data']['content'];
+    Get.to(()=>PrivacyPolicy(privacyPolicy: privacyPolicy ?? ""));
+    _isLoginLoading = false;
+    update();
+  }
+
+
+
   void updateLastBackPressTime(DateTime time) {
     lastBackPressTime = time;
     update();
@@ -101,7 +121,7 @@ class AuthController extends GetxController implements GetxService {
 
   void updateBottomBarVisibility(bool isVisible) {
     _isShowingBottomBar = isVisible;
-    debugPrint('Bottom bar visibility: $isVisible');
+    //debugPrint('Bottom bar visibility: $isVisible');
     update();
   }
   Future<void> sendOtpApi(String? phoneNo) async {
@@ -152,7 +172,7 @@ class AuthController extends GetxController implements GetxService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final String? deviceToken = await prefs.getString('FCM');
-    debugPrint('Device token: $deviceToken');
+    //debugPrint('Device token: $deviceToken');
     try {
       // Create a multipart request
       var request = http.MultipartRequest(
@@ -166,7 +186,7 @@ class AuthController extends GetxController implements GetxService {
         'otp': otp,
         "device_token": deviceToken ?? "",
       });
-      debugPrint('Device token: ${request.fields}');
+      //debugPrint('Device token: ${request.fields}');
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200 || response.statusCode == 201) {
         String responseString = await response.stream.bytesToString();

@@ -89,7 +89,7 @@ class AppointmentController extends GetxController implements GetxService {
 
   void setPatientAppointment(dynamic val) {
     if(val.isEmpty){
-      debugPrint("empty");
+      //debugPrint("empty");
       _patientAppointments.clear;
     } else {
       _patientAppointments = val;
@@ -405,9 +405,9 @@ class AppointmentController extends GetxController implements GetxService {
     Response response = await appointmentRepo.bookAppointmentRepo(
        bookingDiabeticType,
         appointment, schedule_type, schedule_Id);
-    debugPrint('Response: ${response.body}');
+    //debugPrint('Response: ${response.body}');
     if (response.statusCode == 200) {
-      debugPrint("Appointment booked successfully: ${response.body}");
+      //debugPrint("Appointment booked successfully: ${response.body}");
       Get.find<AppointmentController>()
           .setOrderId(response.body['history_id'].toString());
       Get.find<AppointmentController>()
@@ -434,10 +434,10 @@ class AppointmentController extends GetxController implements GetxService {
     update();
     Response response = await appointmentRepo.getSlotList(branchId, date,bookingDiabeticType);
     List<dynamic> val = response.body['available_slots'];
-    // debugPrint('Length: ${val.length}');
+    // //debugPrint('Length: ${val.length}');
 
     if (response.statusCode == 200) {
-      debugPrint('Response: ${response.body}');
+      //debugPrint('Response: ${response.body}');
 
       timeSlot.clear();
       response.body['available_slots'].forEach((slot) {
@@ -505,7 +505,7 @@ class AppointmentController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         if (response.body != null && response.body['appointmentData'] != null) {
           List<dynamic> responseData = response.body['appointmentData'];
-          debugPrint("Response patient: ${response.body['appointmentData'][0]["patient_appointments"]}");
+          //debugPrint("Response patient: ${response.body['appointmentData'][0]["patient_appointments"]}");
           setAppointmentHistoryList(responseData
               .map((json) => AppointmentHistoryModel.fromJson(
                   json as Map<String, dynamic>))
@@ -583,7 +583,7 @@ class AppointmentController extends GetxController implements GetxService {
     Response response = await appointmentRepo.postDataBack(requestBody);
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('Response: $responseData');
+      //debugPrint('Response: $responseData');
       if (responseData['message'] == "Appointment Booked Successfully.") {
         setisPaymentSuccessFull(true);
         getInvoice(responseData['appt_id'].toString());
@@ -612,7 +612,7 @@ class AppointmentController extends GetxController implements GetxService {
     Response response = await appointmentRepo.postDataBackPlans(requestBody,renew);
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('Response: $responseData');
+      //debugPrint('Response: $responseData');
     await Get.find<AuthController>().userDataApi();
 
       Get.offAllNamed(RouteHelper.dashboard);
@@ -633,11 +633,11 @@ class AppointmentController extends GetxController implements GetxService {
   ) async {
     update();
     Response response = await appointmentRepo.getInvoice(Id);
-    debugPrint('Response: ${response.body['pdfLink']}');
+    //debugPrint('Response: ${response.body['pdfLink']}');
     setapptId(response.body['pdfLink']);
 
     if (response.statusCode == 200) {
-      // debugPrint('Response: ${response.body}');
+      // //debugPrint('Response: ${response.body}');
       // showCustomSnackBar('Booking Created Successfully');
     } else {
       update();
@@ -651,11 +651,11 @@ class AppointmentController extends GetxController implements GetxService {
   ) async {
     update();
     Response response = await appointmentRepo.getInvoiceSubs(Id);
-    debugPrint('Response: ${response.body['pdfLink']}');
+    //debugPrint('Response: ${response.body['pdfLink']}');
     setInvoiceId(response.body['pdfLink']);
 
     if (response.statusCode == 200) {
-      // debugPrint('Response: ${response.body}');
+      // //debugPrint('Response: ${response.body}');
       // showCustomSnackBar('Booking Created Successfully');
     } else {
       update();
@@ -670,11 +670,11 @@ class AppointmentController extends GetxController implements GetxService {
       ) async {
     update();
     Response response = await appointmentRepo.getPrescription(Id);
-    debugPrint('Response: ${response.body['pdfLink']}');
+    //debugPrint('Response: ${response.body['pdfLink']}');
     setPrescription(response.body['pdfLink']);
 
     if (response.statusCode == 200) {
-      // debugPrint('Response: ${response.body}');
+      // //debugPrint('Response: ${response.body}');
       // showCustomSnackBar('Booking Created Successfully');
     } else {
       update();
@@ -698,9 +698,9 @@ class AppointmentController extends GetxController implements GetxService {
         await appointmentRepo.purchasePlanApi(patientId, planId, paymentMethod,renew);
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('Response: ${response.body}');
+      //debugPrint('Response: ${response.body}');
       if (responseData["status"]) {
-        debugPrint("Plan purchased successfully: ${response.body}");
+        //debugPrint("Plan purchased successfully: ${response.body}");
         Get.find<AppointmentController>().setHistoryId(responseData["history_id"].toString());
         razorpayImplement(responseData["plan_name"], responseData["amount"].toString(), responseData["history_id"].toString(),responseData["key"], responseData["currency"], );
         // await Get.find<AuthController>().userDataApi();
@@ -739,7 +739,7 @@ class AppointmentController extends GetxController implements GetxService {
     await appointmentRepo.referApi();
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('refer====>: $responseData');
+      //debugPrint('refer====>: $responseData');
       setReferImage(responseData["banners"][0]["image"]);
       _isLoadingRefer = false;
       update();
@@ -779,7 +779,7 @@ class AppointmentController extends GetxController implements GetxService {
     await appointmentRepo.discountApi();
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('discount====>: $responseData');
+      //debugPrint('discount====>: $responseData');
       setDiscount(responseData["banners"][0]["image"]);
       // if (responseData["message"] == "Subscription created successfully") {
       //
@@ -816,7 +816,7 @@ class AppointmentController extends GetxController implements GetxService {
     await appointmentRepo.diabeticBannerApi();
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('diabetic====>: $responseData');
+      //debugPrint('diabetic====>: $responseData');
       setdiabeticBanner(responseData["banners"][0]["image"]);
       // if (responseData["message"] == "Subscription created successfully") {
       //
@@ -844,7 +844,7 @@ class AppointmentController extends GetxController implements GetxService {
       Response response = await appointmentRepo.cancellationApi(id);
 
       if (response.statusCode == 200) {
-       debugPrint('Response===>: ${response.body}');
+       //debugPrint('Response===>: ${response.body}');
          Get.find<AppointmentController>().getAppointmentHistory();
        _isCancellingLoading = false;
       } else {

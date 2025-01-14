@@ -205,7 +205,7 @@ void razorpayImplement(AppointmentModel appointment, String orderId,
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   } catch (e) {
-    debugPrint('Error====>: ${e.toString()}');
+    // debugPrint('Error====>: ${e.toString()}');
     // _razorpay.clear();
   }
 }
@@ -218,18 +218,18 @@ void _handlePaymentSuccess(
     "orderId": Get.find<AppointmentController>().orderId,
     "paymentStatus": "success"
   };
-  debugPrint("requestBody==> $requestBody");
-  debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
+  // debugPrint("requestBody==> $requestBody");
+  // debugPrint('EVENT_PAYMENT_SUCCESS: ${response.data}');
 
   Get.find<AppointmentController>().postDataBack(requestBody);
 }
 
 void _handlePaymentError(PaymentFailureResponse response) {
   // Do something when payment fails
-  debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
+ // debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
 }
 
 void _handleExternalWallet(ExternalWalletResponse response) {
   // Do something when an external wallet was selected
-  debugPrint('EVENT_EXTERNAL_WALLET: ${response.walletName}');
+  //debugPrint('EVENT_EXTERNAL_WALLET: ${response.walletName}');
 }

@@ -36,7 +36,7 @@ class AppointmentRepo {
 
   Future<Response> bookAppointmentRepo(bool bookingType,AppointmentModel appointment,String schedule_type, String schedule_Id) async {
     // Prepare the data to be sent in the request body
-    debugPrint('appointment.appointmentDate: ${bookingType}');
+    //debugPrint('appointment.appointmentDate: ${bookingType}');
     final requestBody = {
       "branchid": appointment.branchId,
       if (!appointment.includePatientType && appointment.patientId != null) 'patientId': appointment.patientId,
