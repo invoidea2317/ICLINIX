@@ -6,7 +6,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class PrivacyPolicy extends StatelessWidget {
   final String privacyPolicy;
-  const PrivacyPolicy({super.key, required this.privacyPolicy});
+  final String title;
+  const PrivacyPolicy({super.key, required this.privacyPolicy, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class PrivacyPolicy extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Privacy Policy'),
+        title:  Text('${title}'),
       ),
       body: WebViewWidget(
         controller: _controller,

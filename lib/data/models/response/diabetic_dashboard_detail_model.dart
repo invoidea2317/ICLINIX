@@ -2,7 +2,7 @@
 class SugarChartModel {
   final DateTime testDate;
   final int? postMeal;
-  final int fastingValues;
+  final int? fastingValues;
 
   SugarChartModel({
     required this.testDate,

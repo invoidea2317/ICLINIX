@@ -272,8 +272,8 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                         }
                                       },
                                       validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return PleaseSelectDropdown;
+                                        if(_fastingSugarController.text.isEmpty && (value ?? "").isEmpty){
+                                          return "Enter PostPrandial Sugars or Fasting Sugar";
                                         }
                                         return null;
                                       },
@@ -422,7 +422,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                                   if (_formKey.currentState!
                                                       .validate()) {
                                                     diabeticControl.addSugarApi(
-                                                      isBp! ? '1' : '0',
+                                                      isBp! ? 'bp' : 'sugar',
                                                       diabeticControl
                                                           .selectedSugarCheckValue
                                                           .toString(),
@@ -434,8 +434,8 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                                         diabeticControl.isHba1c?diabeticControl
                                                           .hbA1cPercentage.value
                                                           .toString():"",
-                                                      _systolicController.text,
-                                                      _diastolicController.text
+                                                        isBp! ? _systolicController.text : null,
+                                                        isBp! ? _diastolicController.text : null
                                                     );
                                                     diabeticControl.selectedSugarCheck = "";
                                                   }

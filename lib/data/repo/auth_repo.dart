@@ -46,8 +46,8 @@ class AuthRepo {
     return await apiClient.getData(AppConstants.myProfileUrl,method: 'GET');
   }
 
-  Future<Response> getPrivacyPolicy() async {
-    return await apiClient.getData(AppConstants.privacyUrl,method: 'GET');
+  Future<Response> getPrivacyPolicy(String data) async {
+    return await apiClient.getData(AppConstants.privacyUrl+"${data}",method: 'GET');
   }
 
 

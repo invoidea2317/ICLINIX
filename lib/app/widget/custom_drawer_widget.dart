@@ -233,9 +233,7 @@ debugPrint("Drawer Opened");
                 Align(alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {
-                      Get.find<AuthController>().getPrivacyPolicy();
-
-
+                      Get.find<AuthController>().getPrivacyPolicy("1");
                     },
                     child: Text(
                         "Privacy Policy",
@@ -245,7 +243,9 @@ debugPrint("Drawer Opened");
                 ),
                 Align(alignment: Alignment.centerLeft,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.find<AuthController>().getPrivacyPolicy("2");
+                    },
                     child: Text(
                         "Terms & Condition",
                         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18,color: Theme.of(context).cardColor)

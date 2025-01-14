@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/models/response/add_patient_model.dart';
@@ -26,6 +27,8 @@ class DiabeticRepo {
       String? diastolic
 
       ) {
+
+log("$checkingTime",name:"Checking Time");
     return apiClient.postData(AppConstants.dailySugarCheckup, {
       'test_type' : testType,
       'checking_time' : checkingTime,

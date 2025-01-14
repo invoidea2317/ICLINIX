@@ -75,7 +75,9 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
       return "Invalid date";
     }
   }
- bool isExpand = false;
+
+  bool  isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     log(
@@ -190,8 +192,8 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                             BorderRadius.circular(Dimensions.radius10)),
                     child: Padding(
                       padding:
-                          const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,vertical: 5),
-                      child: Column(
+                          const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                      child:  Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
@@ -200,183 +202,304 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                                 child: Text(
                                   diabeticControl.planDetails != null
                                       ? diabeticControl.planDetails!.planName
-                                          .toString()
+                                      .toString()
                                       : "N/A",
                                   style: openSansRegular.copyWith(
                                       color: Theme.of(context).cardColor,
                                       fontSize: Dimensions.fontSizeDefault),
                                 ),
                               ),
+
+
+
                               Visibility(
-                                visible: diabeticControl.planDetails != null,
-                                child: IconButton(
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    setState(() {
-                                      isExpand = !isExpand;
-                                    });
-                                  },
-                                  icon: Icon(Icons.keyboard_arrow_down_rounded),
-                                ),
-                              )
+                                visible: () {
+                                  final expiredAt = diabeticControl
+                                      .subscriptionModel?.expiredAt ??
+                                      "${DateTime.now()}";
+                                  int daysLeft = 0;
+
+                                  try {
+                                    final DateTime expiry =
+                                    DateTime.parse(expiredAt);
+                                    final DateTime now = DateTime.now();
+
+                                    if (expiry.isAfter(now)) {
+                                      daysLeft = expiry.difference(now).inDays;
+                                    } else {
+                                      daysLeft = 0; // Expired case
+                                    }
+                                  } catch (e) {
+                                    // Handle invalid date
+                                    debugPrint("Error parsing expiration date: $e");
+                                    daysLeft = 0; // Default fallback
+                                  }
+
+                                  return !(daysLeft <= 7);
+                                }(),
+                                child: IconButton(onPressed: (){
+                                  setState(() {
+                                    isExpanded = !isExpanded;
+                                  });
+                                }, icon: Icon(Icons.keyboard_arrow_down_rounded),color: Colors.white,),
+                              ),
+
+
+                              Visibility(
+                                visible: () {
+                                  final expiredAt = diabeticControl
+                                      .subscriptionModel?.expiredAt ??
+                                      "${DateTime.now()}";
+                                  int daysLeft = 0;
+
+                                  try {
+                                    final DateTime expiry =
+                                    DateTime.parse(expiredAt);
+                                    final DateTime now = DateTime.now();
+
+                                    if (expiry.isAfter(now)) {
+                                      daysLeft = expiry.difference(now).inDays;
+                                    } else {
+                                      daysLeft = 0; // Expired case
+                                    }
+                                  } catch (e) {
+                                    // Handle invalid date
+                                    debugPrint("Error parsing expiration date: $e");
+                                    daysLeft = 0; // Default fallback
+                                  }
+
+                                  return daysLeft <= 7;
+                                }(),
+                                child: ElevatedButton(
+                                    onPressed: () {
+
+                                      // debugPrint("${diabeticControl.subscriptionModel?.patientId}");
+                                      Get.to(() => PlanPaymentRenewScreen(
+                                        patientId: (diabeticControl.subscriptionModel?.patientId ??
+                                            "")
+                                            .toString(),
+                                        planId: ((diabeticControl.planDetails ??
+                                            PlanDetailsModel(
+                                                planId: 0,
+                                                planName: "",
+                                                price: 0,
+                                                discount: 0,
+                                                sellingPrice: 0,
+                                                discountType: 0,
+                                                duration: 9,
+                                                sortDesc: '',
+                                                description: '',
+                                                tagLine: '',
+                                                status: 0,
+                                                sortOrder: 0,
+                                                createdAt:
+                                                DateTime.now(),
+                                                updateAt:
+                                                DateTime.now(),
+                                                planResources: [],
+                                                subscription:
+                                                SubscriptionModel(
+                                                    subscriptionId:
+                                                    0,
+                                                    subscriptionUniqueId:
+                                                    '',
+                                                    patientId:
+                                                    0,
+                                                    userId: 0,
+                                                    planId: 0,
+                                                    subsHistoryId:
+                                                    0,
+                                                    status: 0,
+                                                    expiredAt:
+                                                    '',
+                                                    expired: 0,
+                                                    createdAt:
+                                                    '',
+                                                    updatedAt:
+                                                    '')))
+                                            .planId ??
+                                            "")
+                                            .toString(),
+                                        patientModel: diabeticControl
+                                            .planDetails ??
+                                            PlanDetailsModel(
+                                                planId: 0,
+                                                planName: "",
+                                                price: 0,
+                                                discount: 0,
+                                                sellingPrice: 0,
+                                                discountType: 0,
+                                                duration: 9,
+                                                sortDesc: '',
+                                                description: '',
+                                                tagLine: '',
+                                                status: 0,
+                                                sortOrder: 0,
+                                                createdAt: DateTime.now(),
+                                                updateAt: DateTime.now(),
+                                                planResources: [],
+                                                subscription: SubscriptionModel(
+                                                    subscriptionId: 0,
+                                                    subscriptionUniqueId: '',
+                                                    patientId: 0,
+                                                    userId: 0,
+                                                    planId: 0,
+                                                    subsHistoryId: 0,
+                                                    status: 0,
+                                                    expiredAt: '',
+                                                    expired: 0,
+                                                    createdAt: '',
+                                                    updatedAt: '')),
+                                      ));
+                                    },
+                                    child: const Text("Renew Plan")),
+                              ),
+
                             ],
                           ),
-                          diabeticControl.planDetails != null
-                              ? Visibility(
-                            visible: isExpand,
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                          diabeticControl.planDetails != null?Visibility(
+                            visible: isExpanded,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
                                     children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Name: ",
-                                              style: openSansRegular.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${Get.find<AppointmentController>().patientData.firstName} ${Get.find<AppointmentController>().patientData.lastName}",
-                                              // Provide a fallback value if planDetails is null
-                                              style: openSansSemiBold.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                          ],
+                                      TextSpan(
+                                        text: "First Name: ",
+                                        style: openSansRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
                                         ),
                                       ),
-                                      // RichText(
-                                      //   text: TextSpan(
-                                      //     children: [
-                                      //       TextSpan(
-                                      //         text: "Last Name: ",
-                                      //         style: openSansRegular.copyWith(
-                                      //           fontSize:
-                                      //               Dimensions.fontSizeDefault,
-                                      //           color: yellowColor,
-                                      //         ),
-                                      //       ),
-                                      //       TextSpan(
-                                      //         text:
-                                      //             "${Get.find<AppointmentController>().patientData.lastName}",
-                                      //         // Provide a fallback value if planDetails is null
-                                      //         style: const TextStyle(
-                                      //             fontSize:
-                                      //                 Dimensions.fontSizeDefault,
-                                      //             fontWeight: FontWeight.bold,
-                                      //             color: yellowColor),
-                                      //       ),
-                                      //     ],
-                                      //   ),
-                                      // ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Diabetic: ",
-                                              style: openSansRegular.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${Get.find<AppointmentController>().patientData.diabetesProblem == 0 ? "No" : "Yes"}",
-                                              // Provide a fallback value if planDetails is null
-                                              style: const TextStyle(
-                                                  fontSize:
-                                                      Dimensions.fontSizeDefault,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: yellowColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Eye Problem: ",
-                                              style: openSansRegular.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${Get.find<AppointmentController>().patientData.eyeProblem == 0 ? "No" : "Yes"}",
-                                              // Provide a fallback value if planDetails is null
-                                              style: const TextStyle(
-                                                  fontSize:
-                                                      Dimensions.fontSizeDefault,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: yellowColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "BP Problem: ",
-                                              style: openSansRegular.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "${Get.find<AppointmentController>().patientData.bloodPressureProblem == 0 ? "No" : "Yes"}",
-                                              // Provide a fallback value if planDetails is null
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: yellowColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Your Plan Expires in ",
-                                              style: openSansRegular.copyWith(
-                                                fontSize: Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: diabeticControl.planDetails != null
-                                                  ? calculateTimeLeft(diabeticControl
-                                                  .subscriptionModel!.expiredAt ??
-                                                  "")
-                                                  : "N/A",
-                                              // Provide a fallback value if planDetails is null
-                                              style: openSansSemiBold.copyWith(
-                                                fontSize: Dimensions.fontSizeDefault,
-                                                color: yellowColor,
-                                              ),
-                                            ),
-                                          ],
+                                      TextSpan(
+                                        text: "${Get.find<AppointmentController>().patientData.firstName}",
+                                        // Provide a fallback value if planDetails is null
+                                        style: openSansSemiBold.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
                                         ),
                                       ),
                                     ],
                                   ),
-                              )
-                              : Container(),
-
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Last Name: ",
+                                        style: openSansRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "${Get.find<AppointmentController>().patientData.lastName}",
+                                        // Provide a fallback value if planDetails is null
+                                        style: TextStyle(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Diabetic: ",
+                                        style: openSansRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "${Get.find<AppointmentController>().patientData.diabetesProblem == 0?"No":"Yes"}",
+                                        // Provide a fallback value if planDetails is null
+                                        style: TextStyle(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Eye Problem: ",
+                                        style: openSansRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "${Get.find<AppointmentController>().patientData.eyeProblem == 0?"No":"Yes"}",
+                                        // Provide a fallback value if planDetails is null
+                                        style: TextStyle(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "BP Problem: ",
+                                        style: openSansRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: yellowColor,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "${Get.find<AppointmentController>().patientData.bloodPressureProblem == 0?"No":"Yes"}",
+                                        // Provide a fallback value if planDetails is null
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: yellowColor
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ):Container(),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Your Plan Expires in ",
+                                  style: openSansRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    color: yellowColor,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: diabeticControl.planDetails != null
+                                      ? calculateTimeLeft(diabeticControl
+                                      .subscriptionModel!
+                                      .expiredAt ??
+                                      "")
+                                      : "N/A",
+                                  // Provide a fallback value if planDetails is null
+                                  style: openSansSemiBold.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    color: yellowColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -431,27 +554,27 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                       "Expired")
                     sizedBoxDefault(),
 
-                  if (!isListEmpty) ...[
-                    const Text('Today’s Blood Sugar Parameters',
-                        style: openSansSemiBold),
-                    sizedBoxDefault(),
-                    SugarChart(),
-                  ],
+                    if (!isListEmpty) ...[
+                      const Text('Today’s Blood Sugar Parameters',
+                          style: openSansSemiBold),
+                      sizedBoxDefault(),
+                      SugarChart(),
+                    ],
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
-                                  SubscriptionModel(
-                                      subscriptionId: 0,
-                                      subscriptionUniqueId: "",
-                                      patientId: 0,
-                                      userId: 0,
-                                      planId: 0,
-                                      subsHistoryId: 0,
-                                      status: 0,
-                                      expiredAt: "2024-12-19",
-                                      expired: 0,
-                                      createdAt: "",
-                                      updatedAt: ""))
-                              .expiredAt ??
-                          "") !=
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
                       "Expired")
                     sizedBoxDefault(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
@@ -471,89 +594,89 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           "") !=
                       "Expired")
                     // sizedBoxDefault(),
-                    const HorizontalviewDiabetic(),
+                    HorizontalviewDiabetic(),
                   sizedBoxDefault(),
-                  AddHealthGoal(),
+                    AddHealthGoal(),
                   sizedBoxDefault(),
                   // HorizontalviewDiabetic(),
                   // sizedBoxDefault(),
                   // const RoutineComponent(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
-                                  SubscriptionModel(
-                                      subscriptionId: 0,
-                                      subscriptionUniqueId: "",
-                                      patientId: 0,
-                                      userId: 0,
-                                      planId: 0,
-                                      subsHistoryId: 0,
-                                      status: 0,
-                                      expiredAt: "2024-12-19",
-                                      expired: 0,
-                                      createdAt: "",
-                                      updatedAt: ""))
-                              .expiredAt ??
-                          "") !=
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
                       "Expired")
                     sizedBoxDefault(),
                   // const CurrentMedicationComponent(),
                   // sizedBoxDefault(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
-                                  SubscriptionModel(
-                                      subscriptionId: 0,
-                                      subscriptionUniqueId: "",
-                                      patientId: 0,
-                                      userId: 0,
-                                      planId: 0,
-                                      subsHistoryId: 0,
-                                      status: 0,
-                                      expiredAt: "2024-12-19",
-                                      expired: 0,
-                                      createdAt: "",
-                                      updatedAt: ""))
-                              .expiredAt ??
-                          "") !=
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
                       "Expired")
                     const ResourcesComponent(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
-                                  SubscriptionModel(
-                                      subscriptionId: 0,
-                                      subscriptionUniqueId: "",
-                                      patientId: 0,
-                                      userId: 0,
-                                      planId: 0,
-                                      subsHistoryId: 0,
-                                      status: 0,
-                                      expiredAt: "2024-12-19",
-                                      expired: 0,
-                                      createdAt: "",
-                                      updatedAt: ""))
-                              .expiredAt ??
-                          "") !=
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") !=
                       "Expired")
                     sizedBoxDefault(),
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
-                                  SubscriptionModel(
-                                      subscriptionId: 0,
-                                      subscriptionUniqueId: "",
-                                      patientId: 0,
-                                      userId: 0,
-                                      planId: 0,
-                                      subsHistoryId: 0,
-                                      status: 0,
-                                      expiredAt: "2024-12-19",
-                                      expired: 0,
-                                      createdAt: "",
-                                      updatedAt: ""))
-                              .expiredAt ??
-                          "") ==
+                      SubscriptionModel(
+                          subscriptionId: 0,
+                          subscriptionUniqueId: "",
+                          patientId: 0,
+                          userId: 0,
+                          planId: 0,
+                          subsHistoryId: 0,
+                          status: 0,
+                          expiredAt: "2024-12-19",
+                          expired: 0,
+                          createdAt: "",
+                          updatedAt: ""))
+                      .expiredAt ??
+                      "") ==
                       "Expired")
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         EmptyDataWidget(
-                          text: 'Nothing Available',
-                          // Change this text if needed
+                          text:
+                          'Nothing Available', // Change this text if needed
                           image: Images.icEmptyDataHolder,
                           fontColor: Theme.of(context).disabledColor,
                         ),

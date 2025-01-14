@@ -88,16 +88,26 @@ class AuthController extends GetxController implements GetxService {
     return Future.value(true);
   }
 
-  Future<void> getPrivacyPolicy() async {
+  Future<void> getPrivacyPolicy(String value) async {
 
     _isLoginLoading = true;
     update();
-    Response response = await authRepo.getPrivacyPolicy();
+    Response response = await authRepo.getPrivacyPolicy(value);
 
-    final dynamic data = jsonEncode(response.body.toString());
-    log(data,name: "Privacy Policy");
-    privacyPolicy = data['data']['content'];
-    Get.to(()=>PrivacyPolicy(privacyPolicy: privacyPolicy ?? ""));
+    final Map<String, dynamic> data = response.body['data'] as Map<String, dynamic>;    log(data.toString(),name: "Privacy Policy");
+
+      privacyPolicy = data['content'].toString();
+      if(value == "1") {
+      Get.to(() => PrivacyPolicy(
+            privacyPolicy: privacyPolicy ?? "",
+            title: "Privacy Policy",
+          ));
+    } else {
+        Get.to(() => PrivacyPolicy(
+          privacyPolicy: privacyPolicy ?? "",
+          title: "Terms & Condition",
+        ));
+      }
     _isLoginLoading = false;
     update();
   }

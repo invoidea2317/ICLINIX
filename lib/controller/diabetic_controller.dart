@@ -97,10 +97,10 @@ class DiabeticController extends GetxController implements GetxService {
 
 // This will map string values to corresponding numeric values
   final Map<String, int> sugarCheckMapping = {
-    'Post Breakfast': 2,
-    'Post Lunch': 3,
-    'Post Dinner': 4,
-    'Bedtime': 5,
+    'Post Breakfast': 1,
+    'Post Lunch': 2,
+    'Post Dinner': 3,
+    'Bedtime': 4,
   };
 
   int selectedSugarCheckValue = 0; // Initialize numeric variable for the selected value
@@ -209,7 +209,7 @@ class DiabeticController extends GetxController implements GetxService {
   bool get isDailySugarCheckupLoading => _isDailySugarCheckupLoading;
 
   Future<void> addSugarApi(String? testType, String? checkingTime, String? fastingSugar, String? measuredValue, String? checkingDate,
-      String? hbA1c,String systolic,String diastolic) async {
+      String? hbA1c,String? systolic,String? diastolic) async {
     _isDailySugarCheckupLoading = true;
     update();
     Response response = await diabeticRepo.dailySugarCheckUpRepo(

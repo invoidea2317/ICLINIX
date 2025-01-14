@@ -16,7 +16,7 @@ class SugarChart extends StatelessWidget {
 
       // Convert to data source for fasting and post-meal values
       final fastingData = sugarList?.map((sugar) {
-        return SugarData(date: sugar.testDate, value: sugar.fastingValues.toDouble());
+        return SugarData(date: sugar.testDate, value: (sugar.fastingValues ?? 0).toDouble());
       }).toList();
 
       final postMealData = sugarList?.where((sugar) => sugar.postMeal != null).map((sugar) {
