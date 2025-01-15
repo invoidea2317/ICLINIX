@@ -9,35 +9,159 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:get/get.dart';
 import 'package:iclinix/utils/styles.dart';
 
+import '../../../../data/models/response/diabetic_dashboard_detail_model.dart';
 import '../../../widget/custom_dropdown_field.dart';
+import '../../dashboard/dashboard_screen.dart';
 
-class AddSugarLevelsDialog extends StatelessWidget {
+class AddSugarLevelsDialog extends StatefulWidget {
   final bool? isBp;
 
   AddSugarLevelsDialog({super.key, this.isBp = false});
 
+  @override
+  State<AddSugarLevelsDialog> createState() => _AddSugarLevelsDialogState();
+}
+
+class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
   final _fastingSugarController = TextEditingController();
+
   final _diastolicController = TextEditingController();
+
   final _systolicController = TextEditingController();
+
   final _measuredValueController = TextEditingController();
+
   final afterLunchController = TextEditingController();
+
   final afterDinnerController = TextEditingController();
+
   final randomEntryController = TextEditingController();
+
   final _dateController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  String fastingTest = 'Fasting Blood Sugar';
+  String postPrandialTest = 'Postprandial Sugars';
+  String PleaseSelectDropdown = 'Please select Blood Sugar';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fastingTest = widget.isBp! ? 'Blood Pressure' : 'Fasting Blood Sugar';
+     postPrandialTest = widget.isBp! ? 'Blood Pressure' : 'Postprandial Sugars';
+     PleaseSelectDropdown =
+    widget.isBp! ? 'Blood Pressure' : 'Please select Blood Sugar';
+
+    if((widget.isBp ?? false)){
+      _diastolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].diastolic;
+      _systolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].systolic;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Get.find<DiabeticController>().updateDate(DateTime.parse((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).testDate));
+          _dateController.text = Get.find<DiabeticController>().formattedDate!;
+        }
+      });
+
+    } else {
+      _fastingSugarController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].fastingSugar;
+      _measuredValueController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].measuredValue;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Get.find<DiabeticController>().updateDate(DateTime.parse((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).testDate));
+          _dateController.text = Get.find<DiabeticController>().formattedDate!;
+        }
+      });
+    }
+  }
+
+
+  Widget whichWidget(DiabeticController controller){
+    if(controller.sugarChartList!.monthlySugarValues.isNotEmpty && !(widget.isBp ?? false)){
+      return SizedBox(
+        height: 500,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.sugarChartList!.monthlySugarValues.length,
+          itemBuilder: (context, index) {
+            final checkup = controller.sugarChartList!.monthlySugarValues[index];
+            String heading;
+            switch (int.parse(checkup.measureValues.isEmpty?"5":checkup.measureValues[0].checkingTime)) {
+              case 1:
+                heading = "Before Meal";
+                break;
+              case 2:
+                heading = "After Breakfast";
+                break;
+              case 3:
+                heading = "After Lunch";
+                break;
+              case 4:
+                heading = "After Dinner";
+                break;
+              case 5:
+                heading = "Random Entry";
+                break;
+              default:
+                heading = "Unknown";
+            }
+            return ListTile(
+              title: Text(
+                  "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      "Fasting Sugar: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].fastingSugar} mg/dL"),
+                  Text(
+                      "$heading: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].measuredValue} mg/dL"),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    if(controller.bpChartList!.monthlySugarValues.isNotEmpty && (widget.isBp ?? false)) {
+      return SizedBox(
+        height: 500,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.bpChartList!.monthlySugarValues.length,
+          itemBuilder: (context, index) {
+            final checkup = controller.bpChartList!.monthlySugarValues[index];
+            String heading;
+            return ListTile(
+              title: Text(
+                  "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      "Diastolic: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].diastolic} mmHg"),
+                  Text(
+                      "Systolic: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].systolic} mmHg"),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return const Center(
+        child: Text("No sugar history available"));
+  }
   @override
   Widget build(BuildContext context) {
-    String fastingTest = isBp! ? 'Blood Pressure' : 'Fasting Blood Sugar';
-    String postPrandialTest = isBp! ? 'Blood Pressure' : 'Postprandial Sugars';
-    String PleaseSelectDropdown =
-        isBp! ? 'Blood Pressure' : 'Please select Blood Sugar';
+
 
     return Dialog(
       insetPadding:
           const EdgeInsets.symmetric(horizontal: Dimensions.paddingSize10),
       child: GetBuilder<DiabeticController>(builder: (diabeticControl) {
-        _dateController.text = diabeticControl.formattedDate!;
+        _dateController.text = Get.find<DiabeticController>().formattedDate!;
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
@@ -56,10 +180,10 @@ class AddSugarLevelsDialog extends StatelessWidget {
                     children: [
                       Text(
                         diabeticControl.showHistory == true
-                            ? isBp!
+                            ? widget.isBp!
                                 ? 'Bp history'
                                 : 'Sugar History'
-                            : isBp!
+                            : widget.isBp!
                                 ? 'Add Blood Pressure Data'
                                 : 'Add Sugar',
                         style: openSansSemiBold.copyWith(
@@ -70,7 +194,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              await diabeticControl.getSugarCheckUpHistory();
+                              // await diabeticControl.getSugarCheckUpHistory();
                               diabeticControl.toggleShowHistory(true);
                             },
                             child: Container(
@@ -119,66 +243,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                 Column(
                   children: [
                     diabeticControl.showHistory
-                        ? diabeticControl.isDailySugarCheckupLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : diabeticControl.sugarCheckUpList!.isNotEmpty
-                                ? SizedBox(
-                                    height: 500,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: diabeticControl
-                                          .sugarCheckUpList!
-                                          .where((checkup) =>
-                                              (isBp! &&
-                                                  checkup.testType ==
-                                                      1) || // Show test_type 1 for BP
-                                              (!isBp! &&
-                                                  checkup.testType ==
-                                                      0)) // Show test_type 0 for sugar
-                                          .toList()
-                                          .length,
-                                      itemBuilder: (context, index) {
-                                        final checkup = diabeticControl
-                                            .sugarCheckUpList!
-                                            .where((checkup) =>
-                                                (isBp! &&
-                                                    checkup.testType ==
-                                                        1) || // Show test_type 1 for BP
-                                                (!isBp! &&
-                                                    checkup.testType ==
-                                                        0)) // Show test_type 0 for sugar
-                                            .toList()[index];
-                                        String heading;
-                                        switch (checkup.checkingTime) {
-                                          case 1:
-                                            heading = "Before Meal";
-                                            break;
-                                          case 2:
-                                            heading = "After Breakfast";
-                                            break;
-                                          case 3:
-                                            heading = "After Lunch";
-                                            break;
-                                          case 4:
-                                            heading = "After Dinner";
-                                            break;
-                                          case 5:
-                                            heading = "Random Entry";
-                                            break;
-                                          default:
-                                            heading = "Unknown";
-                                        }
-                                        return ListTile(
-                                          title: Text(
-                                              "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
-                                          subtitle: Text(
-                                              "$heading: ${checkup.measuredValue ?? 'N/A'}"),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : const Center(
-                                    child: Text("No sugar history available"))
+                        ?  whichWidget(diabeticControl)
                         : Form(
                             key: _formKey,
                             child: Column(
@@ -229,15 +294,16 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                         fontSize: Dimensions.fontSize12),
                                   ),
                                   BloodSugarInput(
-                                    suffixText: isBp! ? "mmHg" : "mg/dL",
-                                    title: isBp! ? "Diastolic " : fastingTest,
+                                      maxLength: 3,
+                                    suffixText: widget.isBp! ? "mmHg" : "mg/dL",
+                                    title: widget.isBp! ? "Diastolic " : fastingTest,
                                     hintText:
-                                        isBp! ? "Diastolic " : fastingTest,
-                                    controller: isBp!
+                                        widget.isBp! ? "Diastolic " : fastingTest,
+                                    controller: widget.isBp!
                                         ? _diastolicController
                                         : _fastingSugarController,
                                     validator: (value) {
-                                      if(isBp!) {
+                                      if(widget.isBp!) {
                                         if (value == null || value.isEmpty) {
                                           return 'Please Enter a Value';
                                         }
@@ -251,7 +317,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                   ),
                                   sizedBox10(),
                                   Visibility(
-                                    visible: !isBp!,
+                                    visible: !widget.isBp!,
                                     child: CustomDropdownField(
                                       hintText: postPrandialTest,
                                       selectedValue: diabeticControl
@@ -282,8 +348,9 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                     ),
                                   ),
                                   Visibility(
-                                      visible: isBp!,
+                                      visible: widget.isBp!,
                                       child: BloodSugarInput(
+                                        maxLength: 3,
                                         suffixText: "mmHg",
                                         title: "Systolic ",
                                         hintText: "Systolic ",
@@ -310,8 +377,9 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                                       Dimensions.fontSize12),
                                             ),
                                             BloodSugarInput(
+                                              maxLength: 3,
                                               suffixText:
-                                                  isBp! ? "mm/Hg" : "mg/dL",
+                                                  widget.isBp! ? "mm/Hg" : "mg/dL",
                                               title: diabeticControl
                                                   .selectedSugarCheck,
                                               hintText: diabeticControl
@@ -326,7 +394,7 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                  isBp!
+                                  widget.isBp!
                                       ? SizedBox()
                                       : Column(
                                           crossAxisAlignment:
@@ -422,22 +490,29 @@ class AddSugarLevelsDialog extends StatelessWidget {
                                                   if (_formKey.currentState!
                                                       .validate()) {
                                                     diabeticControl.addSugarApi(
-                                                      isBp! ? 'bp' : 'sugar',
+                                                      widget.isBp! ? 'bp' : 'sugar',
                                                       diabeticControl
                                                           .selectedSugarCheckValue
                                                           .toString(),
                                                       _fastingSugarController
+                                                          .text == "0.0"?null:_fastingSugarController
                                                           .text,
                                                       _measuredValueController
+                                                          .text == "0.0"?null:_measuredValueController
                                                           .text,
                                                       _dateController.text,
                                                         diabeticControl.isHba1c?diabeticControl
                                                           .hbA1cPercentage.value
                                                           .toString():"",
-                                                        isBp! ? _systolicController.text : null,
-                                                        isBp! ? _diastolicController.text : null
-                                                    );
-                                                    diabeticControl.selectedSugarCheck = "";
+                                                        widget.isBp! ? _systolicController.text : null,
+                                                        widget.isBp! ? _diastolicController.text : null
+                                                    ).then((value){
+                                                      if(value){
+                                                        Get.to(()=>DashboardScreen(pageIndex: 1));
+                                                      }
+                                                      diabeticControl.selectedSugarCheck = "";
+                                                    });
+
                                                   }
                                                 },
                                               ),

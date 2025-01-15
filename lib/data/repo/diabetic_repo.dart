@@ -28,17 +28,21 @@ class DiabeticRepo {
 
       ) {
 
-log("$checkingTime",name:"Checking Time");
-    return apiClient.postData(AppConstants.dailySugarCheckup, {
-      'test_type' : testType,
-      'checking_time' : checkingTime,
-      'fasting_suger' : fastingSugar,
-      'measured_value' : measuredValue,
-      "diastolic":diastolic,
-      "systolic": systolic,
-      'test_date' : checkingDate,
-      'hbA1c' : hbA1c,
-    });
+
+final body = {
+  'test_type' : testType,
+  'checking_time' : checkingTime,
+  'fasting_suger' : fastingSugar,
+  'measured_value' : measuredValue,
+  "diastolic":diastolic,
+  "systolic": systolic,
+  'test_date' : checkingDate,
+  'hbA1c' : hbA1c,
+};
+
+log("$body",name:"Data Going Before Api");
+
+    return apiClient.postData(AppConstants.dailySugarCheckup,body );
   }
 
   Future<Response> fetchDailySugarCheckUpRepo() {

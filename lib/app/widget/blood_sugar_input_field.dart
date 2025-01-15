@@ -22,6 +22,7 @@ class BloodSugarInput extends StatelessWidget {
   final String? Function(String?)? validatorSecond; // Validator parameter
   final ValueChanged<String>? onChangedSecond; // Optional onChanged parameter
   final bool? readOnlySecond;
+  final int? maxLength;
 
   BloodSugarInput({
     super.key,
@@ -33,7 +34,8 @@ class BloodSugarInput extends StatelessWidget {
     this.onChanged, // Initialize the onChanged parameter
     this.readOnly = false,
     this.inputType,
-    this.isDouble = false, this.titleSecond, this.hintTextSecond, this.suffixTextSecond, this.inputTypeSecond, this.controllerSecond, this.validatorSecond, this.onChangedSecond, this.readOnlySecond, // Initialize readOnly with a default value of false
+    this.maxLength,
+    this.isDouble = false, this.titleSecond, this.hintTextSecond, this.suffixTextSecond, this.inputTypeSecond, this.controllerSecond, this.validatorSecond, this.onChangedSecond, this.readOnlySecond,  // Initialize readOnly with a default value of false
 
   });
 
@@ -54,6 +56,7 @@ class BloodSugarInput extends StatelessWidget {
         Visibility(
           visible: !(isDouble ?? false),
           child: CustomTextField(
+            maxLength: maxLength,
             readOnly: readOnly,
             // Pass the readOnly parameter to CustomTextField
             inputType: inputType ?? TextInputType.number,
@@ -75,6 +78,8 @@ class BloodSugarInput extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomTextField(
+                  // upperLimit: 12,
+                  maxLength: maxLength,
                   readOnly: readOnly,
                   // Pass the readOnly parameter to CustomTextField
                   inputType: inputType ?? TextInputType.number,
@@ -84,6 +89,7 @@ class BloodSugarInput extends StatelessWidget {
                   hintText: hintText,
                   // Use the provided hintText
                   suffixText: suffixText ?? 'mg/dL',
+                  arrows: true,
                   validation: validator,
                   // Pass the validator function to CustomTextField
                   onChanged:
@@ -93,6 +99,9 @@ class BloodSugarInput extends StatelessWidget {
               SizedBox(width: 20,),
               Expanded(
                 child: CustomTextField(
+                  upperLimit: 12,
+                  arrows: true,
+                  maxLength: maxLength,
                   readOnly: readOnlySecond ?? false,
                   // Pass the readOnly parameter to CustomTextField
                   inputType: inputTypeSecond ?? TextInputType.number,

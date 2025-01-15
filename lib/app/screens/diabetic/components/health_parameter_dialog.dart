@@ -234,8 +234,8 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                         // Duration of Diabetes Input
                         BloodSugarInput(
                           isDouble: true,
-                          titleSecond: 'Duration of Diabetes in Months',
-                          hintTextSecond: 'Duration in Months',
+                          titleSecond: 'Months',
+                          hintTextSecond: 'Months',
 
                           controllerSecond: monthController,
                           suffixTextSecond: "Month",
@@ -249,7 +249,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                             }
                             return null;
                           },
-                          title: 'Duration of Diabetes in Years', hintText: 'Duration in Year',
+                          title: 'Years', hintText: 'Year',
                           controller: yearController,
                           suffixText: "Year",
                           validator: (value) {

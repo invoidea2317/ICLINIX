@@ -15,7 +15,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
-        android:debuggable="true"
+        android:debuggable="false"
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
         tools:ignore="HardcodedDebugMode">

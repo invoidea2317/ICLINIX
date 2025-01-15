@@ -35,6 +35,9 @@ class CustomTextField extends StatefulWidget {
   final bool isClockIcon; // New property for clock icon
   final int? maxLength; // Property for max character limit
   final String? suffixText;
+  final bool arrows;
+  final int? upperLimit;
+  final int? lowerLimit;
 
   const CustomTextField({
     super.key,
@@ -69,6 +72,9 @@ class CustomTextField extends StatefulWidget {
     this.isClockIcon = false, // Initialize the new property
     this.maxLength,
     this.suffixText,
+    this.arrows = false,
+    this.upperLimit,
+    this.lowerLimit,
   });
 
   @override
@@ -97,11 +103,14 @@ class CustomTextFieldState extends State<CustomTextField> {
           validator: widget.validation,
           readOnly: widget.readOnly,
           maxLines: widget.maxLines,
+          maxLength: widget.maxLength,
           controller: widget.controller,
           focusNode: widget.focusNode,
-          style: const TextStyle(fontSize: 16), // Adjust text style as needed
+          style: const TextStyle(fontSize: 16),
+          // Adjust text style as needed
           textInputAction: widget.inputAction,
-          keyboardType: widget.isAmount ? TextInputType.number : widget.inputType,
+          keyboardType:
+              widget.isAmount ? TextInputType.number : widget.inputType,
           cursorColor: Theme.of(context).primaryColor,
           textCapitalization: widget.capitalization,
           enabled: widget.isEnabled,
@@ -111,14 +120,15 @@ class CustomTextFieldState extends State<CustomTextField> {
           inputFormatters: widget.isAmount
               ? [FilteringTextInputFormatter.allow(RegExp(r'\d'))]
               : widget.isNumber
-              ? [
-            FilteringTextInputFormatter.allow(RegExp(r'\d')),
-            LengthLimitingTextInputFormatter(widget.maxLength ?? 10),
-          ]
-              : widget.isPhone
-              ? [FilteringTextInputFormatter.allow(RegExp('[0-9+]'))]
-              : null,
+                  ? [
+                      FilteringTextInputFormatter.allow(RegExp(r'\d')),
+                      LengthLimitingTextInputFormatter(widget.maxLength ?? 10),
+                    ]
+                  : widget.isPhone
+                      ? [FilteringTextInputFormatter.allow(RegExp('[0-9+]'))]
+                      : null,
           decoration: InputDecoration(
+            counterText: "",
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
               borderSide: BorderSide(
@@ -149,86 +159,152 @@ class CustomTextFieldState extends State<CustomTextField> {
                 fontSize: Dimensions.fontSize12, color: Colors.red),
             fillColor: Theme.of(context).cardColor,
             hintStyle: openSansRegular.copyWith(
-                fontSize: Dimensions.fontSize14, color: Theme.of(context).hintColor),
+                fontSize: Dimensions.fontSize14,
+                color: Theme.of(context).hintColor),
             filled: true,
             prefixIcon: widget.isPhone
                 ? SizedBox(
-              width: 55,
-              child: Row(
-                children: [
-                  const SizedBox(width: 5),
-                  Text(
-                    " + 91",
-                    style: TextStyle(
-                      color: Theme.of(context).disabledColor.withOpacity(0.40),
+                    width: 55,
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 5),
+                        Text(
+                          " + 91",
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .disabledColor
+                                .withOpacity(0.40),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Container(
+                          height: 20,
+                          width: 2,
+                          color:
+                              Theme.of(context).disabledColor.withOpacity(0.40),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 5),
-                  Container(
-                    height: 20,
-                    width: 2,
-                    color: Theme.of(context).disabledColor.withOpacity(0.40),
-                  ),
-                ],
-              ),
-            )
+                  )
                 : widget.prefixImage != null && widget.prefixIcon == null
-                ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Image.asset(
-                widget.prefixImage!,
-                height: 20,
-                width: 20,
-              ),
-            )
-                : widget.prefixImage == null && widget.prefixIcon != null
-                ? Icon(
-              widget.prefixIcon,
-              size: widget.iconSize,
-            )
-                : null,
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Image.asset(
+                          widget.prefixImage!,
+                          height: 20,
+                          width: 20,
+                        ),
+                      )
+                    : widget.prefixImage == null && widget.prefixIcon != null
+                        ? Icon(
+                            widget.prefixIcon,
+                            size: widget.iconSize,
+                          )
+                        : null,
             suffixIcon: widget.isPassword
                 ? IconButton(
-              icon: Icon(
-                _obscureText ? Icons.visibility_off : Icons.visibility,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: _toggle,
-            )
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: _toggle,
+                  )
                 : widget.isCalenderIcon
-                ? GestureDetector(
-              onTap: () {
-                // Add calendar functionality here, like opening a date picker
-              },
-              child: Icon(
-                Icons.calendar_month,
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-                : widget.isClockIcon
-                ? GestureDetector(
-              onTap: () {
-                // Add clock functionality here, like opening a time picker
-              },
-              child: Icon(
-                Icons.access_time,
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-                : widget.editText
-                ? Container(
-              width: 60,
-              child: Center(child: Text(widget.suffixText ?? 'mg/dL')),
-            )
-                : null,
+                    ? GestureDetector(
+                        onTap: () {
+                          // Add calendar functionality here, like opening a date picker
+                        },
+                        child: Icon(
+                          Icons.calendar_month,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
+                    : widget.isClockIcon
+                        ? GestureDetector(
+                            onTap: () {
+                              // Add clock functionality here, like opening a time picker
+                            },
+                            child: Icon(
+                              Icons.access_time,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        : widget.arrows
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        if (widget.controller != null) {
+                                          int value = int.tryParse(
+                                                  widget.controller!.text) ??
+                                              0;
+                                          if (widget.upperLimit != null) {
+                                            if (value <
+                                                (widget.upperLimit ?? 12)) {
+                                              // Check if the value is less than 12
+                                              value += 1; // Increment the value
+                                              widget.controller!.text =
+                                                  value.toString();
+                                              (widget.onChanged as void
+                                                      Function(String))
+                                                  .call(
+                                                      widget.controller!.text);
+                                            }
+                                          } else {
+                                            value += 1; // Increment the value
+                                            widget.controller!.text =
+                                                value.toString();
+                                            (widget.onChanged as void
+                                            Function(String))
+                                                .call(
+                                                widget.controller!.text);
+                                          }
+                                        }
+                                      },
+                                      child: Icon(
+                                          Icons.keyboard_arrow_up_outlined)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        if (widget.controller != null) {
+                                          int value = int.tryParse(
+                                                  widget.controller!.text) ??
+                                              0;
+
+                                          if (value > 1) {
+                                            // Check if the value is greater than 0
+                                            value -= 1; // Decrement the value
+                                            widget.controller!.text =
+                                                value.toString();
+                                            (widget.onChanged as void Function(
+                                                    String))
+                                                .call(widget.controller!.text);
+                                          }
+                                        }
+                                      },
+                                      child: Icon(
+                                          Icons.keyboard_arrow_down_rounded))
+                                ],
+                              )
+                            : widget.editText
+                                ? Container(
+                                    width: 60,
+                                    child: Center(
+                                        child:
+                                            Text(widget.suffixText ?? 'mg/dL')),
+                                  )
+                                : null,
           ),
           onChanged: widget.onChanged as void Function(String)?,
         ),
         widget.divider
             ? const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Divider(),
-        )
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              )
             : const SizedBox(),
       ],
     );

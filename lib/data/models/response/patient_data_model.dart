@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class SubscribedPatientModel {
   final int? id;
   final int? userId;
@@ -140,7 +142,7 @@ class SubscribedPatientModel {
       weight: json['weight'],
       waistCircumference: json['waist_circumference'],
       hipCircumference: json['hip_circumference'],
-      duraDiabetes: json['dura_diabetes'],
+      duraDiabetes: jsonDecode(json['dura_diabetes']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

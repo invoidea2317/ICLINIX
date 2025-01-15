@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -208,7 +209,7 @@ class DiabeticController extends GetxController implements GetxService {
   bool _isDailySugarCheckupLoading = false;
   bool get isDailySugarCheckupLoading => _isDailySugarCheckupLoading;
 
-  Future<void> addSugarApi(String? testType, String? checkingTime, String? fastingSugar, String? measuredValue, String? checkingDate,
+  Future<dynamic> addSugarApi(String? testType, String? checkingTime, String? fastingSugar, String? measuredValue, String? checkingDate,
       String? hbA1c,String? systolic,String? diastolic) async {
     _isDailySugarCheckupLoading = true;
     update();
@@ -217,14 +218,17 @@ class DiabeticController extends GetxController implements GetxService {
     );
     if(response.statusCode == 200) {
       var responseData = response.body;
-      if(responseData["msg"]  == "Data Inserted Successfully") {
+      log("${responseData}",name: "Response Data From AddSugar");
+      if(responseData["msg"]  == "Data Inserted/Updated Successfully") {
 
         _isDailySugarCheckupLoading = false;
         //
         // Get.back();
-        Get.to(()=>DashboardScreen(pageIndex: 1));
+        // log()
+        // showCustomSnackBar('Added Successfully', );
+
         update();
-        return showCustomSnackBar('Added Successfully', );
+        return true;
       } else {
         showCustomSnackBar(responseData["msg"], isError: true);
         _isDailySugarCheckupLoading = false;
@@ -270,12 +274,20 @@ class DiabeticController extends GetxController implements GetxService {
   }
 
 
-  List<SugarChartModel>? _sugarChartList;
+  MonthlySugarValues? _sugarChartList;
+  MonthlySugarValue? todaySugar;
+  MonthlySugarValue? todayBpValue;
 
 
 
 
-  List<SugarChartModel>? get sugarChartList => _sugarChartList;
+  MonthlySugarValues? get sugarChartList => _sugarChartList;
+  MonthlySugarValues? _bpChartList;
+
+
+
+
+  MonthlySugarValues? get bpChartList => _bpChartList;
 
   DietPlanModel? get dietPlan => _dietPlan;
   DietPlanModel? _dietPlan;
@@ -304,20 +316,51 @@ class DiabeticController extends GetxController implements GetxService {
          var oldSubs = response.body["old_subs"];
 
 
-        print("Full API Response: ${renewOption}");
-        print("Full API Response: ${oldSubs}");
+        // print("Full API Response: ${renewOption}");
+        // print("Full API Response: ${oldSubs}");
         if (data != null) {
           // Process monthly sugar values if they exist
           if (data.containsKey('monthlySugerValues') && data['monthlySugerValues'] != null) {
-            List<dynamic> monthlyValues = data['monthlySugerValues'];
-            _sugarChartList = monthlyValues
-                .map((json) => SugarChartModel.fromJson(json as Map<String, dynamic>))
-                .toList();
+            // List<dynamic> monthlyValues = data['monthlySugerValues'];
+            _sugarChartList = MonthlySugarValues.fromJson(data['monthlySugerValues']);
             print("Sugar Checkup List fetched successfully: $_sugarChartList");
           } else {
-            _sugarChartList = [];
+            _sugarChartList = MonthlySugarValues(monthlySugarValues: []);
             print("No monthlySugerValues key found in the response.");
           }
+
+
+
+
+          if (data.containsKey('monthlyBpValues') && data['monthlyBpValues'] != null) {
+            List<dynamic> monthlyValues = data['monthlyBpValues'];
+            _bpChartList = MonthlySugarValues.fromJson(data['monthlyBpValues']);
+            print("Sugar Checkup List fetched successfully: $_bpChartList");
+          } else {
+            _bpChartList = MonthlySugarValues(monthlySugarValues: []);
+            print("No monthlySugerValues key found in the response.");
+          }
+
+          if (data['todaySugerValues'] != null) {
+            dynamic monthlyValues = data['todaySugerValues'];
+            todaySugar =  MonthlySugarValue.fromJson(monthlyValues as Map<String, dynamic>);
+
+            print("Sugar Checkup List fetched successfully: $_bpChartList");
+          } else {
+            todaySugar = MonthlySugarValue(testDate: DateTime.now().toString(), measureValues: [],);
+            print("No monthlySugerValues key found in the response.");
+          }
+
+          if (data['todayBpValues'] != null) {
+            dynamic monthlyValues = data['todayBpValues'];
+            todayBpValue =  MonthlySugarValue.fromJson(monthlyValues as Map<String, dynamic>);
+
+            print("Sugar Checkup List fetched successfully: $_bpChartList");
+          } else {
+            todayBpValue = MonthlySugarValue(testDate: DateTime.now().toString(), measureValues: [],);
+            print("No monthlySugerValues key found in the response.");
+          }
+
 
           // Process diet plan
           if (data.containsKey('dietPlan') && data['dietPlan'] != null) {

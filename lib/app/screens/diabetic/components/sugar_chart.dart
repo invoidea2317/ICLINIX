@@ -4,24 +4,30 @@ import 'package:get/get.dart';
 import 'package:iclinix/controller/diabetic_controller.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../data/models/response/diabetic_dashboard_detail_model.dart';
+
 class SugarChart extends StatelessWidget {
-  SugarChart({super.key});
+  bool isBp;
+  SugarChart({super.key,required this.isBp});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DiabeticController>(builder: (diabeticController) {
-      final sugarList = diabeticController.sugarChartList;
-      final isListEmpty = sugarList == null || sugarList.isEmpty;
+      final sugarList = isBp?diabeticController.bpChartList:diabeticController.sugarChartList;
+      final isListEmpty = sugarList == null || sugarList.monthlySugarValues.isEmpty;
       final isSugarLoading = diabeticController.isDailySugarCheckupLoading;
 
       // Convert to data source for fasting and post-meal values
-      final fastingData = sugarList?.map((sugar) {
-        return SugarData(date: sugar.testDate, value: (sugar.fastingValues ?? 0).toDouble());
-      }).toList();
+      List<SugarData> fastingData = [];
+      sugarList?.monthlySugarValues.forEach((element){
+        fastingData.add(SugarData(date: DateTime.parse(element.testDate), value: element.measureValues.isNotEmpty?double.parse(isBp?element.measureValues[0].diastolic:element.measureValues[0].fastingSugar):0.0));
+      });
 
-      final postMealData = sugarList?.where((sugar) => sugar.postMeal != null).map((sugar) {
-        return SugarData(date: sugar.testDate, value: sugar.postMeal!.toDouble());
-      }).toList();
+      List<SugarData> postMealData = [];
+
+      sugarList?.monthlySugarValues.forEach((element){
+        postMealData.add(SugarData(date: DateTime.parse(element.testDate), value: element.measureValues.isNotEmpty?double.parse(isBp?element.measureValues[0].systolic:element.measureValues[0].measuredValue):0.0));
+      });
 
       return isSugarLoading
           ? const Center(child: CircularProgressIndicator())
@@ -45,9 +51,9 @@ class SugarChart extends StatelessWidget {
               isVisible: true, // Enables dots at data points
               shape: DataMarkerType.circle, // Shape of the dots
               borderWidth: 2, // Border width of the dots
-              borderColor: Colors.blue, // Border color
+              borderColor: Colors.red, // Border color
             ),
-            color: Colors.blue,
+            color: Colors.red,
           ),
           LineSeries<SugarData, DateTime>(
             name: 'Post Meal Values',
@@ -59,9 +65,9 @@ class SugarChart extends StatelessWidget {
               isVisible: true,
               shape: DataMarkerType.circle,
               borderWidth: 2,
-              borderColor: Colors.red,
+              borderColor: Colors.blue,
             ),
-            color: Colors.red,
+            color: Colors.blue,
           ),
         ],
       );

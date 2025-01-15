@@ -13,6 +13,7 @@ import 'package:flutter_slide_drawer/flutter_slide_widget.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/app/widget/custom_drawer_widget.dart';
+import 'package:iclinix/app/widget/custom_dropdown_field.dart';
 import 'package:iclinix/app/widget/empty_data_widget.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/controller/diabetic_controller.dart';
@@ -25,6 +26,7 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
 import 'package:iclinix/utils/themes/light_theme.dart';
+import '../../widget/custom_snackbar.dart';
 import 'components/health_parameter_dialog.dart';
 import 'components/horizontalView.dart';
 import 'components/resources_component.dart';
@@ -77,6 +79,7 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
   }
 
   bool  isExpanded = false;
+  bool  bpGraph = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +152,8 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
             child: GetBuilder<DiabeticController>(builder: (diabeticControl) {
               final sugarList = diabeticControl.sugarChartList;
-              final isListEmpty = sugarList == null || sugarList.isEmpty;
+              final bpList = diabeticControl.bpChartList;
+              final isListEmpty =( sugarList == null || sugarList.monthlySugarValues.isEmpty) && (bpList== null || bpList.monthlySugarValues.isEmpty);
               final isSugarLoading = diabeticControl.isDailySugarCheckupLoading;
               final planDetails = diabeticControl.planDetails;
 
@@ -558,7 +562,68 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                       const Text('Today’s Blood Sugar Parameters',
                           style: openSansSemiBold),
                       sizedBoxDefault(),
-                      SugarChart(),
+                   Row(
+                     children: [
+                       Expanded(
+                         child: CustomDropdownField(
+                           selectedValue: bpGraph?"Blood Pressure":"Sugar",
+                             hintText: "Select Option", options: ["Sugar","Blood Pressure"], onChanged: (value){
+                          if(value == "Blood Pressure"){
+                            if(bpList!.monthlySugarValues.isNotEmpty) {
+                                    setState(() {
+                                      bpGraph = true;
+                                    });
+                                  } else {
+                              showCustomSnackBar("No Data in Blood Pressure", isError: false);
+                            }
+                                }
+                          else {
+                            if(sugarList!.monthlySugarValues.isNotEmpty) {
+                              setState(() {
+                                bpGraph = false;
+                              });
+                            } else {
+                              showCustomSnackBar("No Data in Sugar", isError: false);
+                            }
+
+
+                          }
+                         }),
+                       ),
+                     ],
+                   ),
+                      sizedBoxDefault(),
+                      SugarChart(isBp: bpGraph,),
+                      sizedBoxDefault(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 20,
+                                height: 20,
+                                color: Colors.red, // First box color
+                              ),
+                        SizedBox(width: 10,),
+                              Text(bpGraph?"Diastolic":"Fasting Sugar"),
+                            ],
+                          ),
+                          SizedBox(width: 10), // Space between boxes
+                          Row(
+                            children: [
+                              Container(
+                                width: 20,
+                                height: 20,
+                                color: Colors.blue, // Second box color
+                              ),
+                              SizedBox(width: 10,),
+                              Text(bpGraph?"Systolic":"Post Meal Sugar"),
+                            ],
+                          ),
+                        ],
+                      ),
+                      sizedBoxDefault(),
                     ],
                   if (calculateTimeLeft((diabeticControl.subscriptionModel ??
                       SubscriptionModel(

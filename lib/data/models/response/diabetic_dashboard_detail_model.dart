@@ -19,6 +19,95 @@ class SugarChartModel {
   }
 }
 
+
+class MonthlySugarValues {
+  List<MonthlySugarValue> monthlySugarValues;
+
+  MonthlySugarValues({required this.monthlySugarValues});
+
+  factory MonthlySugarValues.fromJson(List<dynamic> json) {
+    return MonthlySugarValues(
+      monthlySugarValues: ((json))
+          .map((item) => MonthlySugarValue.fromJson(item))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'monthlySugerValues': monthlySugarValues.map((item) => item.toJson()).toList(),
+    };
+  }
+}
+
+class MonthlySugarValue {
+  String testDate;
+  List<MeasureValue> measureValues;
+
+  MonthlySugarValue({required this.testDate, required this.measureValues});
+
+  factory MonthlySugarValue.fromJson(Map<String, dynamic> json) {
+    return MonthlySugarValue(
+      testDate: json['test_date'],
+      measureValues: (json['measurevalues'] as List<dynamic>)
+          .map((item) => MeasureValue.fromJson(item))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'test_date': testDate,
+      'measurevalues': measureValues.map((item) => item.toJson()).toList(),
+    };
+  }
+}
+
+class MeasureValue {
+  String testType;
+  String checkingTime;
+  String measuredValue;
+  String hbA1c;
+  String fastingSugar;
+  String diastolic;
+  String systolic;
+
+  MeasureValue({
+    required this.testType,
+    required this.checkingTime,
+    required this.measuredValue,
+    required this.hbA1c,
+    required this.fastingSugar,
+    required this.diastolic,
+    required this.systolic,
+  });
+
+  factory MeasureValue.fromJson(Map<String, dynamic> json) {
+    return MeasureValue(
+      testType: json['test_type'].toString(),
+      checkingTime: json['checking_time'].toString(),
+      measuredValue: json['measured_value'].toString(),
+      hbA1c: json['hbA1c'].toString(),
+      fastingSugar: json['fasting_suger'].toString(),
+      diastolic: json['diastolic'].toString(),
+      systolic: json['systolic'].toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'test_type': testType,
+      'checking_time': checkingTime,
+      'measured_value': measuredValue.toString(),
+      'hbA1c': hbA1c,
+      'fasting_suger': fastingSugar,
+      'diastolic': diastolic,
+      'systolic': systolic,
+    };
+  }
+}
+
+
 // PlanResourceModel.dart
 class PlanResourceModel {
   final int id;
