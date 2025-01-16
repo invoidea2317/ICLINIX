@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
@@ -10,6 +11,7 @@ import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../widget/loading_widget.dart';
 import '../../appointment/booking_successful_screen.dart';
 
 
@@ -489,7 +492,95 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
     if (dietPlan == null) {
       return const SizedBox(); // Or any placeholder if no diet plan is available
     }
+    double progress = 0.0; // Track download progress
+    bool isDownloading = false;
+    dynamic filePaths = "";
+    Future<void> downloadFile(String url, String fileName) async {
 
+      if (await Permission.storage.isDenied) {
+        await Permission.manageExternalStorage.request();
+        await Permission.storage.request();
+      }
+
+      setState(() {
+        progress = 0.0;
+        isDownloading = true;
+      });
+
+
+      setState(() {
+        progress = 0.0;
+        isDownloading = true;
+      });
+      LoadingDialog.showLoading(message: "Completed: $progress");
+
+      Directory? downloadsDir;
+      if (Platform.isAndroid) {
+        downloadsDir =
+            Directory('/storage/emulated/0/Download'); // Android Downloads folder
+      } else if (Platform.isIOS) {
+        downloadsDir =
+        await getApplicationDocumentsDirectory(); // iOS app-specific folder
+      }
+
+      final filePath = "${downloadsDir?.path}/${fileName}";
+
+      Dio dio = Dio();
+
+      try {
+        await dio.download(
+          url,
+          filePath,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              setState(() {
+                progress = received / total;
+              });
+            }
+          },
+        );
+
+        setState(() {
+          isDownloading = false;
+        });
+
+        filePaths = filePath;
+        // Open the downloaded file
+        // OpenFile.open(filePath);
+
+        LoadingDialog.hideLoading();
+        showNotification(fileName, filePath);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Download Complete"),
+              content: Text("The file has been downloaded successfully."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Close"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    OpenFile.open(filePath);
+                  },
+                  child: Text("Open File"),
+                ),
+              ],
+            );
+          },
+        );
+      } catch (e) {
+        setState(() {
+          isDownloading = false;
+        });
+        print("Download failed: $e");
+      }
+    }
     return CustomDecoratedContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -506,7 +597,14 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  final url = "${dietPlan.excerciseChart}";
+                  final url2 = "${dietPlan.dietchart}";
+                      // '${AppConstants.resourcesImageUrl}${dataPdf[i].file}';
+                  downloadFile(url,"${dietPlan.excerciseChart}".split('/').last);
+
+                  downloadFile(url2,"${dietPlan.dietchart}".split('/').last);
+                },
                 child: Text(
                   'Download',
                   maxLines: 1,
@@ -519,9 +617,9 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
               ),
             ],
           ),
-          const Divider(),
-          CustomNetworkImageWidget(image: dietPlan.excerciseChart),
-          CustomNetworkImageWidget(image: dietPlan.dietchart),
+          // const Divider(),
+          // CustomNetworkImageWidget(image: dietPlan.excerciseChart),
+          // CustomNetworkImageWidget(image: dietPlan.dietchart),
         ],
       ),
     );

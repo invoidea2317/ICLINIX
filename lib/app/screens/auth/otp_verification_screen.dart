@@ -120,7 +120,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           Text('Enter OTP',style: openSansBold.copyWith(
                               fontSize: Dimensions.fontSizeDefault,
                               color: Theme.of(context).disabledColor.withOpacity(0.50) ),),
-                          Text("We have send verification code to you number",style: openSansRegular.copyWith(
+                          Text("We have sent verification code to you number",style: openSansRegular.copyWith(
                               fontSize: Dimensions.fontSize13,
                               color: Theme.of(context).disabledColor.withOpacity(0.40) ),),
                           sizedBox12(),

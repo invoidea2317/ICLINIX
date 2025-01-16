@@ -425,7 +425,7 @@ class DiabeticController extends GetxController implements GetxService {
         Get.find<AppointmentController>().setisOld(oldSubs);
         Get.find<AppointmentController>().setpatientData(PatientData);
       } else {
-        print("Error fetching dashboard data. Status code: ${response.statusCode}");
+        print("Error fetching dashboard data. Status code: ${response.body}");
       }
     } catch (error) {
       print("Error fetching diabetic dashboard data: $error");

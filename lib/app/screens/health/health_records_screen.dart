@@ -733,27 +733,27 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
                                                                         ),
                                                                       ),
                                                                       Spacer(),
-                                                                      Visibility(
-                                                                        visible:
-                                                                        patientAppointment
-                                                                            .status !=
-                                                                            2 && patientAppointment.status != 1,
-                                                                        child: GestureDetector(
-                                                                          onTap: () {
-                                                                            appointmentControl.getCancelling(
-                                                                                patientAppointment
-                                                                                    .id
-                                                                                    .toString());
-                                                                          },
-                                                                          child: Text("Cancel",
-                                                                            style: TextStyle(
-                                                                              color: Colors.red,
-                                                                              fontSize: 14,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
+                                                                      // Visibility(
+                                                                      //   visible:
+                                                                      //   patientAppointment
+                                                                      //       .status !=
+                                                                      //       2 && patientAppointment.status != 1,
+                                                                      //   child: GestureDetector(
+                                                                      //     onTap: () {
+                                                                      //       appointmentControl.getCancelling(
+                                                                      //           patientAppointment
+                                                                      //               .id
+                                                                      //               .toString());
+                                                                      //     },
+                                                                      //     child: Text("Cancel",
+                                                                      //       style: TextStyle(
+                                                                      //         color: Colors.red,
+                                                                      //         fontSize: 14,
+                                                                      //         fontWeight: FontWeight.bold,
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //   ),
+                                                                      // ),
                                                                     ],
                                                                   ),
                                                                   sizedBox10(),

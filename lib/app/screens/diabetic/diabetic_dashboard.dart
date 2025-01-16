@@ -64,22 +64,23 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
       final Duration difference = expiry.difference(now);
       final int daysLeft = difference.inDays;
 
-      if (daysLeft > 365) {
-        int years = daysLeft ~/ 365;
-        return "$years year${years > 1 ? 's' : ''}";
-      } else if (daysLeft > 30) {
-        int months = daysLeft ~/ 30;
-        return "$months month${months > 1 ? 's' : ''}";
-      } else {
-        return "$daysLeft day${daysLeft > 1 ? 's' : ''}";
-      }
+      // if (daysLeft > 365) {
+      //   int years = daysLeft ~/ 365;
+      //   return "$years year${years > 1 ? 's' : ''}";
+      // } else if (daysLeft > 30) {
+      //   int months = daysLeft ~/ 30;
+      //   return "$months month${months > 1 ? 's' : ''}";
+      // } else {
+      //   return "$daysLeft day${daysLeft > 1 ? 's' : ''}";
+      // }
+      return "$daysLeft day's";
     } catch (e) {
       return "Invalid date";
     }
   }
 
   bool  isExpanded = false;
-  bool  bpGraph = false;
+  String  bpGraph = "Blood Pressure";
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +277,6 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                                 }(),
                                 child: ElevatedButton(
                                     onPressed: () {
-
                                       // debugPrint("${diabeticControl.subscriptionModel?.patientId}");
                                       Get.to(() => PlanPaymentRenewScreen(
                                         patientId: (diabeticControl.subscriptionModel?.patientId ??
@@ -566,12 +566,12 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                      children: [
                        Expanded(
                          child: CustomDropdownField(
-                           selectedValue: bpGraph?"Blood Pressure":"Sugar",
-                             hintText: "Select Option", options: ["Sugar","Blood Pressure"], onChanged: (value){
+                           selectedValue: bpGraph == "Blood Pressure"?"Blood Pressure":bpGraph == "Fasting Sugar"?"Fasting Sugar":"Postprandial Sugars",
+                             hintText: "Select Option", options: const ["Fasting Sugar","Blood Pressure","Postprandial Sugars"], onChanged: (value){
                           if(value == "Blood Pressure"){
                             if(bpList!.monthlySugarValues.isNotEmpty) {
                                     setState(() {
-                                      bpGraph = true;
+                                      bpGraph = "Blood Pressure";
                                     });
                                   } else {
                               showCustomSnackBar("No Data in Blood Pressure", isError: false);
@@ -579,10 +579,16 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                                 }
                           else {
                             if(sugarList!.monthlySugarValues.isNotEmpty) {
-                              setState(() {
-                                bpGraph = false;
-                              });
-                            } else {
+                              if (value == "Fasting Sugar") {
+                                      setState(() {
+                                        bpGraph = "fasting";
+                                      });
+                                    } else {
+                                setState(() {
+                                  bpGraph = "postMeal";
+                                });
+                              }
+                                  } else {
                               showCustomSnackBar("No Data in Sugar", isError: false);
                             }
 
@@ -598,28 +604,37 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 20,
-                                height: 20,
-                                color: Colors.red, // First box color
-                              ),
-                        SizedBox(width: 10,),
-                              Text(bpGraph?"Diastolic":"Fasting Sugar"),
-                            ],
+                          Visibility(
+                            visible: bpGraph != "postMeal",
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  color: Colors.red, // First box color
+                                ),
+                                                    SizedBox(width: 10,),
+                                Text(bpGraph == "Blood Pressure"?"Systolic":"Fasting Sugar"),
+                              ],
+                            ),
                           ),
-                          SizedBox(width: 10), // Space between boxes
-                          Row(
-                            children: [
-                              Container(
-                                width: 20,
-                                height: 20,
-                                color: Colors.blue, // Second box color
-                              ),
-                              SizedBox(width: 10,),
-                              Text(bpGraph?"Systolic":"Post Meal Sugar"),
-                            ],
+                          Visibility(
+                              visible: bpGraph != "postMeal",
+
+                              child: SizedBox(width: 10)), // Space between boxes
+                          Visibility(
+                            visible: bpGraph != "fasting",
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  color: Colors.blue, // Second box color
+                                ),
+                                SizedBox(width: 10,),
+                                Text(bpGraph == "Blood Pressure"?"Diastolic":"Post Meal Sugar"),
+                              ],
+                            ),
                           ),
                         ],
                       ),
