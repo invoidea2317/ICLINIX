@@ -54,8 +54,8 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
     widget.isBp! ? 'Blood Pressure' : 'Please select Blood Sugar';
 
     if((widget.isBp ?? false)){
-      _diastolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].diastolic;
-      _systolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].systolic;
+      _diastolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].diastolic;
+      _systolicController.text = ((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0":(Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].systolic;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           Get.find<DiabeticController>().updateDate(DateTime.parse((Get.find<DiabeticController>().todayBpValue ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).testDate));
@@ -64,8 +64,8 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
       });
 
     } else {
-      _fastingSugarController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].fastingSugar;
-      _measuredValueController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0.0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].measuredValue;
+      _fastingSugarController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].fastingSugar;
+      _measuredValueController.text = ((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues.isEmpty)?"0":(Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).measureValues[0].measuredValue;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           Get.find<DiabeticController>().updateDate(DateTime.parse((Get.find<DiabeticController>().todaySugar ?? MonthlySugarValue(testDate: DateTime.now().toString(),measureValues: [])).testDate));
@@ -293,6 +293,21 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                     style: openSansRegular.copyWith(
                                         fontSize: Dimensions.fontSize12),
                                   ),
+                                  Visibility(
+                                      visible: widget.isBp!,
+                                      child: BloodSugarInput(
+                                        maxLength: 3,
+                                        suffixText: "mmHg",
+                                        title: "Systolic ",
+                                        hintText: "Systolic ",
+                                        controller: _systolicController,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please Enter a Value';
+                                          }
+                                          return null;
+                                        },
+                                      )),
                                   BloodSugarInput(
                                       maxLength: 3,
                                     suffixText: widget.isBp! ? "mmHg" : "mg/dL",
@@ -347,21 +362,6 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                           true, // Set to true to show title
                                     ),
                                   ),
-                                  Visibility(
-                                      visible: widget.isBp!,
-                                      child: BloodSugarInput(
-                                        maxLength: 3,
-                                        suffixText: "mmHg",
-                                        title: "Systolic ",
-                                        hintText: "Systolic ",
-                                        controller: _systolicController,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please Enter a Value';
-                                          }
-                                          return null;
-                                        },
-                                      )),
                                   sizedBox10(),
                                   diabeticControl.selectedSugarCheck.isEmpty
                                       ? const SizedBox()
@@ -495,10 +495,10 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                           .selectedSugarCheckValue
                                                           .toString(),
                                                       _fastingSugarController
-                                                          .text == "0.0"?null:_fastingSugarController
+                                                          .text == "0"?null:_fastingSugarController
                                                           .text,
                                                       _measuredValueController
-                                                          .text == "0.0"?null:_measuredValueController
+                                                          .text == "0"?null:_measuredValueController
                                                           .text,
                                                       _dateController.text,
                                                         diabeticControl.isHba1c?diabeticControl

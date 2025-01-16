@@ -57,6 +57,7 @@ class BloodSugarInput extends StatelessWidget {
           visible: !(isDouble ?? false),
           child: CustomTextField(
             maxLength: maxLength,
+            isFormat: true,
             readOnly: readOnly,
             // Pass the readOnly parameter to CustomTextField
             inputType: inputType ?? TextInputType.number,
@@ -76,6 +77,7 @@ class BloodSugarInput extends StatelessWidget {
           visible: (isDouble ?? false),
           child: Row(
             children: [
+
               Expanded(
                 child: CustomTextField(
                   // upperLimit: 12,
@@ -93,7 +95,7 @@ class BloodSugarInput extends StatelessWidget {
                   validation: validator,
                   // Pass the validator function to CustomTextField
                   onChanged:
-                      onChanged, // Pass the onChanged callback to CustomTextField
+                  onChanged, // Pass the onChanged callback to CustomTextField
                 ),
               ),
               SizedBox(width: 20,),
@@ -117,6 +119,8 @@ class BloodSugarInput extends StatelessWidget {
                   onChangedSecond, // Pass the onChanged callback to CustomTextField
                 ),
               ),
+
+
             ],
           ),
         ),
