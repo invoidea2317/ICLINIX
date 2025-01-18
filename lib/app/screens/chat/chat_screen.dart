@@ -52,13 +52,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: CustomDropdownField(
                         selectedValue: chatControl.type == 1 ? "Question" : chatControl.type == 3?"Urgent":"Problem",
                         hintText: '',
-                        options: const ["Question", "Problem", "Urgent"],
+                        options: const ["Question", "Problem", "Urgent","Lifestyle Support"],
                         onChanged: (String? newValue) {
                           chatControl.setType(newValue == "Question"
                               ? 1
                               : newValue == "Urgent"
                               ? 3
-                              : 2);
+                              : newValue == "Lifestyle Support" ? 4:2);
                         },
                         showTitle: true, // Set to true to show title
                       ),

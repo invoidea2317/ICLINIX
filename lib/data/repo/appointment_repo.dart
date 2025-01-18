@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:iclinix/data/api/api_client.dart';
@@ -25,18 +26,60 @@ class AppointmentRepo {
     return apiClient.getData(AppConstants.patientListUrl,method: 'GET');
   }
  Future<Response> getSlotList(String branchId, String date, bool bookingType) {
+   String doctorID = "";
 
+
+   if(bookingType){
+     doctorID = "72";
+   }
+   else {
+     if(branchId == "1"){
+       doctorID = "3";
+     }
+
+     if(branchId == "2"){
+       doctorID = "37";
+     }
+
+     if(branchId == "3"){
+       doctorID = "66";
+     }
+   }
    final requestBody = {
       "branchID": branchId,
       "appt_date": date,
-      "doctor_id": bookingType?72:3,
+      "doctor_id": doctorID,
    };
+
+   debugPrint('requestBody: $requestBody');
     return apiClient.postData(AppConstants.slotListUrl,requestBody);
   }
 
   Future<Response> bookAppointmentRepo(bool bookingType,AppointmentModel appointment,String schedule_type, String schedule_Id) async {
     // Prepare the data to be sent in the request body
     //debugPrint('appointment.appointmentDate: ${bookingType}');
+    log("${appointment.branchId}",name: "Branch ID");
+
+    String doctorID = "";
+
+
+    if(bookingType){
+      doctorID = "72";
+    }
+    else {
+      if(appointment.branchId == "1"){
+        doctorID = "3";
+      }
+
+      if(appointment.branchId == "2"){
+        doctorID = "37";
+      }
+
+      if(appointment.branchId == "3"){
+        doctorID = "66";
+      }
+    }
+
     final requestBody = {
       "branchid": appointment.branchId,
       if (!appointment.includePatientType && appointment.patientId != null) 'patientId': appointment.patientId,
@@ -55,7 +98,7 @@ class AppointmentRepo {
       "pay_method": "razorpay",
       "schedule_type": schedule_type,
       "schedule_type_id": schedule_Id,
-      "doctor_id": bookingType?72:3,
+      "doctor_id": doctorID,
     };
 
     // Print the request body for debugging

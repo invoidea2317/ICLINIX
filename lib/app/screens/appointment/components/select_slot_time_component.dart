@@ -22,7 +22,7 @@ class SelectSlotTimeComponent extends StatelessWidget {
               ),
             ),
             sizedBox10(),
-            SizedBox(
+            appointmentControl.timeSlot.length>0?SizedBox(
               height: 310,
               child: Scrollbar(
                 controller: _scrollController,
@@ -72,6 +72,11 @@ class SelectSlotTimeComponent extends StatelessWidget {
                   },
                 ),
               ),
+            ):Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child: Text("Sorry! no time slots are available for this date please select another date."))
+              ],
             ),
           ],
         );

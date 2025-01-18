@@ -5,6 +5,7 @@ import 'package:iclinix/app/widget/custom_app_bar.dart';
 import 'package:flutter_slide_drawer/flutter_slide_widget.dart';
 import 'package:iclinix/app/widget/empty_data_widget.dart';
 import 'package:iclinix/app/widget/loading_widget.dart';
+import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/controller/clinic_controller.dart';
 import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/images.dart';
@@ -71,7 +72,7 @@ class AppointmentScreen extends StatelessWidget {
                 ),
               )
                   : ListView.separated(
-                itemCount: dataList?.length ?? 0,
+                itemCount: Get.find<AppointmentController>().bookingDiabeticType?1:(dataList?.length ?? 0),
                 padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault,
                   right: Dimensions.paddingSizeDefault,
                   bottom: Dimensions.paddingSize100,),
