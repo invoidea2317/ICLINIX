@@ -70,10 +70,13 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
                           style: ListTileStyle.list,
                           splashColor: Colors.grey,
                           title: Text(
-                            chatControl.allTickets[index].subject ??"" ,
+                            chatControl.allTickets[index].ticketType?.type.toString() ??"" ,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          subtitle: const Text("Tap To Open Chat"),
+                          subtitle:  Text(
+                            chatControl.allTickets[index].subject ?? "",
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                          ),
                         ),
                       ),
                     );

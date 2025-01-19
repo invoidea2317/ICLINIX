@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iclinix/app/widget/blood_sugar_input_field.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
+import 'package:iclinix/app/widget/custom_snackbar.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
 import 'package:iclinix/controller/diabetic_controller.dart';
 import 'package:iclinix/helper/date_converter.dart';
@@ -112,9 +113,9 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      "Fasting Sugar: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].fastingSugar} mg/dL"),
+                      "Fasting Sugar: ${checkup.measureValues.isEmpty || checkup.measureValues[0].fastingSugar == "0"?"Enter Fasting Sugar Value":checkup.measureValues[0].fastingSugar} mg/dL"),
                   Text(
-                      "$heading: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].measuredValue} mg/dL"),
+                      "$heading: ${checkup.measureValues.isEmpty || checkup.measureValues[0].measuredValue == "0"?"Enter $heading Value":checkup.measureValues[0].measuredValue} mg/dL"),
                 ],
               ),
             );
@@ -139,9 +140,9 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      "Diastolic: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].diastolic} mmHg"),
+                      "Diastolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].diastolic == "0"?"Enter Diastolic Value":checkup.measureValues[0].diastolic} mmHg"),
                   Text(
-                      "Systolic: ${checkup.measureValues.isEmpty?"0":checkup.measureValues[0].systolic} mmHg"),
+                      "Systolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].systolic == "0"?"Enter Diastolic Value":checkup.measureValues[0].systolic} mmHg"),
                 ],
               ),
             );
@@ -305,6 +306,11 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                           if (value == null || value.isEmpty) {
                                             return 'Please Enter a Value';
                                           }
+
+                                          if(value == "0"){
+                                            return "Systolic Value Can't be Zero";
+                                          }
+
                                           return null;
                                         },
                                       )),
@@ -322,9 +328,16 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                         if (value == null || value.isEmpty) {
                                           return 'Please Enter a Value';
                                         }
+                                        if(value == "0"){
+                                          return "Diastolic Value Can't be Zero";
+                                        }
                                       } else {
                                         if(_measuredValueController.text.isEmpty && value!.isEmpty){
                                           return "Enter PostPrandial Sugars or Fasting Sugar";
+                                        }
+
+                                        if(value!.isEmpty){
+                                          return "Enter Fasting Sugar can't be zero";
                                         }
                                       }
                                       return null;
@@ -355,6 +368,10 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                       validator: (value) {
                                         if(_fastingSugarController.text.isEmpty && (value ?? "").isEmpty){
                                           return "Enter PostPrandial Sugars or Fasting Sugar";
+                                        }
+
+                                        if(value == "0"){
+                                          return "PostPrandial Value can't be zero";
                                         }
                                         return null;
                                       },
@@ -487,33 +504,73 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                 isBold: false,
                                                 fontSize: Dimensions.fontSize14,
                                                 onPressed: () {
-                                                  if (_formKey.currentState!
-                                                      .validate()) {
-                                                    diabeticControl.addSugarApi(
-                                                      widget.isBp! ? 'bp' : 'sugar',
-                                                      diabeticControl
-                                                          .selectedSugarCheckValue
-                                                          .toString(),
-                                                      _fastingSugarController
-                                                          .text == "0"?null:_fastingSugarController
-                                                          .text,
-                                                      _measuredValueController
-                                                          .text == "0"?null:_measuredValueController
-                                                          .text,
-                                                      _dateController.text,
-                                                        diabeticControl.isHba1c?diabeticControl
-                                                          .hbA1cPercentage.value
-                                                          .toString():"",
-                                                        widget.isBp! ? _systolicController.text : null,
-                                                        widget.isBp! ? _diastolicController.text : null
-                                                    ).then((value){
-                                                      if(value){
-                                                        Get.to(()=>DashboardScreen(pageIndex: 1));
-                                                      }
-                                                      diabeticControl.selectedSugarCheck = "";
-                                                    });
+                                                 if(widget.isBp!){
 
-                                                  }
+                                                   if(_diastolicController.text == "0" || _systolicController.text == "0"){
+                                                     showCustomSnackBar("Blood Pressure Value's Can't Be Zero",);
+                                                     return;
+                                                   }
+
+                                                   if (_formKey.currentState!
+                                                       .validate()) {
+                                                     diabeticControl.addSugarApi(
+                                                         widget.isBp! ? 'bp' : 'sugar',
+                                                         diabeticControl
+                                                             .selectedSugarCheckValue
+                                                             .toString(),
+                                                         _fastingSugarController
+                                                             .text == "0"?null:_fastingSugarController
+                                                             .text,
+                                                         _measuredValueController
+                                                             .text == "0"?null:_measuredValueController
+                                                             .text,
+                                                         _dateController.text,
+                                                         diabeticControl.isHba1c?diabeticControl
+                                                             .hbA1cPercentage.value
+                                                             .toString():"",
+                                                         widget.isBp! ? _systolicController.text : null,
+                                                         widget.isBp! ? _diastolicController.text : null
+                                                     ).then((value){
+                                                       if(value){
+                                                         Get.to(()=>DashboardScreen(pageIndex: 1));
+                                                       }
+                                                       diabeticControl.selectedSugarCheck = "";
+                                                     });
+
+                                                   }
+                                                 } else {
+                                                   if (_formKey.currentState!
+                                                       .validate()) {
+                                                     diabeticControl.addSugarApi(
+                                                         widget.isBp! ? 'bp' : 'sugar',
+                                                         diabeticControl
+                                                             .selectedSugarCheckValue
+                                                             .toString(),
+                                                         _fastingSugarController
+                                                             .text == "0"?null:_fastingSugarController
+                                                             .text,
+                                                         _measuredValueController
+                                                             .text == "0"?null:_measuredValueController
+                                                             .text,
+                                                         _dateController.text,
+                                                         diabeticControl.isHba1c?diabeticControl
+                                                             .hbA1cPercentage.value
+                                                             .toString():"",
+                                                         widget.isBp! ? _systolicController.text : null,
+                                                         widget.isBp! ? _diastolicController.text : null
+                                                     ).then((value){
+                                                       if(value){
+                                                         Get.to(()=>DashboardScreen(pageIndex: 1));
+                                                       }
+                                                       diabeticControl.selectedSugarCheck = "";
+                                                     });
+
+                                                   }
+                                                 }
+
+
+
+
                                                 },
                                               ),
                                             ),

@@ -31,10 +31,12 @@ class SugarChart extends StatelessWidget {
           // Fasting data
           final fastingValue = element.measureValues.isNotEmpty
               ? double.tryParse((isBp == "Blood Pressure")
-              ? element.measureValues[0].systolic ?? '0'
-              : element.measureValues[0].fastingSugar ?? '0')
+              ? element.measureValues[0].systolic
+              : element.measureValues[0].fastingSugar)
               : 0.0;
-          fastingData.add(SugarData(date: date, value: fastingValue ?? 0.0));
+          if (fastingValue != null && fastingValue != 0) {
+            fastingData.add(SugarData(date: date, value: fastingValue));
+          }
 
           // Post-meal data
           final postMealValue = element.measureValues.isNotEmpty
@@ -42,10 +44,25 @@ class SugarChart extends StatelessWidget {
               ? element.measureValues[0].diastolic ?? '0'
               : element.measureValues[0].measuredValue ?? '0')
               : 0.0;
-          postMealData.add(SugarData(date: date, value: postMealValue ?? 0.0));
+          if (postMealValue != null && postMealValue != 0) {
+            postMealData.add(SugarData(date: date, value: postMealValue));
+          }
         }
       });
 
+
+
+
+      // Sort the data by date
+      fastingData.sort((a, b) => a.date.compareTo(b.date));
+      postMealData.sort((a, b) => a.date.compareTo(b.date));
+
+
+      double getMaxValue() {
+        final fastingMax = fastingData.map((data) => data.value).reduce((a, b) => a > b ? a : b);
+        final postMealMax = postMealData.map((data) => data.value).reduce((a, b) => a > b ? a : b);
+        return (fastingMax > postMealMax ? fastingMax : postMealMax) + 50; // Add padding
+      }
       // Debug: Log data
       print("Fasting Data: $fastingData");
       print("Post Meal Data: $postMealData");
@@ -55,15 +72,26 @@ class SugarChart extends StatelessWidget {
           : isListEmpty
           ? const Center(child: Text('Add Sugar Level For Track Details'))
           : SfCartesianChart(
+        crosshairBehavior: CrosshairBehavior(
+          enable: true,
+          activationMode: ActivationMode.singleTap,
+          shouldAlwaysShow: true,
+        ),
         enableAxisAnimation: true,
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat('dd/MM'),
           intervalType: DateTimeIntervalType.days,
+          minimum: fastingData.isNotEmpty ? fastingData.first.date : DateTime.now(),
+          maximum: fastingData.isNotEmpty ? fastingData.last.date.add(Duration(days: 1)) : DateTime.now(),
         ),
-        primaryYAxis: NumericAxis(),
-        series: <LineSeries<SugarData, DateTime>>[
+        primaryYAxis: NumericAxis(
+          minimum: 0,
+          maximum: 1000,
+          interval: 50,
+        ),
+        series: <SplineSeries<SugarData, DateTime>>[
           if (isBp == "Blood Pressure" || isBp == "fasting")
-            LineSeries<SugarData, DateTime>(
+            SplineSeries<SugarData, DateTime>(
               name: 'Fasting Values',
               dataSource: fastingData,
               xValueMapper: (SugarData data, _) => data.date,
@@ -78,7 +106,7 @@ class SugarChart extends StatelessWidget {
               color: Colors.red,
             ),
           if (isBp == "Blood Pressure" || isBp == "postMeal")
-            LineSeries<SugarData, DateTime>(
+            SplineSeries<SugarData, DateTime>(
               name: 'Post Meal Values',
               dataSource: postMealData,
               xValueMapper: (SugarData data, _) => data.date,

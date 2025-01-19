@@ -37,7 +37,8 @@ class CustomTextField extends StatefulWidget {
   final bool arrows;
   final int? upperLimit;
   final int? lowerLimit;
-  final bool? isFormat; // New property for disallowing dots
+  final bool? isFormat;
+  final bool? isSugarAdding;// New property for disallowing dots
 
   const CustomTextField({
     super.key,
@@ -75,7 +76,7 @@ class CustomTextField extends StatefulWidget {
     this.arrows = false,
     this.upperLimit,
     this.lowerLimit,
-    this.isFormat,
+    this.isFormat, this.isSugarAdding = false,
   });
 
   @override
@@ -168,6 +169,7 @@ class CustomTextFieldState extends State<CustomTextField> {
   }
 
   List<TextInputFormatter>? _getInputFormatters() {
+
     if (widget.isFormat == true) {
       return [
         FilteringTextInputFormatter.deny(RegExp(r'\.')),

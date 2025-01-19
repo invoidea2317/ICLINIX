@@ -145,6 +145,7 @@ class AuthController extends GetxController implements GetxService {
         _isLoginLoading = false;
         update();
         // showCustomSnackBar(responseData['message'], isError: false);
+        debugPrint("OTP: ${responseData['message']}");
         Get.toNamed(RouteHelper.getOtpVerificationRoute(phoneNo));
       } else {
         _isLoginLoading = false;
