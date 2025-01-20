@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 class Ticket {
   final int? id;
   final String? ticketNo;
@@ -91,6 +93,7 @@ class TicketReply {
   });
 
   factory TicketReply.fromJson(Map<String, dynamic> json) {
+    debugPrint("TicketReply: ${json['created_at']}");
     return TicketReply(
       id: json['id'],
       ticketId: json['ticket_id'],

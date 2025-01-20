@@ -559,7 +559,7 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                     sizedBoxDefault(),
 
                     if (!isListEmpty) ...[
-                      const Text('Today’s Blood Sugar Parameters',
+                      const Text('Monthly Health Parameters',
                           style: openSansSemiBold),
                       sizedBoxDefault(),
                    Row(

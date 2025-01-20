@@ -101,6 +101,7 @@ class ChatController extends GetxController implements GetxService {
 
        if (parsedResponse['data'] is List) {
          final List<dynamic> data = parsedResponse['data'];
+         log("valueee==> ${data}");
          // Map each item in the data list to a Ticket object
          final List<Ticket> tickets = [];
           data.forEach((item) {
@@ -131,12 +132,13 @@ class ChatController extends GetxController implements GetxService {
 
        // Use response.body directly if already parsed into a map
        final Map<String, dynamic> parsedResponse = response.body;
-
+       debugPrint("valueee Data==> ${parsedResponse}");
        if (parsedResponse['data']["ticket"]["ticket_to_replies"] is List) {
          final List<dynamic> data = parsedResponse['data']["ticket"]["ticket_to_replies"];
          // Map each item in the data list to a Ticket object
          final List<TicketReply> tickets = [];
          data.forEach((item) {
+           debugPrint("valueee Data==> ${item}");
            tickets.add(TicketReply.fromJson(item));
          });
          setTicketReplies([]);

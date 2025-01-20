@@ -43,7 +43,9 @@ class _MessagingState extends State<Messaging> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().userDataApi();
+      Get.find<ChatController>().setTicketReplies(sortRepliesByDate(Get.find<ChatController>().ticketsReplies));
     });
+
   }
 
   Future<void> _pickAttachments() async {
@@ -118,7 +120,8 @@ class _MessagingState extends State<Messaging> {
         final responseData = jsonDecode(responseBody);
         print("Success: ${responseData['message']}");
         if (responseData['message'] == "Reply added successfully") {
-          Get.find<ChatController>().getSingleTicketReplies(widget.id);
+          await Get.find<ChatController>().getSingleTicketReplies(widget.id);
+           Get.find<ChatController>().setTicketReplies(sortRepliesByDate(Get.find<ChatController>().ticketsReplies));
         }
       } else {
         print("Error: ${response.reasonPhrase}");
@@ -127,11 +130,24 @@ class _MessagingState extends State<Messaging> {
       print("Exception: $e");
     }
   }
+  List<TicketReply> sortRepliesByDate(List<TicketReply> replies, {bool ascending = true}) {
+    replies.sort((a, b) {
+      if (ascending) {
+        return a.createdAt!.compareTo(b.createdAt!);
+      } else {
+        return b.createdAt!.compareTo(a.createdAt!);
+      }
+    });
+    return replies;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       builder: (controller) {
+
+
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -139,8 +155,9 @@ class _MessagingState extends State<Messaging> {
             actions: [
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  Get.find<ChatController>().getSingleTicketReplies(widget.id);
+                onPressed: () async {
+                 await Get.find<ChatController>().getSingleTicketReplies(widget.id);
+                  Get.find<ChatController>().setTicketReplies(sortRepliesByDate(Get.find<ChatController>().ticketsReplies));
                 },
               ),
             ],
@@ -164,7 +181,7 @@ class _MessagingState extends State<Messaging> {
                             itemBuilder: (context, index) {
                               final reply = Get.find<ChatController>()
                                   .ticketsReplies[index];
-
+                              debugPrint("User Data: ${reply.createdAt}");
                               final bool isBlueBackground =
                                   reply.replyByUserId ==
                                       (Get.find<AuthController>().userData ??
@@ -380,8 +397,9 @@ class _MessagingState extends State<Messaging> {
   }
 
   String _formatTime(DateTime? dateTime) {
+    debugPrint("DateTime: $dateTime");
     if (dateTime == null) return '';
-    return DateFormat('h:mm a').format(dateTime);
+    return DateFormat('dd/MM/yyy h:mm a').format(dateTime);
   }
 }
 
@@ -468,70 +486,6 @@ class ImageGridView extends StatelessWidget {
       },
     );
   }
-
-  // void _showPopup(BuildContext context, List<String> fileUrls) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               const Text(
-  //                 'All Images',
-  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //               ),
-  //               const SizedBox(height: 8),
-  //               Expanded(
-  //                 child: GridView.builder(
-  //                   gridDelegate:
-  //                       const SliverGridDelegateWithFixedCrossAxisCount(
-  //                     crossAxisCount: 3,
-  //                     crossAxisSpacing: 4.0,
-  //                     mainAxisSpacing: 4.0,
-  //                   ),
-  //                   itemCount: fileUrls.length,
-  //                   itemBuilder: (context, index) {
-  //                     final fileUrl = fileUrls[index];
-  //                     final isPdf = fileUrl.toLowerCase().endsWith('.pdf');
-  //
-  //                     return GestureDetector(
-  //                       onTap: !isPdf
-  //                           ? () => _showFullImage(context, fileUrl)
-  //                           : null,
-  //                       child: isPdf
-  //                           ? Container(
-  //                               color: Colors.grey[300],
-  //                               child: const Center(
-  //                                 child: Icon(
-  //                                   Icons.picture_as_pdf,
-  //                                   size: 50,
-  //                                   color: Colors.red,
-  //                                 ),
-  //                               ),
-  //                             )
-  //                           : Image.network(
-  //                               fileUrl,
-  //                               fit: BoxFit.cover,
-  //                             ),
-  //                     );
-  //                   },
-  //                 ),
-  //               ),
-  //               TextButton(
-  //                 onPressed: () => Navigator.of(context).pop(),
-  //                 child: const Text('Close'),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
 
 }
 

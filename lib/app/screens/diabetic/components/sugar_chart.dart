@@ -86,7 +86,7 @@ class SugarChart extends StatelessWidget {
         ),
         primaryYAxis: NumericAxis(
           minimum: 0,
-          maximum: 1000,
+          maximum: 500,
           interval: 50,
         ),
         series: <SplineSeries<SugarData, DateTime>>[
@@ -111,7 +111,11 @@ class SugarChart extends StatelessWidget {
               dataSource: postMealData,
               xValueMapper: (SugarData data, _) => data.date,
               yValueMapper: (SugarData data, _) => data.value,
-              dataLabelSettings: const DataLabelSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(
+                isVisible: true,
+                // margin: EdgeInsets.all(5),
+                // labelAlignment: ChartDataLabelAlignment.,
+              ),
               markerSettings: const MarkerSettings(
                 isVisible: true,
                 shape: DataMarkerType.circle,
