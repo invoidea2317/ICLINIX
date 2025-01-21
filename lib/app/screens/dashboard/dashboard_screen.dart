@@ -18,6 +18,7 @@ import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/images.dart';
 
+import '../chat/chat_screen.dart';
 import '../diabetic/diabetic_screen.dart';
 import '../profile/profile_screen.dart';
 
@@ -92,9 +93,11 @@ class DashboardScreenState extends State<DashboardScreen> {
             floatingActionButtonLocation: ExpandableFab.location,
             floatingActionButton: ExpandableFab(
               duration: const Duration(milliseconds: 100),
-              overlayStyle: const ExpandableFabOverlayStyle(
-                blur: 15
+              overlayStyle: ExpandableFabOverlayStyle(
+                color: Colors.black.withOpacity(0.5),
+                blur: 5,
               ),
+
               openButtonBuilder: RotateFloatingActionButtonBuilder(
                 child: const Icon(Icons.message),
                 fabSize: ExpandableFabSize.regular,
@@ -110,38 +113,44 @@ class DashboardScreenState extends State<DashboardScreen> {
                 shape: const CircleBorder(),
               ),
               children: [
-                FloatingActionButton.extended(
-                  tooltip: "New Message",
-                  onPressed: () {
-                    Get.toNamed(RouteHelper.getChatRoute());
-                  },
-                  label: const Text("New Message", style: TextStyle(color: Colors.white)), // Title/Label
-                  icon: const Icon(Icons.add, color: Colors.white), // Icon
-                  backgroundColor: Theme.of(context).primaryColor, // Optional: Change the button color
+                // Use a Column to organize FABs with spacing
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FloatingActionButton.extended(
+                      tooltip: "Life Style Support",
+                      onPressed: () {
+                        Get.to(()=>ChatScreen(selectedValue: "Lifestyle Support"));
+                      },
+                      label: const Text("Life Style Support", style: TextStyle(color: Colors.white)),
+                      icon:  const ImageIcon(AssetImage("assets/icons/ImageIconMessage.png"), color: Colors.white),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                    const SizedBox(height: 8), // Add spacing between FABs
+                    FloatingActionButton.extended(
+                      tooltip: "New Message",
+                      onPressed: () {
+                        Get.to(()=>ChatScreen());
+                      },
+                      label: const Text("New Message", style: TextStyle(color: Colors.white)),
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                    const SizedBox(height: 8), // Add spacing between FABs
+                    FloatingActionButton.extended(
+                      tooltip: "All Message",
+                      onPressed: () {
+                        Get.toNamed(RouteHelper.getMessageRoute());
+                      },
+                      label: const Text("All Message", style: TextStyle(color: Colors.white)),
+                      icon: const Icon(Icons.view_agenda, color: Colors.white),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                  ],
                 ),
-
-                FloatingActionButton.extended(
-                  tooltip: "All Message",
-                  onPressed: () {
-                    Get.toNamed(RouteHelper.getMessageRoute());
-                  },
-                  label: const Text("All Message", style: TextStyle(color: Colors.white)), // Title/Label
-                  icon: const Icon(Icons.view_agenda, color: Colors.white), // Icon
-                  backgroundColor: Theme.of(context).primaryColor, // Optional: Change the button color
-                ),
-
-              //   FloatingActionButton(
-              //   tooltip: "New Message",
-              //   onPressed: () {
-              //     Get.toNamed(RouteHelper.getChatRoute());
-              //   },
-              //   child: const Icon(Icons.add,color: Colors.white,),
-              // ),
-            ],
+              ],
             ),
-
-
-
             extendBody: true,
             resizeToAvoidBottomInset: false,
             bottomNavigationBar: GetBuilder<AuthController>(

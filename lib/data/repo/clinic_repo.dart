@@ -92,6 +92,13 @@ class ClinicRepo {
     });
   }
 
+  Future<Response>
+  setReadDone(
+      String id
+      ) async {
+    return await apiClient.getData('ticket/mark-read/${id}');
+  }
+
 }
 
 

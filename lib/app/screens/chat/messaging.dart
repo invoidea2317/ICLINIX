@@ -44,6 +44,7 @@ class _MessagingState extends State<Messaging> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<AuthController>().userDataApi();
       Get.find<ChatController>().setTicketReplies(sortRepliesByDate(Get.find<ChatController>().ticketsReplies));
+       Get.find<ChatController>().setIsRead(widget.id);
     });
 
   }
@@ -146,11 +147,18 @@ class _MessagingState extends State<Messaging> {
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       builder: (controller) {
-
+        Get.find<ChatController>().setIsRead(widget.id);
 
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Get.back();
+                Get.find<ChatController>().getTickets();
+              },
+            ),
             title: Text(widget.subject),
             actions: [
               IconButton(
@@ -238,7 +246,11 @@ class _MessagingState extends State<Messaging> {
                                                                     .fileUrl![0]
                                                                     .toLowerCase()
                                                                     .endsWith(
-                                                                        '.pdf')
+                                                                        '.pdf') || reply
+                                                                .fileUrl![0]
+                                                                .toLowerCase()
+                                                                .endsWith(
+                                                                '.xlsx')
                                                                 ? Stack(
                                                                     children: [
                                                                       Image

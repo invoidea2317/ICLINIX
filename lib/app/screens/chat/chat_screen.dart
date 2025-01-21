@@ -14,7 +14,8 @@ import '../../../utils/sizeboxes.dart';
 import '../../widget/custom_snackbar.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key});
+  String? selectedValue;
+  ChatScreen({super.key, this.selectedValue});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -25,6 +26,18 @@ class _ChatScreenState extends State<ChatScreen> {
   final description = TextEditingController();
   List<File> selectedFiles = [];
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Get.find<ChatController>().setType(widget.selectedValue == "Question"
+        ? 1
+        : widget.selectedValue == "Urgent"
+        ? 3
+        : widget.selectedValue == "Lifestyle Support" ? 4:2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatControl) {
@@ -32,10 +45,10 @@ class _ChatScreenState extends State<ChatScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              CustomAppBar(
+              const CustomAppBar(
                 title: 'Send Message ',
                 isBackButtonExist: true,
-                menuWidget: const Row(
+                menuWidget: Row(
                   children: [
                     NotificationButton(),
                   ],
@@ -44,55 +57,75 @@ class _ChatScreenState extends State<ChatScreen> {
               // SizedBox(
               //   height: 25,
               // ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CustomDropdownField(
-                        selectedValue: chatControl.type == 1 ? "Question" : chatControl.type == 3?"Urgent":"Problem",
-                        hintText: '',
-                        options: const ["Question", "Problem", "Urgent","Lifestyle Support"],
-                        onChanged: (String? newValue) {
-                          chatControl.setType(newValue == "Question"
-                              ? 1
-                              : newValue == "Urgent"
-                              ? 3
-                              : newValue == "Lifestyle Support" ? 4:2);
-                        },
-                        showTitle: true, // Set to true to show title
+              Visibility(
+                visible: chatControl.type != 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdownField(
+                          selectedValue: chatControl.type == 1 ? "Question" : chatControl.type == 3?"Urgent":"Problem",
+                          hintText: '',
+                          options: const ["Question", "Problem", "Urgent",],
+                          onChanged: (String? newValue) {
+                            chatControl.setType(newValue == "Question"
+                                ? 1
+                                : newValue == "Urgent"
+                                ? 3:2);
+                          },
+                          showTitle: true, // Set to true to show title
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: chatControl.type == 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          showBorder: false,
+                        controller: TextEditingController(text: 'Lifestyle Support'),
+                          readOnly: true,
+                          hintText: 'Lifestyle Support',
+                        )
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 15,
               ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: CustomTextField(
+              //           controller: subjectController,
+              //           showTitle: true,
+              //           hintText: 'Topic',
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 15,
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   children: [
                     Expanded(
                       child: CustomTextField(
-                        controller: subjectController,
-                        showTitle: true,
-                        hintText: 'Topic',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        maxLines: 3,
+                        maxLines: 20,
                         controller: description,
                         showTitle: false,
                         hintText: 'Description',
@@ -115,10 +148,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.attach_file),
+                        icon: const Icon(Icons.attach_file),
                         onPressed: _pickFiles,
                       ),
-                      Expanded(child: const Text("Add Attachment",))
+                      const Expanded(child: Text("Add Attachment",))
                     ],
                   ),
                 ),
@@ -130,8 +163,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Selected Files:"),
-                      SizedBox(height: 8),
+                      const Text("Selected Files:"),
+                      const SizedBox(height: 8),
                       ListView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
@@ -139,8 +172,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemBuilder: (context, index) {
                           return Row(
                             children: [
-                              Icon(Icons.insert_drive_file),
-                              SizedBox(width: 8),
+                              const Icon(Icons.insert_drive_file),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(selectedFiles[index].path.split('/').last),
                               ),
@@ -157,14 +190,12 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         bottomNavigationBar: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(left: 16.0,bottom: 100,right: 16),
+            padding: const EdgeInsets.only(left: 16.0,bottom: 20,right: 16),
             child: Row(
               children: [
                 Expanded(
                   child: CustomButtonWidget(buttonText: "Send", onPressed: () {
-                    if (subjectController.text.isEmpty) {
-                      showCustomSnackBar('Please enter subject');
-                    } else if (description.text.isEmpty) {
+                    if (description.text.isEmpty) {
                       showCustomSnackBar('Please enter description');
                     } else {
                       chatControl.sendMessage(chatControl.type, subjectController.text, description.text, selectedFiles);

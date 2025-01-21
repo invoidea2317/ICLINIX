@@ -157,6 +157,26 @@ class ChatController extends GetxController implements GetxService {
        LoadingDialog.hideLoading();
      }
 }
+Future<void> setIsRead(String id) async {
+     try {
+       // LoadingDialog.showLoading(message: "Sending..");
+       final response = await clinicRepo.setReadDone(id); // Replace with your API call
+       // log("valueee==> ${response.body}");
+
+       // Use response.body directly if already parsed into a map
+       final Map<String, dynamic> parsedResponse = response.body;
+       debugPrint("valueee Data==> ${parsedResponse}");
+       if (parsedResponse['message'] == "Ticket marked as read") {
+         debugPrint("valueee Data==> ${parsedResponse}");
+
+       } else {
+         throw Exception("Expected 'data' to be a List, got ${parsedResponse['data'].runtimeType}");
+       }
+     } catch (e) {
+       print("Error parsing tickets: $e");
+       LoadingDialog.hideLoading();
+     }
+}
 
 
 }
