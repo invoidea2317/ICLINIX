@@ -72,22 +72,31 @@ class SugarChart extends StatelessWidget {
           : isListEmpty
           ? const Center(child: Text('Add Sugar Level For Track Details'))
           : SfCartesianChart(
-        crosshairBehavior: CrosshairBehavior(
+        tooltipBehavior: TooltipBehavior(
+          animationDuration: 50,
           enable: true,
-          activationMode: ActivationMode.singleTap,
-          shouldAlwaysShow: true,
+          activationMode: ActivationMode.singleTap, // Ensure tooltip shows on tap
+          header: '',
+          format: 'point.x : point.y', // Display x and y values
+          canShowMarker: true,         // Show marker in the tooltip
         ),
         enableAxisAnimation: true,
+        borderWidth: 0, // Removes the chart border
+        borderColor: Colors.transparent, // Ensures the border is not visible
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat('dd/MM'),
           intervalType: DateTimeIntervalType.days,
           minimum: fastingData.isNotEmpty ? fastingData.first.date : DateTime.now(),
-          maximum: fastingData.isNotEmpty ? fastingData.last.date.add(Duration(days: 1)) : DateTime.now(),
+          maximum: fastingData.isNotEmpty ? fastingData.last.date.add(const Duration(days: 1)) : DateTime.now(),
+          majorGridLines: const MajorGridLines(width: 0), // Remove grid lines
+          axisLine: const AxisLine(width: 1), // Keeps the bottom X-axis line visible
         ),
-        primaryYAxis: NumericAxis(
+        primaryYAxis: const NumericAxis(
           minimum: 0,
           maximum: 500,
           interval: 50,
+          majorGridLines: MajorGridLines(width: 0), // Remove grid lines
+          axisLine: AxisLine(width: 1), // Keeps the left Y-axis line visible
         ),
         series: <SplineSeries<SugarData, DateTime>>[
           if (isBp == "Blood Pressure" || isBp == "fasting")
@@ -96,14 +105,14 @@ class SugarChart extends StatelessWidget {
               dataSource: fastingData,
               xValueMapper: (SugarData data, _) => data.date,
               yValueMapper: (SugarData data, _) => data.value,
-              dataLabelSettings: const DataLabelSettings(isVisible: true),
-              markerSettings: const MarkerSettings(
+              dataLabelSettings: const DataLabelSettings(isVisible: false),
+              markerSettings:  MarkerSettings(
                 isVisible: true,
                 shape: DataMarkerType.circle,
-                borderWidth: 2,
-                borderColor: Colors.red,
+                borderWidth: 3,
+                borderColor: isBp == "fasting"?Color(0xFFCC9531):Color.fromRGBO(255, 159, 64, 1,),
               ),
-              color: Colors.red,
+              color: isBp == "fasting"?Color(0xFFCC9531): Color.fromRGBO(255, 159, 64, 1,),
             ),
           if (isBp == "Blood Pressure" || isBp == "postMeal")
             SplineSeries<SugarData, DateTime>(
@@ -111,21 +120,18 @@ class SugarChart extends StatelessWidget {
               dataSource: postMealData,
               xValueMapper: (SugarData data, _) => data.date,
               yValueMapper: (SugarData data, _) => data.value,
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                // margin: EdgeInsets.all(5),
-                // labelAlignment: ChartDataLabelAlignment.,
-              ),
-              markerSettings: const MarkerSettings(
+              dataLabelSettings: const DataLabelSettings(isVisible: false),
+              markerSettings:  MarkerSettings(
                 isVisible: true,
                 shape: DataMarkerType.circle,
-                borderWidth: 2,
-                borderColor: Colors.blue,
+                borderWidth: 3,
+                borderColor: isBp == "postMeal"?Color(0xFF31CC64):Color.fromRGBO(153, 102, 255, 1),
               ),
-              color: Colors.blue,
+              color: isBp == "postMeal"?Color(0xFF31CC64):Color.fromRGBO(153, 102, 255, 1),
             ),
         ],
       );
+
     });
   }
 

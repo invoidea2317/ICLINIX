@@ -23,7 +23,8 @@ class AddSugarLevelsDialog extends StatefulWidget {
   State<AddSugarLevelsDialog> createState() => _AddSugarLevelsDialogState();
 }
 
-class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
+class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
+    with SingleTickerProviderStateMixin {
   final _fastingSugarController = TextEditingController();
 
   final _diastolicController = TextEditingController();
@@ -50,6 +51,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     fastingTest = widget.isBp! ? 'Blood Pressure' : 'Fasting Blood Sugar';
     postPrandialTest = widget.isBp! ? 'Blood Pressure' : 'Postprandial Sugars';
     PleaseSelectDropdown =
@@ -63,7 +65,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                           measureValues: []))
                   .measureValues
                   .isEmpty)
-              ? "0"
+              ? ""
               : (Get.find<DiabeticController>().todayBpValue ??
                       MonthlySugarValue(
                           testDate: DateTime.now().toString(),
@@ -77,7 +79,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                           measureValues: []))
                   .measureValues
                   .isEmpty)
-              ? "0"
+              ? ""
               : (Get.find<DiabeticController>().todayBpValue ??
                       MonthlySugarValue(
                           testDate: DateTime.now().toString(),
@@ -103,7 +105,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                           measureValues: []))
                   .measureValues
                   .isEmpty)
-              ? "Enter Fasting Sugar Value"
+              ? ""
               : (Get.find<DiabeticController>().todaySugar ??
                       MonthlySugarValue(
                           testDate: DateTime.now().toString(),
@@ -117,7 +119,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                           measureValues: []))
                   .measureValues
                   .isEmpty)
-              ?"Enter Postprandial Sugar Value"
+              ? ""
               : (Get.find<DiabeticController>().todaySugar ??
                       MonthlySugarValue(
                           testDate: DateTime.now().toString(),
@@ -148,7 +150,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
           itemCount: controller.sugarChartList!.monthlySugarValues.length,
           itemBuilder: (context, index) {
             final checkup =
-            controller.sugarChartList!.monthlySugarValues[index];
+                controller.sugarChartList!.monthlySugarValues[index];
             String heading;
             switch (int.parse(checkup.measureValues.isEmpty
                 ? "5"
@@ -174,17 +176,93 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
             return Visibility(
               visible: checkup.measureValues.isNotEmpty &&
                   checkup.measureValues[0].testType == "sugar",
-              child: ListTile(
-                title: Text(
-                    "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        "Fasting Sugar: ${checkup.measureValues.isEmpty || checkup.measureValues[0].fastingSugar == "0" ? "Enter Fasting Sugar Value" : checkup.measureValues[0].fastingSugar} mg/dL"),
-                    Text(
-                        "$heading: ${checkup.measureValues.isEmpty || checkup.measureValues[0].measuredValue == "0" ? "Enter $heading Value" : checkup.measureValues[0].measuredValue} mg/dL"),
-                  ],
+              child: Container(
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ),
+                ),
+                child: Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                      child: Text(
+                        " ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}",
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.5),
+                          fontSize: 12,
+                          fontFamily: 'Open Sans',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 200,
+                              height: 38,
+                              decoration: ShapeDecoration(
+                                color: Color(0xFFF8F5E7),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    "Fasting Sugar: ${checkup.measureValues.isEmpty || checkup.measureValues[0].fastingSugar == "0" ? "Enter Fasting Sugar Value" : checkup.measureValues[0].fastingSugar} mg/dL",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFCC9531),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 250,
+                              height: 38,
+                              decoration: ShapeDecoration(
+                                color: Color(0xFFE7F8EA),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    "$heading: ${checkup.measureValues.isEmpty || checkup.measureValues[0].measuredValue == "0" ? "Enter $heading Value" : checkup.measureValues[0].measuredValue} mg/dL",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF31CC64),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             );
@@ -206,19 +284,121 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
             return Visibility(
               visible: checkup.measureValues.isNotEmpty &&
                   checkup.measureValues[0].testType == "bp",
-              child: ListTile(
-                      title: Text(
-                          "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "Systolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].systolic == "0" ? "" : checkup.measureValues[0].systolic} mmHg"),
-                          Text(
-                              "Diastolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].diastolic == "0" ? "" : checkup.measureValues[0].diastolic} mmHg"),
-                        ],
+              child: Container(
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ),
+                ),
+                child: Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                      child: Text(
+                        " ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}",
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.5),
+                          fontSize: 12,
+                          fontFamily: 'Open Sans',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 200,
+                              height: 38,
+                              decoration: ShapeDecoration(
+                                color: Color.fromRGBO(
+                                  255,
+                                  159,
+                                  64,
+                                  0.19607843137254902,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    "Systolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].systolic == "0" ? "" : checkup.measureValues[0].systolic} mmHg",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(
+                                        255,
+                                        159,
+                                        64,
+                                        1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 200,
+                              height: 38,
+                              decoration: ShapeDecoration(
+                                color: Color.fromRGBO(
+                                    153, 102, 255, 0.24705882352941178),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    "Diastolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].diastolic == "0" ? "" : checkup.measureValues[0].diastolic} mmHg",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(153, 102, 255, 1),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              //
+              // ListTile(
+              //         title: Text(
+              //             "Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
+              //         subtitle: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text(
+              //                 "Systolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].systolic == "0" ? "" : checkup.measureValues[0].systolic} mmHg"),
+              //             Text(
+              //                 "Diastolic: ${checkup.measureValues.isEmpty || checkup.measureValues[0].diastolic == "0" ? "" : checkup.measureValues[0].diastolic} mmHg"),
+              //           ],
+              //         ),
+              //       ),
             );
           },
         ),
@@ -228,6 +408,8 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
     return const Center(child: Text("No sugar history available"));
   }
 
+  TabController? _tabController;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -236,88 +418,207 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
       child: GetBuilder<DiabeticController>(builder: (diabeticControl) {
         _dateController.text = Get.find<DiabeticController>().formattedDate!;
         return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: Get.size.width,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(Dimensions.radius5)),
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                  // color: Theme.of(context).primaryColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: Get.size.width,
+                height: 62,
+                decoration: ShapeDecoration(
+                  color: Color(0xFF0F84B8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(0),
+                    ),
+                  ),
+                ),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
                         diabeticControl.showHistory == true
                             ? widget.isBp!
-                                ? 'Bp history'
+                                ? 'Blood Pressure History'
                                 : 'Sugar History'
                             : widget.isBp!
-                                ? 'Add Blood Pressure Data'
-                                : 'Add Sugar',
-                        style: openSansSemiBold.copyWith(
-                            fontSize: Dimensions.fontSizeDefault,
-                            color: Theme.of(context).cardColor),
+                                ? 'Blood Pressure Data'
+                                : 'Sugar Data',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Open Sans',
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          GestureDetector(
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Get.back();
+                          diabeticControl.selectedSugarCheck = "";
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ))
+                  ],
+                ),
+                // color: Theme.of(context).primaryColor,
+              ),
+              Column(
+                children: [
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Theme.of(context).cardColor.withOpacity(0.1), // Background for TabBar
+                  //     borderRadius: BorderRadius.circular(Dimensions.radius10),
+                  //   ),
+                  //   child: TabBar(
+                  //     controller: _tabController,
+                  //     indicator: BoxDecoration(
+                  //       color: Theme.of(context).cardColor, // Highlighted tab color
+                  //       borderRadius: BorderRadius.circular(Dimensions.radius10),
+                  //     ),
+                  //     labelColor: Theme.of(context).scaffoldBackgroundColor, // Active tab text color
+                  //     unselectedLabelColor: Theme.of(context).cardColor, // Inactive tab text color
+                  //     tabs: [
+                  //       Tab(
+                  //         icon: Icon(Icons.history, size: Dimensions.fontSize30),
+                  //       ),
+                  //       Tab(
+                  //         icon: Icon(Icons.add, size: Dimensions.fontSize30),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 10),
+                  // TabBar(tabs: [
+                  //   Tab(
+                  //     text: "Blood Pressure",
+                  //   ),
+                  //   Tab(
+                  //     text: "Sugar",
+                  //   ),
+                  // ]),
+                  Container(
+                    width: Get.size.width,
+                    height: 62,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ),
+                      color: Color(0xFFF2F2F2),
+                      shape: BoxShape.rectangle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 3,
+                          blurRadius: 4,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              diabeticControl.toggleShowHistory(false);
+                            },
+                            child: Container(
+                                height: 62,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      width: 2,
+                                      color: !diabeticControl.showHistory?Colors.blue:Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                                // padding: const EdgeInsets.all(6),
+                                // decoration: BoxDecoration(
+                                //     color: diabeticControl.showHistory
+                                //         ? Theme.of(context)
+                                //         .cardColor
+                                //         .withOpacity(0.10)
+                                //         : Colors.transparent,
+                                //     borderRadius: BorderRadius.circular(
+                                //         Dimensions.radius10)),
+                                child: Center(
+                                  child: Text(
+                                    'Add Data',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: !diabeticControl.showHistory?Colors.blue:Colors.black.withOpacity(0.5),
+                                      fontSize: 18,
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: -0.24,
+                                    ),
+                                  ),
+                                )
+
+                                // Icon(
+                                //   Icons.history,
+                                //   size: Dimensions.fontSize30,
+                                //   color: Theme.of(context).primaryColor,
+                                // ),
+                                ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
                             onTap: () async {
                               // await diabeticControl.getSugarCheckUpHistory();
                               diabeticControl.toggleShowHistory(true);
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(6),
+                              height: 62,
                               decoration: BoxDecoration(
-                                  color: diabeticControl.showHistory
-                                      ? Theme.of(context)
-                                          .cardColor
-                                          .withOpacity(0.10)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radius10)),
-                              child: Icon(
-                                Icons.history,
-                                size: Dimensions.fontSize30,
-                                color: Theme.of(context).cardColor,
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 2,
+                                    color: diabeticControl.showHistory?Colors.blue:Colors.black.withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(6),
+                              // decoration: BoxDecoration(
+                              //     color: diabeticControl.showHistory == false
+                              //         ? Theme.of(context)
+                              //         .cardColor
+                              //         .withOpacity(0.10)
+                              //         : Colors.transparent,
+                              //     borderRadius: BorderRadius.circular(
+                              //         Dimensions.radius10)),
+                              child: Center(
+                                child: Text(
+                                  'History',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.5),
+                                    fontSize: 18,
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.24,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () async {
-                              diabeticControl.toggleShowHistory(false);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                  color: diabeticControl.showHistory == false
-                                      ? Theme.of(context)
-                                          .cardColor
-                                          .withOpacity(0.10)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radius10)),
-                              child: Icon(
-                                Icons.add,
-                                size: Dimensions.fontSize30,
-                                color: Theme.of(context).cardColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    diabeticControl.showHistory
-                        ? whichWidget(diabeticControl)
-                        : Form(
+
+                  diabeticControl.showHistory
+                      ? whichWidget(diabeticControl)
+                      : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
                             key: _formKey,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,8 +639,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                           .toString();
                                     },
                                     onTap: () async {
-                                      DateTime? pickedDate =
-                                          await showDatePicker(
+                                      DateTime? pickedDate = await showDatePicker(
                                         context: context,
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2010),
@@ -388,8 +688,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                       )),
                                   BloodSugarInput(
                                       maxLength: 3,
-                                      suffixText:
-                                          widget.isBp! ? "mmHg" : "mg/dL",
+                                      suffixText: widget.isBp! ? "mmHg" : "mg/dL",
                                       title: widget.isBp!
                                           ? "Diastolic "
                                           : fastingTest,
@@ -429,15 +728,15 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                               .selectedSugarCheck.isEmpty
                                           ? null
                                           : diabeticControl.selectedSugarCheck,
-                                      options: diabeticControl
-                                          .uniqueSugarCheckOptions,
+                                      options:
+                                          diabeticControl.uniqueSugarCheckOptions,
                                       // Use the unique options list here
                                       onChanged: (String? newValue) {
                                         if (newValue != null) {
                                           diabeticControl
                                               .updateSugarCheck(newValue);
-                                          print(diabeticControl
-                                              .selectedSugarCheck);
+                                          print(
+                                              diabeticControl.selectedSugarCheck);
                                           print(
                                               "Selected Value: ${diabeticControl.selectedSugarCheckValue}"); // Numeric value
                                         }
@@ -466,8 +765,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              diabeticControl
-                                                  .selectedSugarCheck,
+                                              diabeticControl.selectedSugarCheck,
                                               style: openSansRegular.copyWith(
                                                   fontSize:
                                                       Dimensions.fontSize12),
@@ -505,37 +803,29 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                 Expanded(
                                                   child: Text(
                                                     'HbA1c %',
-                                                    style: openSansRegular
-                                                        .copyWith(
+                                                    style:
+                                                        openSansRegular.copyWith(
                                                             fontSize: Dimensions
                                                                 .fontSize12),
                                                   ),
                                                 ),
                                                 Checkbox(
-                                                  value:
-                                                      diabeticControl.isHba1c,
-                                                  activeColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  fillColor:
-                                                      MaterialStateProperty
-                                                          .resolveWith<
-                                                              Color>((Set<
-                                                                  MaterialState>
-                                                              states) {
-                                                    if (states.contains(
-                                                        MaterialState
-                                                            .selected)) {
-                                                      return Theme.of(context)
-                                                          .primaryColor; // Active color
-                                                    }
-                                                    return Colors
-                                                        .grey; // Inactive color
-                                                  }),
+                                                  value: diabeticControl.isHba1c,
+                                                  activeColor: Theme.of(context).primaryColor, // Color when selected
+                                                  fillColor: MaterialStateProperty.resolveWith<Color>(
+                                                        (Set<MaterialState> states) {
+                                                      if (states.contains(MaterialState.selected)) {
+                                                        return Theme.of(context).primaryColor; // Active fill color
+                                                      }
+                                                      return Colors.transparent; // No fill color when unchecked
+                                                    },
+                                                  ),
+                                                  side: BorderSide(
+                                                    color: Theme.of(context).primaryColor, // Border color
+                                                    width: 2, // Border width
+                                                  ),
                                                   onChanged: (value) {
-                                                    diabeticControl
-                                                        .updateIsHba1c(
-                                                            !diabeticControl
-                                                                .isHba1c);
+                                                    diabeticControl.updateIsHba1c(!diabeticControl.isHba1c);
                                                   },
                                                 )
                                               ],
@@ -565,10 +855,9 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                               child: Obx(() {
                                                 return Text(
                                                   'Selected Percentage: ${diabeticControl.hbA1cPercentage.value} %',
-                                                  style:
-                                                      openSansRegular.copyWith(
-                                                          fontSize: Dimensions
-                                                              .fontSize12),
+                                                  style: openSansRegular.copyWith(
+                                                      fontSize:
+                                                          Dimensions.fontSize12),
                                                 );
                                               }),
                                             ),
@@ -581,20 +870,20 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                           child: CircularProgressIndicator())
                                       : Row(
                                           children: [
-                                            Flexible(
-                                              child: CustomButtonWidget(
-                                                buttonText: 'Cancel',
-                                                transparent: true,
-                                                isBold: false,
-                                                fontSize: Dimensions.fontSize14,
-                                                onPressed: () {
-                                                  Get.back();
-                                                  diabeticControl
-                                                      .selectedSugarCheck = "";
-                                                },
-                                              ),
-                                            ),
-                                            sizedBoxW10(),
+                                            // Flexible(
+                                            //   child: CustomButtonWidget(
+                                            //     buttonText: 'Cancel',
+                                            //     transparent: true,
+                                            //     isBold: false,
+                                            //     fontSize: Dimensions.fontSize14,
+                                            //     onPressed: () {
+                                            //       Get.back();
+                                            //       diabeticControl
+                                            //           .selectedSugarCheck = "";
+                                            //     },
+                                            //   ),
+                                            // ),
+                                            // sizedBoxW10(),
                                             Flexible(
                                               child: CustomButtonWidget(
                                                 buttonText: 'Save',
@@ -630,8 +919,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                         .validate()) {
                                                       diabeticControl
                                                           .addSugarApi(
-                                                              widget
-                                                                      .isBp!
+                                                              widget.isBp!
                                                                   ? 'bp'
                                                                   : 'sugar',
                                                               diabeticControl
@@ -670,8 +958,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                         if (value) {
                                                           Get.to(() =>
                                                               DashboardScreen(
-                                                                  pageIndex:
-                                                                      1));
+                                                                  pageIndex: 1));
                                                         }
                                                         diabeticControl
                                                             .selectedSugarCheck = "";
@@ -682,8 +969,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                         .validate()) {
                                                       diabeticControl
                                                           .addSugarApi(
-                                                              widget
-                                                                      .isBp!
+                                                              widget.isBp!
                                                                   ? 'bp'
                                                                   : 'sugar',
                                                               diabeticControl
@@ -722,8 +1008,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                                         if (value) {
                                                           Get.to(() =>
                                                               DashboardScreen(
-                                                                  pageIndex:
-                                                                      1));
+                                                                  pageIndex: 1));
                                                         }
                                                         diabeticControl
                                                             .selectedSugarCheck = "";
@@ -738,231 +1023,231 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog> {
                                   sizedBoxDefault(),
                                 ]),
                           ),
-                  ],
-                ),
+                      ),
+                ],
+              ),
 
-                // sizedBoxDefault(),
+              // sizedBoxDefault(),
 
-                // diabeticControl.showHistory
-                //     ? diabeticControl.isDailySugarCheckupLoading
-                //     ? const Center(child: CircularProgressIndicator())
-                //     : diabeticControl.sugarCheckUpList!.isNotEmpty
-                //     ? SizedBox(height: 500,
-                //       child: ListView.builder(
-                //         shrinkWrap: true,
-                //         itemCount:
-                //         diabeticControl.sugarCheckUpList!.length,
-                //         itemBuilder: (context, index) {
-                //       final checkup =
-                //       diabeticControl.sugarCheckUpList![index];
-                //       String heading;
-                //       switch (checkup.checkingTime) {
-                //         case 1:
-                //           heading = "Before Meal";
-                //           break;
-                //         case 2:
-                //           heading = "After Breakfast";
-                //           break;
-                //         case 3:
-                //           heading = "After Lunch";
-                //           break;
-                //         case 4:
-                //           heading = "After Dinner";
-                //           break;
-                //         case 5:
-                //           heading = "Random Entry";
-                //           break;
-                //         default:
-                //           heading = "Unknown";
-                //       }
-                //       return ListTile(
-                //         title: Text("Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
-                //         subtitle: Text(
-                //             "$heading: ${checkup.measuredValue ?? 'N/A'}"),
-                //       );
-                //                         },
-                //                       ),
-                //     )
-                //     : const Center(
-                //     child: Text("No sugar history available"))
-                //     : Form(
-                //   key: _formKey,
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       sizedBox20(),
-                //       Text(
-                //         'Test Date',
-                //         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),
-                //       ),
-                //       sizedBox5(),
-                //       CustomTextField(
-                //         controller: _dateController,
-                //         readOnly: true,
-                //         onChanged: (val) {
-                //           _dateController.text = diabeticControl.formattedDate.toString();
-                //         },
-                //
-                //         onTap: () async {
-                //           DateTime? pickedDate = await showDatePicker(
-                //             context: context,
-                //             initialDate: DateTime.now(),
-                //             firstDate: DateTime(2010),
-                //             lastDate: DateTime(2100),
-                //           );
-                //           if (pickedDate != null) {
-                //             diabeticControl.updateDate(pickedDate);
-                //
-                //           }
-                //         },
-                //         validation: (value) {
-                //           if (value == null || value.isEmpty) {
-                //             return 'Please select a test date';
-                //           }
-                //           return null;
-                //         },
-                //         hintText: 'Select Test Date',
-                //         isCalenderIcon: true,
-                //         editText: true,
-                //         suffixText: '',
-                //       ),
-                //       sizedBox10(),
-                //       Text(
-                //         fastingTest,
-                //         style:   openSansRegular.copyWith(
-                //             fontSize: Dimensions.fontSize12
-                //         ), //,
-                //       ),
-                //       BloodSugarInput(
-                //         title: fastingTest,
-                //         hintText: fastingTest,
-                //         controller: _fastingSugarController,
-                //         validator: (value) {
-                //           if (value == null || value.isEmpty) {
-                //             return 'Add Value';
-                //           }
-                //           return null;
-                //         },
-                //       ),
-                //       sizedBox10(),
-                //       CustomDropdownField(
-                //         hintText: postPrandialTest,
-                //         selectedValue: diabeticControl.selectedSugarCheck.isEmpty ? null : diabeticControl.selectedSugarCheck,
-                //         options: diabeticControl.uniqueSugarCheckOptions,  // Use the unique options list here
-                //         onChanged: (String? newValue) {
-                //           if (newValue != null) {
-                //             diabeticControl.updateSugarCheck(newValue);
-                //             print(diabeticControl.selectedSugarCheck);
-                //             print("Selected Value: ${diabeticControl.selectedSugarCheckValue}");  // Numeric value
-                //           }
-                //         },
-                //         validator: (value) {
-                //           if (value == null || value.isEmpty) {
-                //             return PleaseSelectDropdown;
-                //           }
-                //           return null;
-                //         },
-                //         showTitle: true, // Set to true to show title
-                //       ),
-                //
-                //       sizedBox10(),
-                //       diabeticControl.selectedSugarCheck.isEmpty ? const SizedBox() :
-                //       Column(crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Text(
-                //             diabeticControl.selectedSugarCheck,
-                //             style:   openSansRegular.copyWith(
-                //                 fontSize: Dimensions.fontSize12
-                //             ), //,
-                //           ),
-                //           BloodSugarInput(
-                //             title:  diabeticControl.selectedSugarCheck,
-                //             hintText:  diabeticControl.selectedSugarCheck,
-                //             controller: _measuredValueController,
-                //             validator: (value) {
-                //               if (value == null || value.isEmpty) {
-                //                 return 'Add Value';
-                //               }
-                //               return null;
-                //             },
-                //           ),
-                //         ],
-                //       ),
-                //       isBp! ? SizedBox() :
-                //       Column(crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           sizedBox10(),
-                //           Text(
-                //           'HbA1c %',
-                //           style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),),
-                //           Obx(() {
-                //             return Slider(
-                //               value: diabeticControl.hbA1cPercentage.value,
-                //               min: 5.0,
-                //               max: 7.0,
-                //               divisions: 20,
-                //               label: diabeticControl.hbA1cPercentage.value.toStringAsFixed(1),
-                //               onChanged: (double newValue) {
-                //                 diabeticControl.hbA1cPercentage.value = newValue;
-                //               },
-                //             );
-                //           }),
-                //           Obx(() {
-                //             return Text(
-                //               'Selected Percentage: ${diabeticControl.hbA1cPercentage.value} %',
-                //               style: openSansRegular.copyWith(
-                //                   fontSize: Dimensions.fontSize12
-                //               ),
-                //             );
-                //           }),
-                //         ],
-                //       ),
-                //       sizedBoxDefault(),
-                //       sizedBoxDefault(),
-                //       diabeticControl.isDailySugarCheckupLoading
-                //           ? const Center(
-                //           child: CircularProgressIndicator())
-                //           : Row(
-                //         children: [
-                //           Flexible(
-                //             child: CustomButtonWidget(
-                //               buttonText: 'Cancel',
-                //               transparent: true,
-                //               isBold: false,
-                //               fontSize: Dimensions.fontSize14,
-                //               onPressed: () {
-                //                 Get.back();
-                //               },
-                //             ),
-                //           ),
-                //           sizedBoxW10(),
-                //           Flexible(
-                //             child: CustomButtonWidget(
-                //               buttonText: 'Save',
-                //               isBold: false,
-                //               fontSize: Dimensions.fontSize14,
-                //               onPressed: () {
-                //                 if (_formKey.currentState!.validate()) {
-                //                   diabeticControl.addSugarApi(
-                //                     isBp! ?  '1' :'0',
-                //                     diabeticControl.selectedSugarCheckValue.toString(),
-                //                       _fastingSugarController.text,
-                //                       _measuredValueController.text,
-                //                       _dateController.text,
-                //                       diabeticControl.hbA1cPercentage.value.toString(),
-                //                   );
-                //                 }
-                //               },
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //       sizedBoxDefault(),
-                //     ],
-                //   ),
-                // ),
-              ],
-            ),
+              // diabeticControl.showHistory
+              //     ? diabeticControl.isDailySugarCheckupLoading
+              //     ? const Center(child: CircularProgressIndicator())
+              //     : diabeticControl.sugarCheckUpList!.isNotEmpty
+              //     ? SizedBox(height: 500,
+              //       child: ListView.builder(
+              //         shrinkWrap: true,
+              //         itemCount:
+              //         diabeticControl.sugarCheckUpList!.length,
+              //         itemBuilder: (context, index) {
+              //       final checkup =
+              //       diabeticControl.sugarCheckUpList![index];
+              //       String heading;
+              //       switch (checkup.checkingTime) {
+              //         case 1:
+              //           heading = "Before Meal";
+              //           break;
+              //         case 2:
+              //           heading = "After Breakfast";
+              //           break;
+              //         case 3:
+              //           heading = "After Lunch";
+              //           break;
+              //         case 4:
+              //           heading = "After Dinner";
+              //           break;
+              //         case 5:
+              //           heading = "Random Entry";
+              //           break;
+              //         default:
+              //           heading = "Unknown";
+              //       }
+              //       return ListTile(
+              //         title: Text("Date: ${AppointmentDateTimeConverter.formatDate(checkup.testDate.toString())}"),
+              //         subtitle: Text(
+              //             "$heading: ${checkup.measuredValue ?? 'N/A'}"),
+              //       );
+              //                         },
+              //                       ),
+              //     )
+              //     : const Center(
+              //     child: Text("No sugar history available"))
+              //     : Form(
+              //   key: _formKey,
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       sizedBox20(),
+              //       Text(
+              //         'Test Date',
+              //         style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),
+              //       ),
+              //       sizedBox5(),
+              //       CustomTextField(
+              //         controller: _dateController,
+              //         readOnly: true,
+              //         onChanged: (val) {
+              //           _dateController.text = diabeticControl.formattedDate.toString();
+              //         },
+              //
+              //         onTap: () async {
+              //           DateTime? pickedDate = await showDatePicker(
+              //             context: context,
+              //             initialDate: DateTime.now(),
+              //             firstDate: DateTime(2010),
+              //             lastDate: DateTime(2100),
+              //           );
+              //           if (pickedDate != null) {
+              //             diabeticControl.updateDate(pickedDate);
+              //
+              //           }
+              //         },
+              //         validation: (value) {
+              //           if (value == null || value.isEmpty) {
+              //             return 'Please select a test date';
+              //           }
+              //           return null;
+              //         },
+              //         hintText: 'Select Test Date',
+              //         isCalenderIcon: true,
+              //         editText: true,
+              //         suffixText: '',
+              //       ),
+              //       sizedBox10(),
+              //       Text(
+              //         fastingTest,
+              //         style:   openSansRegular.copyWith(
+              //             fontSize: Dimensions.fontSize12
+              //         ), //,
+              //       ),
+              //       BloodSugarInput(
+              //         title: fastingTest,
+              //         hintText: fastingTest,
+              //         controller: _fastingSugarController,
+              //         validator: (value) {
+              //           if (value == null || value.isEmpty) {
+              //             return 'Add Value';
+              //           }
+              //           return null;
+              //         },
+              //       ),
+              //       sizedBox10(),
+              //       CustomDropdownField(
+              //         hintText: postPrandialTest,
+              //         selectedValue: diabeticControl.selectedSugarCheck.isEmpty ? null : diabeticControl.selectedSugarCheck,
+              //         options: diabeticControl.uniqueSugarCheckOptions,  // Use the unique options list here
+              //         onChanged: (String? newValue) {
+              //           if (newValue != null) {
+              //             diabeticControl.updateSugarCheck(newValue);
+              //             print(diabeticControl.selectedSugarCheck);
+              //             print("Selected Value: ${diabeticControl.selectedSugarCheckValue}");  // Numeric value
+              //           }
+              //         },
+              //         validator: (value) {
+              //           if (value == null || value.isEmpty) {
+              //             return PleaseSelectDropdown;
+              //           }
+              //           return null;
+              //         },
+              //         showTitle: true, // Set to true to show title
+              //       ),
+              //
+              //       sizedBox10(),
+              //       diabeticControl.selectedSugarCheck.isEmpty ? const SizedBox() :
+              //       Column(crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             diabeticControl.selectedSugarCheck,
+              //             style:   openSansRegular.copyWith(
+              //                 fontSize: Dimensions.fontSize12
+              //             ), //,
+              //           ),
+              //           BloodSugarInput(
+              //             title:  diabeticControl.selectedSugarCheck,
+              //             hintText:  diabeticControl.selectedSugarCheck,
+              //             controller: _measuredValueController,
+              //             validator: (value) {
+              //               if (value == null || value.isEmpty) {
+              //                 return 'Add Value';
+              //               }
+              //               return null;
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //       isBp! ? SizedBox() :
+              //       Column(crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           sizedBox10(),
+              //           Text(
+              //           'HbA1c %',
+              //           style: openSansRegular.copyWith(fontSize: Dimensions.fontSize12),),
+              //           Obx(() {
+              //             return Slider(
+              //               value: diabeticControl.hbA1cPercentage.value,
+              //               min: 5.0,
+              //               max: 7.0,
+              //               divisions: 20,
+              //               label: diabeticControl.hbA1cPercentage.value.toStringAsFixed(1),
+              //               onChanged: (double newValue) {
+              //                 diabeticControl.hbA1cPercentage.value = newValue;
+              //               },
+              //             );
+              //           }),
+              //           Obx(() {
+              //             return Text(
+              //               'Selected Percentage: ${diabeticControl.hbA1cPercentage.value} %',
+              //               style: openSansRegular.copyWith(
+              //                   fontSize: Dimensions.fontSize12
+              //               ),
+              //             );
+              //           }),
+              //         ],
+              //       ),
+              //       sizedBoxDefault(),
+              //       sizedBoxDefault(),
+              //       diabeticControl.isDailySugarCheckupLoading
+              //           ? const Center(
+              //           child: CircularProgressIndicator())
+              //           : Row(
+              //         children: [
+              //           Flexible(
+              //             child: CustomButtonWidget(
+              //               buttonText: 'Cancel',
+              //               transparent: true,
+              //               isBold: false,
+              //               fontSize: Dimensions.fontSize14,
+              //               onPressed: () {
+              //                 Get.back();
+              //               },
+              //             ),
+              //           ),
+              //           sizedBoxW10(),
+              //           Flexible(
+              //             child: CustomButtonWidget(
+              //               buttonText: 'Save',
+              //               isBold: false,
+              //               fontSize: Dimensions.fontSize14,
+              //               onPressed: () {
+              //                 if (_formKey.currentState!.validate()) {
+              //                   diabeticControl.addSugarApi(
+              //                     isBp! ?  '1' :'0',
+              //                     diabeticControl.selectedSugarCheckValue.toString(),
+              //                       _fastingSugarController.text,
+              //                       _measuredValueController.text,
+              //                       _dateController.text,
+              //                       diabeticControl.hbA1cPercentage.value.toString(),
+              //                   );
+              //                 }
+              //               },
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       sizedBoxDefault(),
+              //     ],
+              //   ),
+              // ),
+            ],
           ),
         );
       }),

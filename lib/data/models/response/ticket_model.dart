@@ -15,6 +15,7 @@ class Ticket {
   final DateTime? updatedAt;
   final List<TicketReply>? ticketToReplies;
   final TicketType? ticketType;
+  final String? readStatus;
 
   Ticket({
     this.id,
@@ -29,6 +30,7 @@ class Ticket {
     this.updatedAt,
     this.ticketToReplies,
     this.ticketType,
+     this.readStatus,
   });
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class Ticket {
       status: json['status'],
       priority: json['priority'],
       typeId: json['type_id'],
+      readStatus: json['read_status'].toString(),
       closeDate: json['close_date'] != null ? DateTime.tryParse(json['close_date']) : null,
       createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null,
       updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at']) : null,
@@ -65,6 +68,7 @@ class Ticket {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'ticket_type': ticketType?.toJson(),
+       "read_status": readStatus,
     };
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_containers.dart';
 import 'package:iclinix/app/widget/custom_image_widget.dart';
@@ -27,6 +28,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../widget/loading_widget.dart';
 import '../../appointment/booking_successful_screen.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 
 class ResourcesComponent extends StatefulWidget {
@@ -52,20 +54,26 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
   }
   void showYouTubeVideoDialog(BuildContext context, String videoId) {
 
-
-    // Show dialog
+    // YouTubeWebView(videoId: videoId);
+    // // Show dialog
     showDialog(
+      // insetPadding: EdgeInsets.zero,
       context: context,
       barrierDismissible: true, // Allows closing the dialog by tapping outside
       builder: (context) {
         return Dialog(
+
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Container(
+          child:
+          // Container()
+          Container(
               width: double.infinity,
-              height: 200,
-              child: YoutubePlayerDialog(videoId: videoId)),
+              height:320,
+              child: YouTubeWebView(videoId: videoId)),
         );
       },
     );
@@ -686,62 +694,70 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
 }
 
 
-class YoutubePlayerDialog extends StatefulWidget {
-  final String videoId;
 
-  YoutubePlayerDialog({required this.videoId});
+class YouTubeWebView extends StatefulWidget {
+  final String videoId; // YouTube Video ID
+
+  const YouTubeWebView({Key? key, required this.videoId}) : super(key: key);
 
   @override
-  _YoutubePlayerDialogState createState() => _YoutubePlayerDialogState();
+  _YouTubeWebViewState createState() => _YouTubeWebViewState();
 }
 
-class _YoutubePlayerDialogState extends State<YoutubePlayerDialog> {
-  late YoutubePlayerController _controller;
+class _YouTubeWebViewState extends State<YouTubeWebView> {
+  late WebViewController _controller;
+  late String embedUrl;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize the YoutubePlayerController
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: true,
-        mute: false,
-      ),
-    );
-  }
+    // Construct the YouTube embed URL
+    embedUrl = "https://www.youtube.com/embed/${widget.videoId}";
 
-  @override
-  void dispose() {
-    // Dispose the controller when dialog is closed to stop the video
-    _controller.dispose();
-    super.dispose();
+    // Initialize the WebViewController
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Handle progress updates
+          },
+          onPageStarted: (String url) {
+            debugPrint("Page started loading: $url");
+          },
+          onPageFinished: (String url) {
+            debugPrint("Page finished loading: $url");
+          },
+          onWebResourceError: (WebResourceError error) {
+            debugPrint("WebResourceError: $error");
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(embedUrl));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // YouTube player inside the dialog
-          YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-            onReady: () {
-              print("Player is ready.");
-            },
-          ),
-          // Button to close the dialog
-          // IconButton(
-          //   icon: Icon(Icons.close),
-          //   onPressed: () {
-          //     // Close the dialog
-          //     Navigator.of(context).pop();
-          //   },
-          // ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        // Change orientation to portrait on back press
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+        return true; // Allow the back navigation
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('YouTube Video'),
+        ),
+        body: WebViewWidget(controller: _controller),
       ),
     );
   }
 }
+

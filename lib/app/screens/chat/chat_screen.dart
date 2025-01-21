@@ -107,6 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: (){
                     log("Message1");
                     _pickFiles();
@@ -117,12 +118,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         icon: Icon(Icons.attach_file),
                         onPressed: _pickFiles,
                       ),
-                      GestureDetector(
-                          onTap: (){
-                            _pickFiles();
-                            log("Message2");
-                          },
-                          child: Expanded(child: const Text("Add Attachment",)))
+                      Expanded(child: const Text("Add Attachment",))
                     ],
                   ),
                 ),

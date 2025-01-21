@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helper/gi_dart.dart' as di;
@@ -16,7 +17,7 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
 
-
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Initialize Flutter Local Notifications Plugin
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
