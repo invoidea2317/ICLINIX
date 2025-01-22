@@ -216,11 +216,13 @@ class DiabeticController extends GetxController implements GetxService {
     Response response = await diabeticRepo.dailySugarCheckUpRepo(
         testType, checkingTime,fastingSugar, measuredValue,checkingDate,hbA1c,systolic,diastolic
     );
+    debugPrint("Response Data: ${response.statusCode}");
     if(response.statusCode == 200) {
       var responseData = response.body;
-      log("${responseData}",name: "Response Data From AddSugar");
-      if(responseData["msg"]  == "Data Inserted/Updated Successfully") {
-
+      debugPrint("Response Data: $responseData");
+      // log("${responseData}",name: "Response Data From AddSugar");
+      if(responseData["msg"].toString()  == "Data Inserted/Updated Successfully") {
+         debugPrint("Data Inserted/Updated Successfully");
         _isDailySugarCheckupLoading = false;
         //
         // Get.back();
@@ -311,7 +313,7 @@ class DiabeticController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
         var data = response.body['data'];
-        // log("Data: ${response.body['data']["patientDetails"]}");
+        log("Data: ${response.body['data']["patientDetails"]}");
          var renewOption = response.body["renew_option"];
          var oldSubs = response.body["old_subs"];
 
@@ -382,7 +384,7 @@ class DiabeticController extends GetxController implements GetxService {
           if (data.containsKey('planDetails') && data['planDetails'] != null) {
             var planDetailsData = data['planDetails'];
             _planDetails = PlanDetailsModel.fromJson(planDetailsData);
-
+            // _patientData = PatientData.fromJson(data["patientDetails"]);
             // Clear previous resources
             videoResources.clear();
             imageResources.clear();
@@ -437,14 +439,16 @@ class DiabeticController extends GetxController implements GetxService {
   }
 
 
-  Future<void> addHealthApi(String? height, String? weight, String? waistCircumference,
-      String? hipCircumference, String? year,String? month) async {
+  Future<void> addHealthApi(String? patientId,String? height, String? weight, String? waistCircumference,
+      String? hipCircumference, String? year,String? month,String? others) async {
     _isDailySugarCheckupLoading = true;
     update();
-    Response response = await diabeticRepo.healthCheckUpRepo(height,weight,waistCircumference,
-        hipCircumference,year,month);
+    Response response = await diabeticRepo.healthCheckUpRepo(patientId,height,weight,waistCircumference,
+        hipCircumference,year,month,(others ?? ""));
+    debugPrint("Response Data: ${response.statusCode}");
     if(response.statusCode == 200) {
       var responseData = response.body;
+      debugPrint("Response Data: ${responseData}");
       if(responseData["msg"]  == "Data updated successfully") {
         Get.back();
         _isDailySugarCheckupLoading = false;

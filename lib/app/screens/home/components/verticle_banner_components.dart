@@ -48,18 +48,18 @@ class _VerticalBannerComponentsState extends State<VerticalBannerComponents> {
             //   ],
             // ):Image.network(controller.referImage)),
             // sizedBoxDefault(),
-            GestureDetector(
-                onTap: () {
-              controller.selectBookingType(false);
-              Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
-            },
-                child: controller.isDiscount?const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                ):Image.network(controller.discount)),
-            sizedBoxDefault(),
+            // GestureDetector(
+            //     onTap: () {
+            //   controller.selectBookingType(false);
+            //   Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));
+            // },
+            //     child: controller.isDiscount?const Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         CircularProgressIndicator(),
+            //       ],
+            //     ):Image.network(controller.discount)),
+            // sizedBoxDefault(),
             InkWell(onTap: () {
               controller.selectBookingType(true);
               Get.toNamed(RouteHelper.getAllClinicRoute(isBackButton: true));

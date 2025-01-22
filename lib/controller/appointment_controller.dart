@@ -53,6 +53,7 @@ class AppointmentController extends GetxController implements GetxService {
     update();
   }
  void setpatientData(PatientModel data) {
+    debugPrint("data===>: $data");
    _patientData = data;
     update();
   }

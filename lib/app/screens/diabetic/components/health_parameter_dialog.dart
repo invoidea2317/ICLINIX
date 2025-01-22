@@ -12,7 +12,8 @@ import '../../../../utils/styles.dart';
 import '../../../widget/custom_snackbar.dart';
 
 class AddHealthParameterDialog extends StatefulWidget {
-  const AddHealthParameterDialog({super.key});
+  final String patientId;
+  const AddHealthParameterDialog({super.key,required this.patientId});
 
   @override
   _AddHealthParameterDialogState createState() => _AddHealthParameterDialogState();
@@ -89,21 +90,26 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
         key: _formKey,
         child: SingleChildScrollView(
           child: GetBuilder<DiabeticController>(builder: (controller) {
-            bpDateController.text = controller.formattedDate ?? '';
-            bpTimeController.text = controller.formattedTime ?? '';
-            weightController.text = controller.subscribedPatientData?.weight ?? '';
-            heightController.text = controller.subscribedPatientData?.height?.toString() ?? '';
-            waistController.text = controller.subscribedPatientData?.waistCircumference?.toString() ?? '';
-            hipController.text = controller.subscribedPatientData?.hipCircumference?.toString() ?? '';
-            yearController.text = controller.subscribedPatientData?.duraDiabetes?["year"].toString() ?? '';
-            monthController.text = controller.subscribedPatientData?.duraDiabetes?["month"].toString() ?? '';
-            double weight = double.tryParse(weightController.text) ?? 0;
-            double height = double.tryParse(heightController.text) ?? 0;
-            String bmi = '';
-            if (height > 0) {
-              bmi = (weight / ((height / 100) * (height / 100))).toStringAsFixed(2); // height in cm
-            }
-            bMIController.text = bmi;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+
+              bpDateController.text = controller.formattedDate ?? '';
+              bpTimeController.text = controller.formattedTime ?? '';
+              weightController.text = controller.subscribedPatientData?.weight ?? '';
+              heightController.text = controller.subscribedPatientData?.height?.toString() ?? '';
+              waistController.text = controller.subscribedPatientData?.waistCircumference?.toString() ?? '';
+              hipController.text = controller.subscribedPatientData?.hipCircumference?.toString() ?? '';
+              yearController.text = controller.subscribedPatientData?.duraDiabetes?["year"] ?? '';
+              monthController.text = controller.subscribedPatientData?.duraDiabetes?["month"] ?? '';
+              double weight = double.tryParse(weightController.text) ?? 0;
+              double height = double.tryParse(heightController.text) ?? 0;
+              String bmi = '';
+              if (height > 0) {
+                bmi = (weight / ((height / 100) * (height / 100))).toStringAsFixed(2); // height in cm
+              }
+              bMIController.text = bmi;
+            });
+
+
             return Padding(
               padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
               child: Column(
@@ -231,10 +237,11 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                         //   ],
                         // ),
                         // sizedBox10(),
+                        Text("Duration of Diabetes", style: openSansRegular),
                         // Duration of Diabetes Input
                         BloodSugarInput(
                           isDouble: true,
-                          titleSecond: 'Months',
+                          titleSecond: '',
                           hintTextSecond: 'Months',
 
                           controllerSecond: monthController,
@@ -249,7 +256,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                             }
                             return null;
                           },
-                          title: 'Years', hintText: 'Year',
+                          title: '', hintText: 'Year',
                           controller: yearController,
                           suffixText: "Year",
                           validator: (value) {
@@ -306,14 +313,19 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                                 fontSize: Dimensions.fontSize14,
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
+                                    debugPrint('Save button clicked==> ${widget.patientId}');
                                     controller.addHealthApi(
+                                      widget.patientId,
                                       heightController.text,
                                       weightController.text,
                                       waistController.text,
                                       hipController.text,
                                      yearController.text,
-                                      monthController.text
-                                    );
+                                      monthController.text,
+                                      otherHealthController.text,
+                                    ).then((value){
+                                      Get.find<DiabeticController>().getSubscribedPatientDataApi();
+                                    });
                                   }
                                 },
                               ),

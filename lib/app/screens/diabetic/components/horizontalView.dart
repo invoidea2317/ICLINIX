@@ -7,7 +7,8 @@ import 'add_sugar_levels_dialog.dart';
 import 'health_parameter_dialog.dart';
 
 class HorizontalviewDiabetic extends StatelessWidget {
-  const HorizontalviewDiabetic({super.key});
+  final String patientId;
+  const HorizontalviewDiabetic({super.key, required this.patientId});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class HorizontalviewDiabetic extends StatelessWidget {
                 }else if(i==1){
                   Get.dialog(AddSugarLevelsDialog());
                 }else{
-                  Get.dialog(const AddHealthParameterDialog());
+                  Get.dialog( AddHealthParameterDialog(patientId: patientId,));
                 }
              },
              child: Container(

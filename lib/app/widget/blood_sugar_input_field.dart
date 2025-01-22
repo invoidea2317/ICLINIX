@@ -80,6 +80,7 @@ class BloodSugarInput extends StatelessWidget {
 
               Expanded(
                 child: CustomTextField(
+                  showTitle: false,
                   // upperLimit: 12,
                   maxLength: maxLength,
                   readOnly: readOnly,
@@ -102,6 +103,7 @@ class BloodSugarInput extends StatelessWidget {
               Expanded(
                 child: CustomTextField(
                   upperLimit: 12,
+                  showTitle: false,
                   arrows: true,
                   maxLength: maxLength,
                   readOnly: readOnlySecond ?? false,

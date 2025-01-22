@@ -130,6 +130,7 @@ class ApiClient extends GetxService {
       //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       //debugPrint('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
+      debugPrint("_mainHeaders: $_mainHeaders");
       http.Response response = await http.post(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),

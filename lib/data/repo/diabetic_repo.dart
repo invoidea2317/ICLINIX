@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:iclinix/data/api/api_client.dart';
 import 'package:iclinix/data/models/response/add_patient_model.dart';
 import 'package:iclinix/utils/app_constants.dart';
@@ -52,10 +53,11 @@ log("$body",name:"Data Going Before Api");
     return apiClient.getData(AppConstants.diabeticDashboard,method: 'GET');
   }
 
-  Future<Response> healthCheckUpRepo(String? height,
+  Future<Response> healthCheckUpRepo(String? patientId,String? height,
       String? weight,String? waistCircumference,
-      String? hipCircumference, String? year,String? month) {
-    return apiClient.postData(AppConstants.healthCheckup,{
+      String? hipCircumference, String? year,String? month, String Others) {
+    var body = {
+      // "patient_id": "$patientId",
       'height' : height,
       'weight' :weight,
       'waist_circumference' : waistCircumference,
@@ -63,8 +65,11 @@ log("$body",name:"Data Going Before Api");
       'dura_diabetes' : {
         "year":year,
         "month":month,
-      }
-    });
+      },
+      "other_condition":Others
+    };
+    debugPrint("Body: $body");
+    return apiClient.postData(AppConstants.healthCheckup,body);
   }
 
   Future<Response> fetchResourceContentRepo(String id) {

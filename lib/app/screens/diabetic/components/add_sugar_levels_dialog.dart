@@ -713,9 +713,9 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
                                             return "Enter PostPrandial Sugars or Fasting Sugar";
                                           }
 
-                                          if (value!.isEmpty) {
-                                            return "Enter Fasting Sugar can't be zero";
-                                          }
+                                          // if (value!.isEmpty) {
+                                          //   return "Enter Fasting Sugar can't be zero";
+                                          // }
                                         }
                                         return null;
                                       }),
@@ -902,18 +902,25 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
                                                       );
                                                       return;
                                                     }
-                                                    // if (!widget.isBp!) {
-                                                    // if (_fastingSugarController
-                                                    //             .text ==
-                                                    //         "0" ||
-                                                    //
-                                                    //             .text ==
-                                                    //         "0") {
-                                                    //   showCustomSnackBar(
-                                                    //     "Blood Pressure Value's Can't Be Zero",
-                                                    //   );
-                                                    //   return;
-                                                    // }
+
+                                                 if (
+                                                     int.tryParse(_systolicController
+                                                                .text)! > 400) {
+                                                      showCustomSnackBar(
+                                                        "Blood Pressure Value's Can't Be greater then 400",
+                                                      );
+                                                      return;
+                                                    }
+
+                                                 if (
+                                                 int.tryParse(_diastolicController
+                                                     .text)! < 60 ) {
+                                                      showCustomSnackBar(
+                                                        "Blood Pressure Value's Can't Be lesser then 60",
+                                                      );
+                                                      return;
+                                                    }
+
 
                                                     if (_formKey.currentState!
                                                         .validate()) {
@@ -965,6 +972,19 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
                                                       });
                                                     }
                                                   } else {
+
+                                                    if ((int.tryParse(_fastingSugarController
+                                                        .text) ?? 0) > 700
+                                                        ||
+                                                       ( int.tryParse(_measuredValueController
+                                                            .text) ?? 0) > 700) {
+                                                      showCustomSnackBar(
+                                                        "Blood Sugar Value's Can't Be greater then 700",
+                                                      );
+                                                      return;
+                                                    }
+
+
                                                     if (_formKey.currentState!
                                                         .validate()) {
                                                       diabeticControl
@@ -1005,7 +1025,10 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
                                                                       .text
                                                                   : null)
                                                           .then((value) {
+                                                        // debugPrint("Value: $value");
                                                         if (value) {
+                                                          // debugPrint("Value: $value");F
+                                                          // Get.back();
                                                           Get.to(() =>
                                                               DashboardScreen(
                                                                   pageIndex: 1));

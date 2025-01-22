@@ -136,7 +136,8 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                     ),
                     PopupMenuItem<String>(
                       onTap: () {
-                        Get.dialog(const AddHealthParameterDialog());
+                        debugPrint("PatientId==>${(Get.find<DiabeticController>().patientData ?? PatientData(diabetesProblem: 0, bpProblem: 0, eyeProblem: 0)).id.toString()}");
+                        Get.dialog(AddHealthParameterDialog(patientId: (Get.find<DiabeticController>().patientData ?? PatientData(diabetesProblem: 0, bpProblem: 0, eyeProblem: 0)).id.toString(),));
                       },
                       value: 'Add Health Data',
                       child: const Text('Add Health Data'),
@@ -734,7 +735,7 @@ class _DiabeticDashboardState extends State<DiabeticDashboard> {
                           "") !=
                       "Expired")
                     // sizedBoxDefault(),
-                    HorizontalviewDiabetic(),
+                    HorizontalviewDiabetic(patientId: (Get.find<DiabeticController>().patientData ?? PatientData(diabetesProblem: 0, bpProblem: 0, eyeProblem: 0)).id.toString(),),
                   sizedBoxDefault(),
                   AddHealthGoal(),
                   sizedBoxDefault(),

@@ -91,6 +91,19 @@ class CustomTextFieldState extends State<CustomTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        widget.showTitle
+            ? Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Text(
+            widget.hintText,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        )
+            : const SizedBox(),
         SizedBox(height: widget.showTitle ? 5 : 0),
         TextFormField(
           onTap: widget.onTap,
@@ -112,6 +125,7 @@ class CustomTextFieldState extends State<CustomTextField> {
           obscureText: widget.isPassword ? _obscureText : false,
           inputFormatters: _getInputFormatters(),
           decoration: InputDecoration(
+            suffixText: widget.suffixText,
             counterText: "",
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
