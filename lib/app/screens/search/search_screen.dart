@@ -881,7 +881,7 @@ class SearchScreen extends StatelessWidget {
                                       Get.toNamed(
                                           RouteHelper.getServiceDetailRoute(
                                               dataList2[i].id.toString(),
-                                              dataList2[i].name.toString()));
+                                              dataList2[i].name.toString(),dataList2[i].videoUrl.toString()));
 
                                       // Get.toNamed(RouteHelper.getSelectSlotRoute(
                                       //     dataList2[i].image,
@@ -1037,7 +1037,10 @@ class SearchScreen extends StatelessWidget {
                                                           .toString(),
                                                       dataList2[i]
                                                           .name
-                                                          .toString()));
+                                                          .toString(),
+                                                  dataList2[i].videoUrl.toString()
+
+                                              ));
                                               // Get.toNamed(
                                               // RouteHelper.getSelectSlotRoute(
                                               //     dataList[i].image,

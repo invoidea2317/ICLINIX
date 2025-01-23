@@ -12,6 +12,7 @@ import '../../../../utils/styles.dart';
 import '../../../widget/custom_button_widget.dart';
 import '../../../widget/custom_image_widget.dart';
 import '../../../widget/empty_data_widget.dart';
+import '../../diabetic/components/resources_component.dart';
 
 class ViewAllServicesScreen extends StatelessWidget {
   const ViewAllServicesScreen({super.key});
@@ -57,7 +58,7 @@ class ViewAllServicesScreen extends StatelessWidget {
               itemBuilder: (context, i) {
                 return GestureDetector(
                   onTap: () {
-                    Get.toNamed(RouteHelper.getServiceDetailRoute(dataList[i].id.toString(), dataList[i].name.toString()));
+                    Get.toNamed(RouteHelper.getServiceDetailRoute(dataList[i].id.toString(), dataList[i].name.toString(),dataList[i].videoUrl.toString()));
                   },
                   child: Column(crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

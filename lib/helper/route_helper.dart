@@ -114,9 +114,9 @@ class RouteHelper {
 
   static String getServiceDetailRoute(
     String? id,
-    String? title,
+    String? title, String? videoUrl,
   ) =>
-      '$serviceDetail?id=$id&title=$title';
+      '$serviceDetail?id=$id&title=$title&videoUrl=$videoUrl';
 
   static String getAddPlanPatientDetailsRoute(String? planId) =>
       '$planPatientDetails?planId=$planId';
@@ -206,6 +206,7 @@ class RouteHelper {
         page: () => ServiceDetailsScreen(
               id: Get.parameters['id'],
               title: Get.parameters['title'],
+              videoUrl: Get.parameters['videoUrl'],
             )),
     GetPage(
         name: planPatientDetails,

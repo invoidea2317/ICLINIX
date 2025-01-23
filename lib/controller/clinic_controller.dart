@@ -69,6 +69,7 @@ class ClinicController extends GetxController implements GetxService {
       Response response = await clinicRepo.getServicesList();
       if (response.statusCode == 200) {
         List<dynamic> responseData = response.body['services'];
+        log("==gj=====> ${response.body['services']}",name: "Services");
         _servicesList = responseData.map((json) => ServicesModel.fromJson(json)).toList();
         print("Plans fetched successfully: $_servicesList");
       } else {

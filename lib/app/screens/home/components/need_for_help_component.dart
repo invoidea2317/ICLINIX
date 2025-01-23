@@ -70,7 +70,7 @@ class NeedForHelpComponent extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           print('chck');
-                          Get.toNamed(RouteHelper.getServiceDetailRoute(dataList[i].id.toString(), dataList[i].name.toString()));
+                          Get.toNamed(RouteHelper.getServiceDetailRoute(dataList[i].id.toString(), dataList[i].name.toString(),dataList[i].videoUrl));
 
                         },
                         child: Column(

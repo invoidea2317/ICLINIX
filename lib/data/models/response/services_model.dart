@@ -8,6 +8,8 @@ class ServicesModel {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final bannerUrl;
+  final String? videoUrl;
+  final String? videoTitle;
 
   ServicesModel({
     required this.id,
@@ -18,6 +20,8 @@ class ServicesModel {
     required this.sortOrder,
     required this.status,
     required this.createdAt,
+    this.videoUrl,
+    this.videoTitle,
     this.updatedAt,
   });
 
@@ -33,6 +37,8 @@ class ServicesModel {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
       bannerUrl: json['banner_url'],
+      videoUrl: json['video_url'],
+      videoTitle: json['video_title'],
     );
   }
 
@@ -47,6 +53,8 @@ class ServicesModel {
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'banner_url': bannerUrl,
+      'video_url': videoUrl,
+      'video_title': videoTitle,
     };
   }
 }
