@@ -47,6 +47,7 @@ class SubscribedPatientModel {
   final Map<String,dynamic>? duraDiabetes;
   final String? createdAt;
   final String? updatedAt;
+  final String? OtherHealthData;
 
   SubscribedPatientModel({
     this.id,
@@ -95,6 +96,7 @@ class SubscribedPatientModel {
     this.duraDiabetes,
     this.createdAt,
     this.updatedAt,
+    this.OtherHealthData
   });
 
   factory SubscribedPatientModel.fromJson(Map<String, dynamic> json) {
@@ -145,6 +147,7 @@ class SubscribedPatientModel {
       duraDiabetes: jsonDecode(json['dura_diabetes']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
+      OtherHealthData: json['other']
     );
   }
 
@@ -196,6 +199,7 @@ class SubscribedPatientModel {
       'dura_diabetes': duraDiabetes,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'other': OtherHealthData
     };
   }
 }

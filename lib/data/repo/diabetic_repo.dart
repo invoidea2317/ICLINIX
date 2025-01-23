@@ -62,11 +62,9 @@ log("$body",name:"Data Going Before Api");
       'weight' :weight,
       'waist_circumference' : waistCircumference,
       'hip_circumference' : hipCircumference,
-      'dura_diabetes' : {
-        "year":year,
-        "month":month,
-      },
-      "other_condition":Others
+      "year":year,
+      "month":month,
+      "other":Others
     };
     debugPrint("Body: $body");
     return apiClient.postData(AppConstants.healthCheckup,body);

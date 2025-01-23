@@ -616,21 +616,28 @@ class DiabeticController extends GetxController implements GetxService {
     update();
 
     try {
+      _isLoading = true;
       Response response = await diabeticRepo.fetchSubscribedPatientDataRepo();
       if (response.statusCode == 200) {
+        _isLoading = false;
         final data = response.body['data'];
+        debugPrint("Data: $data");
         _subscribedPatientData = SubscribedPatientModel.fromJson(data);
       } else {
+        _isLoading = false;
         // Handle non-200 status codes
         print("Failed to subscribedPatientData data: ${response.statusCode}");
         // ApiChecker.checkApi(response);
       }
     } catch (e) {
+      _isLoading = false;
       // Handle exceptions
       print("Exception occurred: $e");
     }
     _isPatientDataLoading = false;
+    _isLoading = false;
     update();
+
     return _subscribedPatientData;
   }
 

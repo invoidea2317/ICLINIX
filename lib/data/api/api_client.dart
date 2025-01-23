@@ -130,6 +130,7 @@ class ApiClient extends GetxService {
       //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       //debugPrint('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
+      debugPrint("Encoded Body==> ${jsonEncode(body)}");
       debugPrint("_mainHeaders: $_mainHeaders");
       http.Response response = await http.post(
         Uri.parse(appBaseUrl+uri),
@@ -145,8 +146,7 @@ class ApiClient extends GetxService {
 
   Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, List<MultipartDocument> otherFile, {Map<String, String>? headers}) async {
     try {
-      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
-      //debugPrint('====> API Body: $body with ${multipartBody.length} and multipart ${otherFile.length}');
+
       http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse(appBaseUrl+uri));
       request.headers.addAll(headers ?? _mainHeaders);
       for(MultipartBody multipart in multipartBody) {

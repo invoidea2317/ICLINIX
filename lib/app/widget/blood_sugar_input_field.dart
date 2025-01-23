@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iclinix/app/widget/custom_dropdown_field.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
-import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
-import 'package:iclinix/utils/styles.dart';
 
 class BloodSugarInput extends StatelessWidget {
   final String title;
@@ -35,8 +34,15 @@ class BloodSugarInput extends StatelessWidget {
     this.readOnly = false,
     this.inputType,
     this.maxLength,
-    this.isDouble = false, this.titleSecond, this.hintTextSecond, this.suffixTextSecond, this.inputTypeSecond, this.controllerSecond, this.validatorSecond, this.onChangedSecond, this.readOnlySecond,  // Initialize readOnly with a default value of false
-
+    this.isDouble = false,
+    this.titleSecond,
+    this.hintTextSecond,
+    this.suffixTextSecond,
+    this.inputTypeSecond,
+    this.controllerSecond,
+    this.validatorSecond,
+    this.onChangedSecond,
+    this.readOnlySecond, // Initialize readOnly with a default value of false
   });
 
   @override
@@ -77,29 +83,42 @@ class BloodSugarInput extends StatelessWidget {
           visible: (isDouble ?? false),
           child: Row(
             children: [
-
               Expanded(
-                child: CustomTextField(
-                  showTitle: false,
-                  // upperLimit: 12,
-                  maxLength: maxLength,
-                  readOnly: readOnly,
-                  // Pass the readOnly parameter to CustomTextField
-                  inputType: inputType ?? TextInputType.number,
-                  controller: controller,
-                  // Pass the controller here
-                  editText: true,
-                  hintText: hintText,
-                  // Use the provided hintText
-                  suffixText: suffixText ?? 'mg/dL',
-                  arrows: true,
-                  validation: validator,
-                  // Pass the validator function to CustomTextField
-                  onChanged:
-                  onChanged, // Pass the onChanged callback to CustomTextField
-                ),
+                  child: CustomDropdownField(
+                    validator: validator,
+                    selectedValue: controller.text.isEmpty ? null : controller.text,
+                      hintText: "Year",
+                      options:
+                          List.generate(50, (value) => (value + 1).toString()),
+                      onChanged: (value){
+                      debugPrint("Value: $value");
+                        controller.text = value ?? "";
+                        onChanged!(controller.text);
+                      }),
+
+                  // CustomTextField(
+                  //   showTitle: false,
+                  //   // upperLimit: 12,
+                  //   maxLength: maxLength,
+                  //   readOnly: readOnly,
+                  //   // Pass the readOnly parameter to CustomTextField
+                  //   inputType: inputType ?? TextInputType.number,
+                  //   controller: controller,
+                  //   // Pass the controller here
+                  //   editText: true,
+                  //   hintText: hintText,
+                  //   // Use the provided hintText
+                  //   suffixText: suffixText ?? 'mg/dL',
+                  //   arrows: true,
+                  //   validation: validator,
+                  //   // Pass the validator function to CustomTextField
+                  //   onChanged:
+                  //   onChanged, // Pass the onChanged callback to CustomTextField
+                  // ),
+                  ),
+              SizedBox(
+                width: 20,
               ),
-              SizedBox(width: 20,),
               Expanded(
                 child: CustomTextField(
                   upperLimit: 12,
@@ -118,11 +137,9 @@ class BloodSugarInput extends StatelessWidget {
                   validation: validatorSecond,
                   // Pass the validator function to CustomTextField
                   onChanged:
-                  onChangedSecond, // Pass the onChanged callback to CustomTextField
+                      onChangedSecond, // Pass the onChanged callback to CustomTextField
                 ),
               ),
-
-
             ],
           ),
         ),
