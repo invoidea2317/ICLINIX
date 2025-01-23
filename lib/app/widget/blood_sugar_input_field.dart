@@ -86,7 +86,7 @@ class BloodSugarInput extends StatelessWidget {
               Expanded(
                   child: CustomDropdownField(
                     validator: validator,
-                    selectedValue: controller.text.isEmpty ? null : controller.text,
+                    selectedValue: controller.text.isEmpty || controller.text == "0"? null : controller.text,
                       hintText: "Year",
                       options:
                           List.generate(50, (value) => (value + 1).toString()),

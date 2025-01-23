@@ -130,7 +130,7 @@ class _SugarChartState extends State<SugarChart> {
                     primaryYAxis: NumericAxis(
                   maximum: widget.isBp == "Blood Pressure"?400:700,
                       minimum: 0,
-                      interval: 10,
+                      interval: 100,
                       majorGridLines: MajorGridLines(width: 0),
                       axisLine: AxisLine(width: 1),
                     ),

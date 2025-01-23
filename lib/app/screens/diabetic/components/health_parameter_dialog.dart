@@ -253,6 +253,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                         Text("Duration of Diabetes", style: openSansRegular),
                         // Duration of Diabetes Input
                         BloodSugarInput(
+                          maxLength: 2,
                           isDouble: true,
                           titleSecond: '',
                           hintTextSecond: 'Months',
@@ -269,7 +270,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                               return 'Please enter the duration of diabetes';
                             }
                             final numericValue = double.tryParse(value);
-                            if (numericValue == null || numericValue >= 12) {
+                            if (numericValue == null || numericValue > 12 || numericValue <= 0) {
                               return 'Please enter a valid number of months';
                             }
                             return null;
@@ -282,7 +283,7 @@ class _AddHealthParameterDialogState extends State<AddHealthParameterDialog> wit
                               return 'Please enter the years';
                             }
                             final numericValue = int.tryParse(value);
-                            if (numericValue == null || numericValue >  50) {
+                            if (numericValue == null || numericValue >  50 || numericValue <= 0) {
                               return 'Please enter a valid number of years';
                             }
                             return null;
