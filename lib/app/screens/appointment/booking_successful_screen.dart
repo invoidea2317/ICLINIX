@@ -254,6 +254,7 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
 }
 
 Future<void> showNotification(String fileName, String filePath) async {
+
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
     'iClinix',
