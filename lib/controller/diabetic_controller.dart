@@ -325,10 +325,10 @@ class DiabeticController extends GetxController implements GetxService {
           if (data.containsKey('monthlySugerValues') && data['monthlySugerValues'] != null) {
             // List<dynamic> monthlyValues = data['monthlySugerValues'];
             _sugarChartList = MonthlySugarValues.fromJson(data['monthlySugerValues']);
-            print("Sugar Checkup List fetched successfully: $_sugarChartList");
+            // print("Sugar Checkup List fetched successfully: $_sugarChartList");
           } else {
             _sugarChartList = MonthlySugarValues(monthlySugarValues: []);
-            print("No monthlySugerValues key found in the response.");
+            // print("No monthlySugerValues key found in the response.");
           }
 
 
@@ -337,40 +337,40 @@ class DiabeticController extends GetxController implements GetxService {
           if (data.containsKey('monthlyBpValues') && data['monthlyBpValues'] != null) {
             List<dynamic> monthlyValues = data['monthlyBpValues'];
             _bpChartList = MonthlySugarValues.fromJson(data['monthlyBpValues']);
-            print("Sugar Checkup List fetched successfully: $_bpChartList");
+            // print("Sugar Checkup List fetched successfully: $_bpChartList");
           } else {
             _bpChartList = MonthlySugarValues(monthlySugarValues: []);
-            print("No monthlySugerValues key found in the response.");
+            // print("No monthlySugerValues key found in the response.");
           }
 
           if (data['todaySugerValues'] != null) {
             dynamic monthlyValues = data['todaySugerValues'];
             todaySugar =  MonthlySugarValue.fromJson(monthlyValues as Map<String, dynamic>);
 
-            print("Sugar Checkup List fetched successfully: $_bpChartList");
+            // print("Sugar Checkup List fetched successfully: $_bpChartList");
           } else {
             todaySugar = MonthlySugarValue(testDate: DateTime.now().toString(), measureValues: [],);
-            print("No monthlySugerValues key found in the response.");
+            // print("No monthlySugerValues key found in the response.");
           }
 
           if (data['todayBpValues'] != null) {
             dynamic monthlyValues = data['todayBpValues'];
             todayBpValue =  MonthlySugarValue.fromJson(monthlyValues as Map<String, dynamic>);
 
-            print("Sugar Checkup List fetched successfully: $_bpChartList");
+            // print("Sugar Checkup List fetched successfully: $_bpChartList");
           } else {
             todayBpValue = MonthlySugarValue(testDate: DateTime.now().toString(), measureValues: [],);
-            print("No monthlySugerValues key found in the response.");
+            // print("No monthlySugerValues key found in the response.");
           }
 
 
           // Process diet plan
           if (data.containsKey('dietPlan') && data['dietPlan'] != null) {
             _dietPlan = DietPlanModel.fromJson(data['dietPlan'] as Map<String, dynamic>);
-            print("Diet Plan fetched successfully: $_dietPlan");
+            // print("Diet Plan fetched successfully: $_dietPlan");
           } else {
             _dietPlan = null;
-            print("No dietPlan key found in the response.");
+            // print("No dietPlan key found in the response.");
           }
 
           if(data['subscription'] != null) {
@@ -378,7 +378,7 @@ class DiabeticController extends GetxController implements GetxService {
             //debugPrint("Subscription Data: ${data["subscription"]}");
             _subscriptionModel = SubscriptionModel.fromJson(subscriptionData);
           } else {
-            print("No subscription key found in the response.");
+            // print("No subscription key found in the response.");
           }
           // Process plan details and resources
           if (data.containsKey('planDetails') && data['planDetails'] != null) {
@@ -394,6 +394,7 @@ class DiabeticController extends GetxController implements GetxService {
             // Categorize resources by type
             if (planDetailsData.containsKey('plan_resources') && planDetailsData['plan_resources'] != null) {
               for (var resourceData in planDetailsData['plan_resources']) {
+                log("resource ${resourceData}",name: "Resource Data");
                 final PlanResourceModel resource = PlanResourceModel.fromJson(resourceData);
                 switch (resource.type) {
                   case 1:

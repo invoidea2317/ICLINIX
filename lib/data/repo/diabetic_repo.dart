@@ -66,7 +66,7 @@ log("$body",name:"Data Going Before Api");
       "month":month,
       "other":Others
     };
-    debugPrint("Body: $body");
+    // debugPrint("Body: $body");
     return apiClient.postData(AppConstants.healthCheckup,body);
   }
 

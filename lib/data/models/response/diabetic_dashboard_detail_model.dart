@@ -110,13 +110,13 @@ class MeasureValue {
 
 // PlanResourceModel.dart
 class PlanResourceModel {
-  final int id;
-  final int type;
-  final String name;
-  final String sortDescription;
+  final int? id;
+  final int? type;
+  final String? name;
+  final String? sortDescription;
   final String? ytUrl; // Change to String?
-  final String file;
-  final String fileUrl;
+  final String? file;
+  final String? fileUrl;
 
   PlanResourceModel({
     required this.id,

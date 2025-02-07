@@ -448,7 +448,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                         Image.asset("assets/images/pdfIcon.png",scale: 1.25,),
                         Flexible(
                           child: Text(
-                            dataPdf[i].name,
+                            dataPdf[i].name ?? "",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: openSansMedium.copyWith(
@@ -457,7 +457,7 @@ class _ResourcesComponentState extends State<ResourcesComponent> {
                           ),
                         ),
                         Text(
-                          dataPdf[i].sortDescription,
+                          dataPdf[i].sortDescription ?? "",
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: openSansMedium.copyWith(

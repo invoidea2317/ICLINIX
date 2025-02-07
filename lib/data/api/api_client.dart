@@ -65,7 +65,7 @@ class ApiClient extends GetxService {
       }) async {
     try {
       final uriWithQuery = query != null ? Uri.parse('$appBaseUrl$uri').replace(queryParameters: query) : Uri.parse('$appBaseUrl$uri');
-      log('====> API Call: $uriWithQuery\nHeader: ${headers ?? _mainHeaders}');
+      // log('====> API Call: $uriWithQuery\nHeader: ${headers ?? _mainHeaders}');
 
       http.Response response;
 
@@ -115,7 +115,7 @@ class ApiClient extends GetxService {
           throw UnsupportedError('HTTP method not supported');
       }
 
-      log('====> API Response: ${response.body}');
+      // log('====> API Response: ${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -130,8 +130,8 @@ class ApiClient extends GetxService {
       //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       //debugPrint('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
-      debugPrint("Encoded Body==> ${jsonEncode(body)}");
-      debugPrint("_mainHeaders: $_mainHeaders");
+      // debugPrint("Encoded Body==> ${jsonEncode(body)}");
+      // debugPrint("_mainHeaders: $_mainHeaders");
       http.Response response = await http.post(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),

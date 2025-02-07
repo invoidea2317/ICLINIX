@@ -25,7 +25,7 @@ class ResourceDetailsScreen extends StatelessWidget {
 
         return isLoading
             ? const Center(child: CircularProgressIndicator())
-            : data == null
+            : data == null || (data.name ?? "").isEmpty || (data.sortDescription ?? "").isEmpty
             ? const Center(child: Text('No data available'))
             : SingleChildScrollView(
           child: Padding(
@@ -34,11 +34,11 @@ class ResourceDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data.name,
+                  data.name ?? "",
                   style: openSansBold.copyWith(fontSize: Dimensions.fontSize20),
                 ),
                 sizedBoxDefault(),
-                Text(data.sortDescription),
+                Text(data.sortDescription ?? ""),
               ],
             ),
           ),
