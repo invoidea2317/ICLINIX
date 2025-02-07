@@ -1,4 +1,4 @@
-package com.invoidea.iclinix
+package com.invoidea.iclinixmedico
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity()

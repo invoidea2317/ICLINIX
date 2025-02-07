@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
     projectId: 'iclinix-89663',
     databaseURL: 'https://iclinix-89663-default-rtdb.firebaseio.com',
     storageBucket: 'iclinix-89663.firebasestorage.app',
-    iosBundleId: 'com.invoidea.iclinix',
+    iosBundleId: 'com.invoidea.iclinixmedico',
   );
 
 }
