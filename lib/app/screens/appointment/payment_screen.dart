@@ -196,9 +196,9 @@ void razorpayImplement(AppointmentModel appointment, String orderId,
         "status": "created",
         "attempts": 0,
       },
-      'description': 'Demo',
+      // 'description': 'Demo',
       'timeout': 300, // in seconds
-      'prefill': {'contact': appointment.mobileNo, 'email': "yv48183@gmail.com"}
+      // 'prefill': {'contact': appointment.mobileNo, 'email': "yv48183@gmail.com"}
     });
     // Correct event handlers for success, failure, and external wallet
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);

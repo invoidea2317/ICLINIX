@@ -303,10 +303,10 @@ void razorpayImplement(String name, String price, String planId,String key,Strin
         "status": "created",
         "attempts": 0,
       },
-      'description': 'Demo',
+      // 'description': 'Demo',
       'timeout': 300,
       // in seconds
-      'prefill': {'contact': "9971104827", 'email': "yv48184@gmail.com"}
+      // 'prefill': {'contact': "9971104827", 'email': "yv48184@gmail.com"}
     });
     // Correct event handlers for success, failure, and external wallet
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);

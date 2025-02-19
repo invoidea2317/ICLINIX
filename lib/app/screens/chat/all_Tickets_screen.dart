@@ -77,7 +77,7 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
         if (a.readStatus == "1" && b.readStatus == "0") return 1;
 
         // Then, sort by timestamp (assuming `createdAt` is a DateTime object)
-        return b.createdAt!.compareTo(a.createdAt!);
+        return (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now());
       });
 
       return Scaffold(
