@@ -24,6 +24,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../controller/appointment_controller.dart';
 import '../../../helper/local_notification.dart';
+import '../../widget/loading_widget.dart';
 
 
 class BookingSuccessfulScreen extends StatefulWidget {
@@ -47,32 +48,66 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
 
 
   Future<void> downloadFile(String url, String fileName) async {
-    // debugPrint("Downloading file from ${Get.find<AppointmentController>().apptId}");
-    // await Permission.storage.request();
-    if (await Permission.storage.isDenied) {
-      await Permission.manageExternalStorage.request();
-      await Permission.storage.request();
+    bool isGranted = await Permission.storage.isGranted;
+
+    if (!isGranted) {
+      bool userGranted = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Storage Permission Required"),
+            content: Text(
+                "This app needs storage access to save the file to the Downloads folder. "
+                    "If you deny permission, the file will be saved internally, and you can access it only within the app. "
+                    "To grant permission manually, go to Settings > Apps > This App > Permissions."
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("Deny"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Allow"),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (userGranted) {
+        await Permission.manageExternalStorage.request();
+        await Permission.storage.request();
+        isGranted = await Permission.storage.isGranted;
+      }
     }
 
     setState(() {
       progress = 0.0;
       isDownloading = true;
     });
+    LoadingDialog.showLoading(message: "Completed: $progress");
 
     Directory? downloadsDir;
-    if (Platform.isAndroid) {
-      downloadsDir = Directory('/storage/emulated/0/Download'); // Android Downloads folder
+    if (Platform.isAndroid && isGranted) {
+      downloadsDir = Directory('/storage/emulated/0/Download');
     } else if (Platform.isIOS) {
-      downloadsDir = await getApplicationDocumentsDirectory(); // iOS app-specific folder
+      downloadsDir = await getApplicationDocumentsDirectory();
+    } else {
+      downloadsDir = await getApplicationSupportDirectory();
     }
 
-    final filePath = "${downloadsDir?.path}/${fileName}";
+    final filePath = "${downloadsDir?.path}/$fileName";
 
     Dio dio = Dio();
 
     try {
       await dio.download(
-        Get.find<AppointmentController>().apptId,
+        url,
         filePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
@@ -88,9 +123,9 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
       });
 
       filePaths = filePath;
-      // Open the downloaded file
-      // OpenFile.open(filePath);
+      LoadingDialog.hideLoading();
       showNotification(fileName, filePath);
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -115,7 +150,6 @@ class _BookingSuccessfulScreenState extends State<BookingSuccessfulScreen> {
           );
         },
       );
-
     } catch (e) {
       setState(() {
         isDownloading = false;

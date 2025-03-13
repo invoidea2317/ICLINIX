@@ -45,17 +45,43 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
   bool isDownloading = false;
 
   Future<void> downloadFile(String url, String fileName) async {
+    bool isGranted = await Permission.storage.isGranted;
 
-    if (await Permission.storage.isDenied) {
-      await Permission.manageExternalStorage.request();
-      await Permission.storage.request();
+    if (!isGranted) {
+      bool userGranted = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Storage Permission Required"),
+            content: Text(
+                "This app needs storage access to save the file to the Downloads folder. "
+                    "If you deny permission, the file will be saved internally, and you can access it only within the app. "
+                    "To grant permission manually, go to Settings > Apps > This App > Permissions."
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("Deny"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Allow"),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (userGranted) {
+        await Permission.manageExternalStorage.request();
+        await Permission.storage.request();
+        isGranted = await Permission.storage.isGranted;
+      }
     }
-
-    setState(() {
-      progress = 0.0;
-      isDownloading = true;
-    });
-
 
     setState(() {
       progress = 0.0;
@@ -64,15 +90,15 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
     LoadingDialog.showLoading(message: "Completed: $progress");
 
     Directory? downloadsDir;
-    if (Platform.isAndroid) {
-      downloadsDir =
-          Directory('/storage/emulated/0/Download'); // Android Downloads folder
+    if (Platform.isAndroid && isGranted) {
+      downloadsDir = Directory('/storage/emulated/0/Download');
     } else if (Platform.isIOS) {
-      downloadsDir =
-          await getApplicationDocumentsDirectory(); // iOS app-specific folder
+      downloadsDir = await getApplicationDocumentsDirectory();
+    } else {
+      downloadsDir = await getApplicationSupportDirectory();
     }
 
-    final filePath = "${downloadsDir?.path}/${fileName}";
+    final filePath = "${downloadsDir?.path}/$fileName";
 
     Dio dio = Dio();
 
@@ -94,11 +120,9 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
       });
 
       filePaths = filePath;
-      // Open the downloaded file
-      // OpenFile.open(filePath);
-
       LoadingDialog.hideLoading();
       showNotification(fileName, filePath);
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -130,6 +154,7 @@ class _HealthRecordsScreenState extends State<HealthRecordsScreen>
       print("Download failed: $e");
     }
   }
+
   int index = 0;
 
   @override
