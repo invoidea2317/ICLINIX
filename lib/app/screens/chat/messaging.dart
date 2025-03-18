@@ -21,6 +21,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../utils/app_constants.dart';
 import '../../widget/loading_widget.dart';
+import '../CameraScreen/camera_screen.dart';
 import '../appointment/booking_successful_screen.dart';
 
 class Messaging extends StatefulWidget {
@@ -61,15 +62,16 @@ class _MessagingState extends State<Messaging> {
                 title: Text('Capture Image'),
                 onTap: () async {
                   Navigator.pop(context);
-                  final ImagePicker picker = ImagePicker();
-                  final XFile? photo =
-                  await picker.pickImage(source: ImageSource.camera);
-                  if (photo != null) {
+                  String? imagePath = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CameraScreen()),
+                  );
+                  if (imagePath != null) {
                     setState(() {
-                      _attachments.add(photo);
+                      _attachments.add(XFile(imagePath));
                     });
                   }
-                },
+                }
               ),
               ListTile(
                 leading: Icon(Icons.photo_library, color: Colors.blue),

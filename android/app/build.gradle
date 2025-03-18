@@ -37,7 +37,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.invoidea.iclinixmedico"
-    compileSdk = 34
+    compileSdk = 35
 ////    compileSdkVersion 23
 //    buildToolsVersion "23.0.1"
     ndkVersion = "25.1.8937393"
