@@ -837,7 +837,7 @@ class _AddSugarLevelsDialogState extends State<AddSugarLevelsDialog>
                                                   value: diabeticControl
                                                       .hbA1cPercentage.value,
                                                   min: 5.0,
-                                                  max: 7.0,
+                                                  max: 14.0,
                                                   divisions: 20,
                                                   label: diabeticControl
                                                       .hbA1cPercentage.value

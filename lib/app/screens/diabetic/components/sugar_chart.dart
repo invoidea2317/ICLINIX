@@ -87,6 +87,9 @@ class _SugarChartState extends State<SugarChart> {
             50; // Add padding
       }
 
+      debugPrint('Fasting data: $fastingData');
+      debugPrint('Fasting data: $postMealData');
+
       // Debug: Log data
 
       return isSugarLoading

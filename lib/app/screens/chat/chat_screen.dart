@@ -31,11 +31,15 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Get.find<ChatController>().setType(widget.selectedValue == "Question"
-        ? 1
-        : widget.selectedValue == "Urgent"
-        ? 3
-        : widget.selectedValue == "Lifestyle Support" ? 4:2);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<ChatController>().setType(widget.selectedValue == "Question"
+          ? 1
+          : widget.selectedValue == "Urgent"
+          ? 3
+          : widget.selectedValue == "Lifestyle Support" ? 4:2);
+    });
+
   }
 
   @override
