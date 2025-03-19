@@ -62,7 +62,7 @@ class _CameraScreenState extends State<CameraScreen> {
         padding: const EdgeInsets.only(bottom: 50),
         child: FloatingActionButton(
           onPressed: _takePicture,
-          child: Icon(Icons.camera),
+          child: const Icon(Icons.camera),
         ),
       ),
     ),
