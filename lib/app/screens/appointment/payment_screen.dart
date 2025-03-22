@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iclinix/app/screens/appointment/components/booking_summary_widget.dart';
 import 'package:iclinix/app/widget/common_widgets.dart';
 import 'package:iclinix/app/widget/custom_app_bar.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
 import 'package:iclinix/controller/appointment_controller.dart';
-
 import 'package:iclinix/data/models/body/appointment_model.dart';
 import 'package:iclinix/helper/route_helper.dart';
 import 'package:iclinix/utils/dimensions.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
-import 'package:get/get.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../helper/invoice.dart';
 import '../../widget/group_radio_button.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -91,22 +89,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   bookingFee: appointmentControl.amount,
                 ),
                 sizedBoxDefault(),
-                // Obx(() {
-                //   return CustomRadioButton(
-                //     items: appointmentControl.paymentMethods,
-                //     selectedValue: appointmentControl.selectedPaymentMethod.value,
-                //     onChanged: (value) {
-                //       debugPrint('Selected Payment Method: $value');
-                //       if (value == 'Pay via debit/credit card/upi/NetBanking') {
-                //         appointmentControl.selectPaymentMethod(value!);
-                //       } else {
-                //         // Update selected payment method
-                //         appointmentControl.selectPaymentMethod(value!);
-                //       }
-                //
-                //     },
-                //   );
-                // }),
+                Obx(() {
+                  return CustomRadioButton(
+                    items: appointmentControl.paymentMethods,
+                    selectedValue:
+                        appointmentControl.selectedPaymentMethod.value,
+                    onChanged: (value) {
+                      appointmentControl.selectPaymentMethod(value!);
+                    },
+                  );
+                }),
 
                 Row(
                   children: [
@@ -149,23 +141,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
           padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           child: SingleChildScrollView(
             child: CustomButtonWidget(
-              buttonText: 'Pay via Debit card/credit card/UPI/NetBanking',
+              buttonText: appointmentControl.selectedPaymentMethod.value == "Pay online"?'Pay via Debit card/credit card/UPI/NetBanking':"Pay at clinic",
               onPressed: () {
-                razorpayImplement(
-                    widget.appointmentModel,
-                    appointmentControl.orderId,
-                    appointmentControl.amount,
-                    appointmentControl.currency,
-                    appointmentControl.razorPayKey);
                 // razorpayImplement(appointmentModel);
+                debugPrint(
+                    "Selected Payment Method: ${appointmentControl.selectedPaymentMethod.value}");
+                if (appointmentControl.selectedPaymentMethod.value.contains("Pay online")) {
+                  razorpayImplement(
+                      widget.appointmentModel,
+                      appointmentControl.orderId,
+                      appointmentControl.amount,
+                      appointmentControl.currency,
+                      appointmentControl.razorPayKey);
+                  // appointmentControl.bookAppointmentApi(appointmentModel);
+                  // razorpayImplement(appointmentModel);
+                  // appointmentControl.bookAppointmentApi(appointmentModel);
+                } else {
+                  Map<String, dynamic> requestBody = {
+                    "payment_method": "Cash",
+                    "paymentId": "",
+                    "orderId": Get.find<AppointmentController>().orderId,
+                    "paymentStatus": "pending"
+                  };
 
-                // if(appointmentControl.selectedPaymentMethod.value == 'Pay via debit/credit card/upi/NetBanking'){
-                //   // appointmentControl.bookAppointmentApi(appointmentModel);
-                //   // razorpayImplement(appointmentModel);
-                //   // appointmentControl.bookAppointmentApi(appointmentModel);
-                // }else{
-                //   appointmentControl.bookAppointmentApi(appointmentModel);
-                // }
+                  Get.find<AppointmentController>().postDataBack(requestBody);
+                }
               },
               fontSize: Dimensions.fontSize14,
               isBold: false,
@@ -184,8 +184,10 @@ void razorpayImplement(AppointmentModel appointment, String orderId,
   try {
     _razorpay.open({
       'key': key,
-      'amount': int.parse(amount) * 100, // in the smallest currency sub-unit
-      'name': appointment.firstName, // Generate order_id using Orders API
+      'amount': int.parse(amount) * 100,
+      // in the smallest currency sub-unit
+      'name': appointment.firstName,
+      // Generate order_id using Orders API
       "order": {
         "id": orderId,
         "entity": 100,
@@ -197,7 +199,8 @@ void razorpayImplement(AppointmentModel appointment, String orderId,
         "attempts": 0,
       },
       // 'description': 'Demo',
-      'timeout': 300, // in seconds
+      'timeout': 300,
+      // in seconds
       // 'prefill': {'contact': appointment.mobileNo, 'email': "yv48183@gmail.com"}
     });
     // Correct event handlers for success, failure, and external wallet
@@ -214,6 +217,7 @@ void _handlePaymentSuccess(
   PaymentSuccessResponse response,
 ) {
   Map<String, dynamic> requestBody = {
+    "payment_method": "Online",
     "paymentId": "${response.paymentId}",
     "orderId": Get.find<AppointmentController>().orderId,
     "paymentStatus": "success"
@@ -226,7 +230,7 @@ void _handlePaymentSuccess(
 
 void _handlePaymentError(PaymentFailureResponse response) {
   // Do something when payment fails
- // debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
+  // debugPrint('EVENT_PAYMENT_ERROR: ${response.code} - ${response.message}');
 }
 
 void _handleExternalWallet(ExternalWalletResponse response) {

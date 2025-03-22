@@ -473,13 +473,14 @@ class AppointmentController extends GetxController implements GetxService {
 
   List<String> paymentMethods = [
     'Cash',
-    'Pay via Debit card/credit card/UPI/NetBanking'
+    'Pay online'
   ];
   List<String> paymentImages = [Images.icCash, Images.icRazorpay];
   var selectedPaymentMethod =
       'Cash'.obs; // RxString for selected payment method
   void selectPaymentMethod(String method) {
-    selectedPaymentMethod.value = method; // Update the selected payment method
+    selectedPaymentMethod.value = method;
+    update();// Update the selected payment method
   }
 
   List<AppointmentHistoryModel>? _appointmentHistoryList;
@@ -584,7 +585,7 @@ class AppointmentController extends GetxController implements GetxService {
     Response response = await appointmentRepo.postDataBack(requestBody);
     if (response.statusCode == 200) {
       var responseData = response.body;
-      //debugPrint('Response: $responseData');
+      debugPrint('Response: $responseData');
       if (responseData['message'] == "Appointment Booked Successfully.") {
         setisPaymentSuccessFull(true);
         getInvoice(responseData['appt_id'].toString());
