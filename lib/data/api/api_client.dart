@@ -127,7 +127,7 @@ class ApiClient extends GetxService {
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      //debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
+      debugPrint('====> API Call: $uri\nHeader: $_mainHeaders');
       //debugPrint('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
       // debugPrint("Encoded Body==> ${jsonEncode(body)}");
@@ -137,9 +137,11 @@ class ApiClient extends GetxService {
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
-      //debugPrint('====> API Response: [${response.statusCode}] $uri\n${response.body}');
+      debugPrint('====> API Response: [${response.statusCode}] $uri\n${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
+      debugPrint('====> error: [${e}');
+
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
@@ -225,7 +227,7 @@ class ApiClient extends GetxService {
     }else if(response0.statusCode != 200 && response0.body == null) {
       response0 = const Response(statusCode: 0, statusText: noInternetMessage);
     }
-    //debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
+    debugPrint('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
     return response0;
   }
 

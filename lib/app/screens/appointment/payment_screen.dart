@@ -158,12 +158,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   // appointmentControl.bookAppointmentApi(appointmentModel);
                 } else {
                   Map<String, dynamic> requestBody = {
-                    "payment_method": "Cash",
-                    "paymentId": "",
+                    "pay_method": "Cash",
+                    "paymentId": null,
                     "orderId": Get.find<AppointmentController>().orderId,
                     "paymentStatus": "pending"
                   };
-
+                debugPrint("Cash");
                   Get.find<AppointmentController>().postDataBack(requestBody);
                 }
               },

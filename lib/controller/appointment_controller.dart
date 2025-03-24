@@ -434,8 +434,9 @@ class AppointmentController extends GetxController implements GetxService {
     _isSlotLoading = true;
     update();
     Response response = await appointmentRepo.getSlotList(branchId, date,bookingDiabeticType);
+    debugPrint("${response.body}Response");
     List<dynamic> val = response.body['available_slots'];
-    // //debugPrint('Length: ${val.length}');
+    debugPrint('Length: ${val.length}');
 
     if (response.statusCode == 200) {
       //debugPrint('Response: ${response.body}');
@@ -580,12 +581,14 @@ class AppointmentController extends GetxController implements GetxService {
   ) async {
     _isLoading = true;
     LoadingDialog.showLoading(message: "Please wait...");
+    debugPrint("Request Body: ${requestBody}");
     update();
 
     Response response = await appointmentRepo.postDataBack(requestBody);
+    debugPrint("body: ${response.body}");
     if (response.statusCode == 200) {
       var responseData = response.body;
-      debugPrint('Response: $responseData');
+      debugPrint('Response PostDataBack: $responseData');
       if (responseData['message'] == "Appointment Booked Successfully.") {
         setisPaymentSuccessFull(true);
         getInvoice(responseData['appt_id'].toString());

@@ -51,7 +51,7 @@ class AppointmentRepo {
       "doctor_id": doctorID,
    };
 
-   debugPrint('requestBody: $requestBody');
+   debugPrint('requestBody slotList: $requestBody');
     return apiClient.postData(AppConstants.slotListUrl,requestBody);
   }
 
