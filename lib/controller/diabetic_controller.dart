@@ -313,7 +313,7 @@ class DiabeticController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
         var data = response.body['data'];
-        log("Data: ${response.body['data']["patientDetails"]}");
+        log("Data: ${response.body['data']}");
          var renewOption = response.body["renew_option"];
          var oldSubs = response.body["old_subs"];
 

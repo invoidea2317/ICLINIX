@@ -21,6 +21,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../utils/app_constants.dart';
 import '../../widget/loading_widget.dart';
+import '../CameraScreen/camera_screen.dart';
 import '../appointment/booking_successful_screen.dart';
 
 class Messaging extends StatefulWidget {
@@ -50,25 +51,73 @@ class _MessagingState extends State<Messaging> {
   }
 
   Future<void> _pickAttachments() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-        allowMultiple: true,
-      );
-
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          _attachments.addAll(result.files
-              .where((file) => file.path != null) // Ensure path is not null
-              .map((file) => XFile(file.path!))
-              .toList());
-        });
-      }
-    } catch (e) {
-    //  debugPrint('Error picking files: $e');
-    }
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt, color: Colors.blue),
+                title: Text('Capture Image'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  String? imagePath = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CameraScreen()),
+                  );
+                  if (imagePath != null) {
+                    setState(() {
+                      _attachments.add(XFile(imagePath));
+                    });
+                  }
+                }
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library, color: Colors.blue),
+                title: Text('Pick from Gallery'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final ImagePicker picker = ImagePicker();
+                  final List<XFile>? photos = await picker.pickMultiImage();
+                  if (photos != null && photos.isNotEmpty) {
+                    setState(() {
+                      _attachments.addAll(photos);
+                    });
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.insert_drive_file, color: Colors.blue),
+                title: Text('Pick PDF'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  try {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                      allowMultiple: true,
+                    );
+                    if (result != null && result.files.isNotEmpty) {
+                      setState(() {
+                        _attachments.addAll(result.files
+                            .where((file) => file.path != null)
+                            .map((file) => XFile(file.path!))
+                            .toList());
+                      });
+                    }
+                  } catch (e) {
+                    debugPrint('Error picking files: $e');
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
+
 
 
 

@@ -30,6 +30,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your gallery to select images.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used to capture user photos for profile image.</string>
 	<key>NSLocalNetworkUsageDescription</key>

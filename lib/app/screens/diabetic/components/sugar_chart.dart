@@ -49,6 +49,8 @@ class _SugarChartState extends State<SugarChart> {
 
       sugarList?.monthlySugarValues.forEach((element) {
         DateTime? date = _parseDate(element.testDate);
+        debugPrint('Date: $date');
+
         if (date != null) {
           // Fasting data
           final fastingValue = element.measureValues.isNotEmpty
@@ -86,6 +88,9 @@ class _SugarChartState extends State<SugarChart> {
         return (fastingMax > postMealMax ? fastingMax : postMealMax) +
             50; // Add padding
       }
+
+      debugPrint('Fasting data: $fastingData');
+      debugPrint('post data: $postMealData');
 
       // Debug: Log data
 
