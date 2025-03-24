@@ -9,9 +9,11 @@ import 'package:iclinix/app/widget/custom_app_bar.dart';
 import 'package:iclinix/app/widget/custom_button_widget.dart';
 import 'package:iclinix/app/widget/custom_dropdown_field.dart';
 import 'package:iclinix/app/widget/custom_textfield.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../utils/dimensions.dart';
 import '../../../utils/sizeboxes.dart';
 import '../../widget/custom_snackbar.dart';
+import '../CameraScreen/camera_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   String? selectedValue;
@@ -213,16 +215,60 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     });
   }
+   // Import the CameraScreen
 
   Future<void> _pickFiles() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true, // Allow multiple files to be selected
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera),
+              title: const Text("Camera"),
+              onTap: () async {
+                Navigator.pop(context);
+                final imagePath = await Get.to(() => CameraScreen());
+                if (imagePath != null) {
+                  setState(() {
+                    selectedFiles.add(File(imagePath));
+                  });
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text("Gallery"),
+              onTap: () async {
+                Navigator.pop(context);
+                final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                if (pickedFile != null) {
+                  setState(() {
+                    selectedFiles.add(File(pickedFile.path));
+                  });
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf),
+              title: const Text("Pick PDF"),
+              onTap: () async {
+                Navigator.pop(context);
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['pdf'],
+                );
+                if (result != null) {
+                  setState(() {
+                    selectedFiles.add(File(result.files.single.path!));
+                  });
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
-
-    if (result != null) {
-      setState(() {
-        selectedFiles = result.paths.map((path) => File(path!)).toList();
-      });
-    }
   }
+
 }
