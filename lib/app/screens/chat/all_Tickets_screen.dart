@@ -96,133 +96,136 @@ class _AllTicketsScreenState extends State<AllTicketsScreen> {
             ],
           ),
         ),
-        body: Column(
-          children: [
-            chatControl.allTickets.isNotEmpty
-                ? ListView.builder(
-              shrinkWrap: true,
-              itemCount: chatControl.allTickets.length,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      chatControl.getSingleTicketReplies(
-                          chatControl.allTickets[index].id.toString() ?? "");
-                    },
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 8,
-                            ),
-                            Container(
-                              width: Get.size.width,
-                              height: 67,
-                              decoration: BoxDecoration(
-                                color: whichColor(
-                                  chatControl.allTickets[index].ticketType!.type.toString(),
-                                  chatControl.allTickets[index].readStatus ?? "0",
-                                ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              chatControl.allTickets.isNotEmpty
+                  ? ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: chatControl.allTickets.length,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        chatControl.getSingleTicketReplies(
+                            chatControl.allTickets[index].id.toString() ?? "");
+                      },
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 8,
                               ),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 15),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '${_formatTime(chatControl.allTickets[index].createdAt)}',
-                                        style: TextStyle(
-                                          color: Colors.black.withOpacity(0.5),
-                                          fontSize: 12,
-                                          fontFamily: 'Open Sans',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                    ],
+                              Container(
+                                width: Get.size.width,
+                                height: 67,
+                                decoration: BoxDecoration(
+                                  color: whichColor(
+                                    chatControl.allTickets[index].ticketType!.type.toString(),
+                                    chatControl.allTickets[index].readStatus ?? "0",
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0, vertical: 4),
-                                    child: Row(
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Expanded(
-                                          child: Text(
-                                            maxLines: 1,
-                                            chatControl.allTickets[index].latestReply ?? "",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                        Text(
+                                          '${_formatTime(chatControl.allTickets[index].createdAt)}',
+                                          style: TextStyle(
+                                            color: Colors.black.withOpacity(0.5),
+                                            fontSize: 12,
+                                            fontFamily: 'Open Sans',
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                        Visibility(
-                                          visible: chatControl.allTickets[index].readStatus == "0",
-                                          child: Text(
-                                            maxLines: 1,
-                                            "New",
-                                            style: const TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
+                                        SizedBox(width: 10),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 4),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              maxLines: 1,
+                                              chatControl.allTickets[index].latestReply ?? "",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: chatControl.allTickets[index].readStatus == "0",
+                                            child: Text(
+                                              maxLines: 1,
+                                              "New",
+                                              style: const TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          left: 10,
-                          top: 0,
-                          child: Container(
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: chatControl.allTickets[index].ticketType?.type.toString() ==
-                                  "Urgent"
-                                  ? Color(0xFFB84A0F)
-                                  : chatControl.allTickets[index].ticketType?.type.toString() ==
-                                  "Problem"
-                                  ? Color(0xFFB8770F)
-                                  : chatControl.allTickets[index].ticketType?.type.toString() ==
-                                  "Question"
-                                  ? Color(0xFF0F93B8)
-                                  : Color(0xFF60971D),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Center(
-                                child: Text(
-                                  chatControl.allTickets[index].ticketType?.type.toString() ?? "",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                            ],
+                          ),
+                          Positioned(
+                            left: 10,
+                            top: 0,
+                            child: Container(
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: chatControl.allTickets[index].ticketType?.type.toString() ==
+                                    "Urgent"
+                                    ? Color(0xFFB84A0F)
+                                    : chatControl.allTickets[index].ticketType?.type.toString() ==
+                                    "Problem"
+                                    ? Color(0xFFB8770F)
+                                    : chatControl.allTickets[index].ticketType?.type.toString() ==
+                                    "Question"
+                                    ? Color(0xFF0F93B8)
+                                    : Color(0xFF60971D),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(
+                                    chatControl.allTickets[index].ticketType?.type.toString() ?? "",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            )
-                : const Center(
-              child: Text("No Ticket Found"),
-            ),
-          ],
+                  );
+                },
+              )
+                  : const Center(
+                child: Text("No Ticket Found"),
+              ),
+            ],
+          ),
         ),
       );
     });
