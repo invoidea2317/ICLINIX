@@ -269,8 +269,30 @@ class _PlanPaymentRenewScreenState extends State<PlanPaymentRenewScreen> {
                       onPressed: () {
                         LoadingDialog.showLoading();
                      //   debugPrint("Plan id: rzorpay");
-                        appointmentControl.setPlanRenewing(true);
-                        appointmentControl.purchasePlanApi(widget.patientId,planId,'razorpay',true);
+                            {
+                          if(!(Get.find<AuthController>()
+                              .isGuestMain)) {
+                            appointmentControl.setPlanRenewing(true);
+                            appointmentControl.purchasePlanApi(widget.patientId,planId,'razorpay',true);
+                          } else {
+                            Get.defaultDialog(
+                              title: "Login Required",
+                              middleText: "You need to login to book an appointment.",
+                              textConfirm: "Login Now",
+                              textCancel: "Cancel",
+                              confirmTextColor: Colors.white,
+                              onConfirm: () {
+                                Get.back(); // Close the dialog
+                                Get.toNamed(RouteHelper.getLoginRoute()); // Navigate to login screen
+                              },
+                              onCancel: () {
+                                Get.back(); // Just close the dialog
+                              },
+                            );
+                          }
+
+                        }
+
                         // razorpayImplement(name, price, planId);
                       },
                       fontSize: Dimensions.fontSize14,

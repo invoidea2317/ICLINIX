@@ -98,8 +98,27 @@ class PlanPaymentScreen extends StatelessWidget {
             child: !appointmentControl.isPurchasePlanLoading ?  CustomButtonWidget(
               buttonText: 'Purchase Plan',
               onPressed: () {
-                appointmentControl.setPlanRenewing(false);
-                appointmentControl.purchasePlanApi(patientId,planId,'razorpay',false);
+                if(!(Get.find<AuthController>()
+                    .isGuestMain)) {
+                  appointmentControl.setPlanRenewing(false);
+                  appointmentControl.purchasePlanApi(patientId,planId,'razorpay',false);
+                } else {
+                  Get.defaultDialog(
+                    title: "Login Required",
+                    middleText: "You need to login to book an appointment.",
+                    textConfirm: "Login Now",
+                    textCancel: "Cancel",
+                    confirmTextColor: Colors.white,
+                    onConfirm: () {
+                      Get.back(); // Close the dialog
+                      Get.toNamed(RouteHelper.getLoginRoute()); // Navigate to login screen
+                    },
+                    onCancel: () {
+                      Get.back(); // Just close the dialog
+                    },
+                  );
+                }
+
               },
               fontSize: Dimensions.fontSize14,
               isBold: false,

@@ -6,6 +6,7 @@ import 'package:iclinix/app/screens/dashboard/dashboard_screen.dart';
 import 'package:iclinix/app/screens/privacy/privacy_policy.dart';
 import 'package:iclinix/app/widget/confirmation_dialog.dart';
 import 'package:iclinix/app/widget/custom_image_widget.dart';
+import 'package:iclinix/controller/appointment_controller.dart';
 import 'package:iclinix/controller/auth_controller.dart';
 import 'package:iclinix/controller/profile_controller.dart';
 import 'package:iclinix/data/repo/auth_repo.dart';
@@ -15,6 +16,7 @@ import 'package:iclinix/utils/images.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -132,12 +134,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
       height: 1,
       color: Colors.white.withOpacity(0.2));
 
-
+         SharedPreferences ? sharedPreferences = Get.find<AuthController>().sharedPreferences;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-debugPrint("Drawer Opened");
+
+
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   Get.find<AuthController>().updateBottomBarVisibility(false);
     // });
@@ -150,6 +153,7 @@ debugPrint("Drawer Opened");
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -256,20 +260,55 @@ debugPrint("Drawer Opened");
                   alignment: Alignment.centerLeft,
                   child: TextButton(
                     onPressed: () {
-                      Get.dialog(
-                        ConfirmationDialog(
-                          icon: Images.icLogout,
-                          description: 'Are You Sure To Logout',
-                          onYesPressed: () {
-                          Get.find<AuthController>().authRepo.saveUserToken("");
-                           Get.toNamed(RouteHelper.getLoginRoute());
-                          },
-                        ),
-                      );
+                      if(!(Get.find<AuthController>().isGuestMain)){
+                        Get.dialog(
+                          ConfirmationDialog(
+                            icon: Images.icLogout,
+                            description: 'Are You Sure To Logout',
+                            onYesPressed: () {
+                              Get.find<AuthController>()
+                                  .authRepo
+                                  .saveUserToken("");
+                              Get.toNamed(RouteHelper.getLoginRoute());
+                            },
+                          ),
+                        );
+                      } else {
+                        Get.toNamed(RouteHelper.getLoginRoute());
+                      }
                     },
                     child: Text(
-                      "Log Out",
+                     Get.find<AuthController>().isGuestMain? "Log in": "Logout",
                       style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18, color: Theme.of(context).cardColor),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: !(Get.find<AuthController>().isGuestMain),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.dialog(
+                          ConfirmationDialog(
+                            icon: Images.icLogout,
+                            description: 'Are You Sure To Delete Account',
+                            onYesPressed: () {
+                              Get.find<AuthController>()
+                                  .isGuestMain = false;
+                              SharedPreferences prefs = Get.find<AuthController>().sharedPreferences;
+                              prefs.setBool("guest", false);
+                              Get.find<AuthController>().deleteUser();
+                            },
+                          ),
+                        );
+
+                      },
+
+                      child: Text(
+                       "Delete Account",
+                        style: openSansRegular.copyWith(fontSize: Dimensions.fontSize18, color: Theme.of(context).cardColor),
+                      ),
                     ),
                   ),
                 ),

@@ -13,6 +13,9 @@ import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+import '../../../controller/auth_controller.dart';
+import '../../../utils/images.dart';
+import '../../widget/confirmation_dialog.dart';
 import '../../widget/group_radio_button.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -144,27 +147,47 @@ class _PaymentScreenState extends State<PaymentScreen> {
               buttonText: appointmentControl.selectedPaymentMethod.value == "Pay online"?'Pay via Debit card/credit card/UPI/NetBanking':"Pay at clinic",
               onPressed: () {
                 // razorpayImplement(appointmentModel);
-                debugPrint(
-                    "Selected Payment Method: ${appointmentControl.selectedPaymentMethod.value}");
-                if (appointmentControl.selectedPaymentMethod.value.contains("Pay online")) {
-                  razorpayImplement(
-                      widget.appointmentModel,
-                      appointmentControl.orderId,
-                      appointmentControl.amount,
-                      appointmentControl.currency,
-                      appointmentControl.razorPayKey);
-                  // appointmentControl.bookAppointmentApi(appointmentModel);
-                  // razorpayImplement(appointmentModel);
-                  // appointmentControl.bookAppointmentApi(appointmentModel);
+
+                if(!(Get.find<AuthController>()
+                    .isGuestMain)) {
+                  debugPrint(
+                      "Selected Payment Method: ${appointmentControl.selectedPaymentMethod.value}");
+                  if (appointmentControl.selectedPaymentMethod.value
+                      .contains("Pay online")) {
+                    razorpayImplement(
+                        widget.appointmentModel,
+                        appointmentControl.orderId,
+                        appointmentControl.amount,
+                        appointmentControl.currency,
+                        appointmentControl.razorPayKey);
+                    // appointmentControl.bookAppointmentApi(appointmentModel);
+                    // razorpayImplement(appointmentModel);
+                    // appointmentControl.bookAppointmentApi(appointmentModel);
+                  } else {
+                    Map<String, dynamic> requestBody = {
+                      "pay_method": "Cash",
+                      "paymentId": null,
+                      "orderId": Get.find<AppointmentController>().orderId,
+                      "paymentStatus": "pending"
+                    };
+                    debugPrint("Cash");
+                    Get.find<AppointmentController>().postDataBack(requestBody);
+                  }
                 } else {
-                  Map<String, dynamic> requestBody = {
-                    "pay_method": "Cash",
-                    "paymentId": null,
-                    "orderId": Get.find<AppointmentController>().orderId,
-                    "paymentStatus": "pending"
-                  };
-                debugPrint("Cash");
-                  Get.find<AppointmentController>().postDataBack(requestBody);
+                  Get.defaultDialog(
+                    title: "Login Required",
+                    middleText: "You need to login to book an appointment.",
+                    textConfirm: "Login Now",
+                    textCancel: "Cancel",
+                    confirmTextColor: Colors.white,
+                    onConfirm: () {
+                      Get.back(); // Close the dialog
+                      Get.toNamed(RouteHelper.getLoginRoute()); // Navigate to login screen
+                    },
+                    onCancel: () {
+                      Get.back(); // Just close the dialog
+                    },
+                  );
                 }
               },
               fontSize: Dimensions.fontSize14,

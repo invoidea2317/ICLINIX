@@ -49,6 +49,9 @@ class AuthRepo {
   Future<Response> getPrivacyPolicy(String data) async {
     return await apiClient.getData(AppConstants.privacyUrl+"${data}",method: 'GET');
   }
+  Future<Response> deleteAccount() async {
+    return await apiClient.getData(AppConstants.deleteAccount,method: 'POST');
+  }
 
 
 

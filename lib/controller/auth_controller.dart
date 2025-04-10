@@ -112,6 +112,23 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  Future<void> deleteUser() async {
+
+    _isLoginLoading = true;
+    update();
+    Response response = await authRepo.deleteAccount();
+
+    debugPrint("${response.body}");
+     if(response.body['Msg'] == "User Deleted Successfully"){
+       Get.offAllNamed(RouteHelper.getLoginRoute());
+     }else{
+        showCustomSnackBar("Something went wrong", isError: true);
+     }
+
+    _isLoginLoading = false;
+    update();
+  }
+
 
 
   void updateLastBackPressTime(DateTime time) {
@@ -161,6 +178,31 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  Future<void> sendGuestOtp() async {
+    _isLoginLoading = true;
+    update();
+    Response response = await authRepo.sendOtpRepo("9696969696");
+    if (response.statusCode == 200) {
+      var responseData = response.body;
+      if (responseData["message"].contains("OTP sent to your mobile number")) {
+        String otp = responseData['otp'].toString();
+        _isLoginLoading = false;
+        update();
+        // showCustomSnackBar(responseData['message'], isError: false);
+            verifyOtpApi("9696969696", "123456",true);
+      } else {
+        _isLoginLoading = false;
+        update();
+      }
+    } else {
+      _isLoginLoading = false;
+      update();
+      print('Failed to send OTP');
+    }
+    _isLoginLoading = false;
+    update();
+  }
+
   Future<void> saveSubscriptionStatus(bool isActive) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isSubscriptionActive', isActive);
@@ -172,7 +214,7 @@ class AuthController extends GetxController implements GetxService {
     return prefs.getBool('isSubscriptionActive') ?? false;
   }
 
-  Future<void> verifyOtpApi(String? phoneNo, String? otp) async {
+  Future<void> verifyOtpApi(String? phoneNo, String? otp,[bool? isGuest]) async {
     if (phoneNo == null || otp == null) {
       showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
       return;
@@ -214,6 +256,16 @@ class AuthController extends GetxController implements GetxService {
           }
           await saveSubscriptionStatus(isSubscriptionActive);
           // Navigate based on the user's first name
+          if(isGuest ?? false){
+            prefs.setBool("guest", true);
+            isGuestMain = true;
+            update();
+          }else{
+            prefs.setBool("guest", false);
+            isGuestMain = false;
+            update();
+          }
+
           if (user != null) {
             if (user.containsKey('first_name') && user['first_name'] != null && user['first_name'].isNotEmpty) {
               Get.toNamed(RouteHelper.getDashboardRoute());
@@ -238,7 +290,7 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
-
+ bool isGuestMain = false;
   bool _userDataLoading = false;
   bool get userDataLoading => _userDataLoading;
 

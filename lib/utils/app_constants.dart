@@ -12,6 +12,7 @@ class AppConstants {
   static const String updateProfileUrl = "update/my-profile";
   static const String myProfileUrl = "my-profile";
   static const String privacyUrl = "page/";
+  static const String deleteAccount = "delete-account";
   static const String planListUrl = "plan-list";
   static const String clinicListUrl = "clinic-list";
   static const String patientListUrl = "patient-list";

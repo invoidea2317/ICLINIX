@@ -12,6 +12,8 @@ import 'package:get/get.dart';
 import 'package:iclinix/utils/sizeboxes.dart';
 import 'package:iclinix/utils/styles.dart';
 
+import '../../../controller/auth_controller.dart';
+
 class AddPlanPatientDetails extends StatelessWidget {
   final String? planId;
 
@@ -50,57 +52,76 @@ class AddPlanPatientDetails extends StatelessWidget {
                               ? 'Add Patient'
                               : 'Next',
                           onPressed: () {
-                            if (appointmentControl.isPlanNewPatientEnabled) {
-                              if (_formKey.currentState!.validate()) {
-                                print(
-                                    'Print _firstnameController  ${_firstnameController.text}');
-                                print(
-                                    'Print _lastnameController  ${_lastnameController.text}');
-                                print(
-                                    'Print _phoneController  ${_phoneController.text}');
-                                print(
-                                    'Print selectedGender  ${appointmentControl.getGenderStatus()}');
-                                print(
-                                    'Print _dateController  ${_dateController.text}');
-                                print(
-                                    'Print getDiabetesStatus  ${appointmentControl.getDiabetesStatus()}');
-                                print(
-                                    'Print selectedBp  ${appointmentControl.getBpStatus()}');
-                                print(
-                                    'Print selectedGlasses  ${appointmentControl.getGlassesStatus()}');
-                                print(
-                                    'Print _otherProblemController  ${_otherProblemController.text}');
-                                print(
-                                    'Print selectedPatientId  ${appointmentControl.selectedPatientId.value.toString()}');
-                                print(
-                                    'print bool ${appointmentControl.bookingDiabeticType}');
+                            if(!(Get.find<AuthController>()
+                                .isGuestMain)){
+                              if (appointmentControl.isPlanNewPatientEnabled) {
+                                if (_formKey.currentState!.validate()) {
+                                  print(
+                                      'Print _firstnameController  ${_firstnameController.text}');
+                                  print(
+                                      'Print _lastnameController  ${_lastnameController.text}');
+                                  print(
+                                      'Print _phoneController  ${_phoneController.text}');
+                                  print(
+                                      'Print selectedGender  ${appointmentControl.getGenderStatus()}');
+                                  print(
+                                      'Print _dateController  ${_dateController.text}');
+                                  print(
+                                      'Print getDiabetesStatus  ${appointmentControl.getDiabetesStatus()}');
+                                  print(
+                                      'Print selectedBp  ${appointmentControl.getBpStatus()}');
+                                  print(
+                                      'Print selectedGlasses  ${appointmentControl.getGlassesStatus()}');
+                                  print(
+                                      'Print _otherProblemController  ${_otherProblemController.text}');
+                                  print(
+                                      'Print selectedPatientId  ${appointmentControl.selectedPatientId.value.toString()}');
+                                  print(
+                                      'print bool ${appointmentControl.bookingDiabeticType}');
 
-                                AddPatientModel addPatientModel =
-                                    AddPatientModel(
-                                  firstName: _firstnameController.text,
-                                  lastName: _lastnameController.text,
-                                  mobileNo: _phoneController.text,
-                                  gender: appointmentControl.getGenderStatus(),
-                                  dob: _dateController.text,
-                                  diabetesProblem:
-                                      appointmentControl.getDiabetesStatus(),
-                                  bpProblem: appointmentControl.getBpStatus(),
-                                  eyeProblem:
-                                      appointmentControl.getGlassesStatus(),
-                                  initial: appointmentControl.selectedInitial,
-                                );
-                                appointmentControl
-                                    .addPatientApi(addPatientModel);
+                                  AddPatientModel addPatientModel =
+                                      AddPatientModel(
+                                    firstName: _firstnameController.text,
+                                    lastName: _lastnameController.text,
+                                    mobileNo: _phoneController.text,
+                                    gender:
+                                        appointmentControl.getGenderStatus(),
+                                    dob: _dateController.text,
+                                    diabetesProblem:
+                                        appointmentControl.getDiabetesStatus(),
+                                    bpProblem: appointmentControl.getBpStatus(),
+                                    eyeProblem:
+                                        appointmentControl.getGlassesStatus(),
+                                    initial: appointmentControl.selectedInitial,
+                                  );
+                                  appointmentControl
+                                      .addPatientApi(addPatientModel);
+                                }
+                              } else {
+                                Get.toNamed(RouteHelper.getPlanPaymentRoute(
+                                    appointmentControl.selectedPatientId.value
+                                        .toString(),
+                                    planId));
+                                // appointmentControl.purchasePlanApi(appointmentControl.selectedPatientId.value.toString(),
+                                //     planId, planId)
+
+                                // Get.toNamed(RouteHelper.getDiabeticDashboardRoute());
                               }
                             } else {
-                              Get.toNamed(RouteHelper.getPlanPaymentRoute(
-                                  appointmentControl.selectedPatientId.value
-                                      .toString(),
-                                  planId));
-                              // appointmentControl.purchasePlanApi(appointmentControl.selectedPatientId.value.toString(),
-                              //     planId, planId)
-
-                              // Get.toNamed(RouteHelper.getDiabeticDashboardRoute());
+                              Get.defaultDialog(
+                                title: "Login Required",
+                                middleText: "You need to login to book an appointment.",
+                                textConfirm: "Login Now",
+                                textCancel: "Cancel",
+                                confirmTextColor: Colors.white,
+                                onConfirm: () {
+                                  Get.back(); // Close the dialog
+                                  Get.toNamed(RouteHelper.getLoginRoute()); // Navigate to login screen
+                                },
+                                onCancel: () {
+                                  Get.back(); // Just close the dialog
+                                },
+                              );
                             }
                           },
                         )

@@ -83,6 +83,28 @@ class LoginScreen extends StatelessWidget {
                             return null;
                           },
                         ),
+                        sizedBox12(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Enter as",style: openSansRegular.copyWith(
+                                fontSize: Dimensions.fontSize13,
+                                color: Theme.of(context).disabledColor.withOpacity(0.40) ),),
+
+                            GetBuilder<AuthController>(
+                              builder: (controller) {
+                                return GestureDetector(
+                                  onTap: (){
+                                    controller.sendGuestOtp();
+                                  },
+                                  child: Text(" Guest?",style: openSansRegular.copyWith(
+                                      fontSize: Dimensions.fontSize13,
+                                      color: Colors.blue ),),
+                                );
+                              }
+                            ),
+                          ],
+                        ),
                         // sizedBox10(),
                         // InkWell(
                         //   onTap: () {
