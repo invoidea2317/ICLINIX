@@ -30,8 +30,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>We need access to your gallery to select images.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is used to capture user photos for profile image.</string>
 	<key>NSLocalNetworkUsageDescription</key>
@@ -62,12 +60,6 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>

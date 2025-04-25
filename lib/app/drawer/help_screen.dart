@@ -58,7 +58,7 @@ class HelpScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         buildInkWell(context, tap: () async {
-                          const phoneNumber = '6366526413';
+                          const phoneNumber = '9899118030';
                           final Uri phoneUri =
                               Uri(scheme: 'tel', path: phoneNumber);
 
@@ -92,7 +92,7 @@ class HelpScreen extends StatelessWidget {
                         title: 'Mail: ', data: 'iclinix@gmail.com'),
                     sizedBox10(),
                     buildRichText(context,
-                        title: 'Contact No: ', data: '91-9899118030'),
+                        title: 'Contact No: ', data: '+91-9899118030'),
                     sizedBox10(),
                     // buildRichText(context,
                     //     title: 'Website ', data: 'https://iclinix.in/'),
